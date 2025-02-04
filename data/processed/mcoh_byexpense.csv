@@ -1,0 +1,307 @@
+state,expense_category,median_months_cash_on_hand,number_nonprofits
+AK,Between $100K and $499K,4.32,507
+AK,Between $1M and $4.99M,3.96,266
+AK,Between $500K and $999K,4.88,193
+AK,Between $5M and $9.99M,5.63,61
+AK,Greater than $10M,4.35,77
+AK,Less than $100K,8.51,209
+AL,Between $100K and $499K,4.62,1600
+AL,Between $1M and $4.99M,3.42,707
+AL,Between $500K and $999K,4.23,639
+AL,Between $5M and $9.99M,2.96,137
+AL,Greater than $10M,1.59,180
+AL,Less than $100K,3.23,689
+AR,Between $100K and $499K,3.16,1000
+AR,Between $1M and $4.99M,5,427
+AR,Between $500K and $999K,4.49,320
+AR,Between $5M and $9.99M,4.84,81
+AR,Greater than $10M,2.34,194
+AR,Less than $100K,2.83,408
+AZ,Between $100K and $499K,4.3,1610
+AZ,Between $1M and $4.99M,4.21,989
+AZ,Between $500K and $999K,4.25,669
+AZ,Between $5M and $9.99M,4.48,258
+AZ,Greater than $10M,3.87,373
+AZ,Less than $100K,6.8,551
+CA,Between $100K and $499K,2.46,12345
+CA,Between $1M and $4.99M,4.64,7198
+CA,Between $500K and $999K,3.32,4853
+CA,Between $5M and $9.99M,4.96,1737
+CA,Greater than $10M,3.38,2692
+CA,Less than $100K,1.08,4803
+CO,Between $100K and $499K,3.75,2719
+CO,Between $1M and $4.99M,4.53,1554
+CO,Between $500K and $999K,4.3,1170
+CO,Between $5M and $9.99M,4.06,320
+CO,Greater than $10M,3.9,426
+CO,Less than $100K,6.79,884
+CT,Between $100K and $499K,5.51,1765
+CT,Between $1M and $4.99M,5.68,899
+CT,Between $500K and $999K,5.62,679
+CT,Between $5M and $9.99M,2.85,245
+CT,Greater than $10M,2.38,400
+CT,Less than $100K,8.59,811
+DC,Between $100K and $499K,5.4,1111
+DC,Between $1M and $4.99M,5.97,1516
+DC,Between $500K and $999K,5.38,758
+DC,Between $5M and $9.99M,5.8,500
+DC,Greater than $10M,5.15,759
+DC,Less than $100K,19.46,339
+DE,Between $100K and $499K,3.35,458
+DE,Between $1M and $4.99M,8.01,273
+DE,Between $500K and $999K,8.09,156
+DE,Between $5M and $9.99M,2.52,57
+DE,Greater than $10M,4.19,68
+DE,Less than $100K,0,216
+FL,Between $100K and $499K,2.59,5334
+FL,Between $1M and $4.99M,3.7,2820
+FL,Between $500K and $999K,3.31,2036
+FL,Between $5M and $9.99M,3.41,621
+FL,Greater than $10M,2.78,1043
+FL,Less than $100K,2.84,2223
+GA,Between $100K and $499K,3.76,3003
+GA,Between $1M and $4.99M,5,1386
+GA,Between $500K and $999K,4.21,1157
+GA,Between $5M and $9.99M,3.57,323
+GA,Greater than $10M,2.29,562
+GA,Less than $100K,6.14,1075
+HI,Between $100K and $499K,2.02,587
+HI,Between $1M and $4.99M,4.58,365
+HI,Between $500K and $999K,4.38,236
+HI,Between $5M and $9.99M,3.56,77
+HI,Greater than $10M,2.62,120
+HI,Less than $100K,5.94,235
+IA,Between $100K and $499K,3.91,1815
+IA,Between $1M and $4.99M,4.75,669
+IA,Between $500K and $999K,4.46,549
+IA,Between $5M and $9.99M,3.51,168
+IA,Greater than $10M,2.59,305
+IA,Less than $100K,15.28,830
+ID,Between $100K and $499K,4.51,638
+ID,Between $1M and $4.99M,6.17,312
+ID,Between $500K and $999K,4.52,236
+ID,Between $5M and $9.99M,2.6,40
+ID,Greater than $10M,2.89,73
+ID,Less than $100K,10.89,204
+IL,Between $100K and $499K,5.54,4466
+IL,Between $1M and $4.99M,5.57,2491
+IL,Between $500K and $999K,5.84,1712
+IL,Between $5M and $9.99M,4.15,638
+IL,Greater than $10M,3.54,1051
+IL,Less than $100K,9.96,1784
+IN,Between $100K and $499K,3.49,2942
+IN,Between $1M and $4.99M,4.89,1262
+IN,Between $500K and $999K,5.29,1076
+IN,Between $5M and $9.99M,4.98,270
+IN,Greater than $10M,3.36,489
+IN,Less than $100K,4.66,1075
+KS,Between $100K and $499K,2.5,1247
+KS,Between $1M and $4.99M,4.08,567
+KS,Between $500K and $999K,4.27,437
+KS,Between $5M and $9.99M,4.34,130
+KS,Greater than $10M,2.75,248
+KS,Less than $100K,0.39,522
+KY,Between $100K and $499K,3.97,1572
+KY,Between $1M and $4.99M,5.13,665
+KY,Between $500K and $999K,5.93,542
+KY,Between $5M and $9.99M,3.96,148
+KY,Greater than $10M,2.75,289
+KY,Less than $100K,3.15,607
+LA,Between $100K and $499K,2.49,1457
+LA,Between $1M and $4.99M,4.89,716
+LA,Between $500K and $999K,4.6,535
+LA,Between $5M and $9.99M,4.23,147
+LA,Greater than $10M,3.57,226
+LA,Less than $100K,3.94,572
+MA,Between $100K and $499K,6.99,3176
+MA,Between $1M and $4.99M,6.85,1984
+MA,Between $500K and $999K,6.89,1319
+MA,Between $5M and $9.99M,5.25,462
+MA,Greater than $10M,3.6,937
+MA,Less than $100K,11.67,1462
+MD,Between $100K and $499K,4.32,2506
+MD,Between $1M and $4.99M,5.62,1317
+MD,Between $500K and $999K,5.14,905
+MD,Between $5M and $9.99M,5.23,332
+MD,Greater than $10M,3.24,599
+MD,Less than $100K,3.67,999
+ME,Between $100K and $499K,6.66,848
+ME,Between $1M and $4.99M,5.79,413
+ME,Between $500K and $999K,5.8,297
+ME,Between $5M and $9.99M,3.53,76
+ME,Greater than $10M,2.81,158
+ME,Less than $100K,0.54,341
+MI,Between $100K and $499K,4.67,3475
+MI,Between $1M and $4.99M,4.45,1726
+MI,Between $500K and $999K,4.57,1294
+MI,Between $5M and $9.99M,3.25,411
+MI,Greater than $10M,2.67,671
+MI,Less than $100K,9.39,1350
+MN,Between $100K and $499K,4.16,3081
+MN,Between $1M and $4.99M,5.33,1504
+MN,Between $500K and $999K,4.66,1129
+MN,Between $5M and $9.99M,2.99,404
+MN,Greater than $10M,2.89,633
+MN,Less than $100K,12.8,1419
+MO,Between $100K and $499K,3.64,2435
+MO,Between $1M and $4.99M,5.27,1204
+MO,Between $500K and $999K,4.84,902
+MO,Between $5M and $9.99M,4.36,279
+MO,Greater than $10M,1.4,646
+MO,Less than $100K,3.18,1036
+MS,Between $100K and $499K,4.36,928
+MS,Between $1M and $4.99M,4.13,391
+MS,Between $500K and $999K,4.47,357
+MS,Between $5M and $9.99M,3.26,75
+MS,Greater than $10M,1.41,123
+MS,Less than $100K,2.48,339
+MT,Between $100K and $499K,3.71,805
+MT,Between $1M and $4.99M,5.54,356
+MT,Between $500K and $999K,5.14,296
+MT,Between $5M and $9.99M,3.88,83
+MT,Greater than $10M,4.67,121
+MT,Less than $100K,13.04,283
+NC,Between $100K and $499K,5.83,3732
+NC,Between $1M and $4.99M,5.23,1768
+NC,Between $500K and $999K,5.15,1390
+NC,Between $5M and $9.99M,4.07,385
+NC,Greater than $10M,2.89,541
+NC,Less than $100K,11.2,1199
+ND,Between $100K and $499K,4.26,539
+ND,Between $1M and $4.99M,4.17,240
+ND,Between $500K and $999K,3.9,174
+ND,Between $5M and $9.99M,4.74,50
+ND,Greater than $10M,4.65,117
+ND,Less than $100K,3.59,176
+NE,Between $100K and $499K,5.27,1018
+NE,Between $1M and $4.99M,5.25,441
+NE,Between $500K and $999K,5.06,352
+NE,Between $5M and $9.99M,4.02,94
+NE,Greater than $10M,6.11,167
+NE,Less than $100K,10.4,414
+NH,Between $100K and $499K,5.14,748
+NH,Between $1M and $4.99M,5.98,319
+NH,Between $500K and $999K,5.26,275
+NH,Between $5M and $9.99M,4.92,57
+NH,Greater than $10M,3.8,147
+NH,Less than $100K,7.78,282
+NJ,Between $100K and $499K,4.42,3162
+NJ,Between $1M and $4.99M,4.55,1602
+NJ,Between $500K and $999K,4.81,1008
+NJ,Between $5M and $9.99M,2.91,445
+NJ,Greater than $10M,2.48,579
+NJ,Less than $100K,6.89,1785
+NM,Between $100K and $499K,4.33,773
+NM,Between $1M and $4.99M,5.61,414
+NM,Between $500K and $999K,5.92,325
+NM,Between $5M and $9.99M,3.7,64
+NM,Greater than $10M,2.78,101
+NM,Less than $100K,14.52,274
+NV,Between $100K and $499K,2.07,625
+NV,Between $1M and $4.99M,2.42,363
+NV,Between $500K and $999K,3.22,225
+NV,Between $5M and $9.99M,3.36,88
+NV,Greater than $10M,1.62,115
+NV,Less than $100K,0,296
+NY,Between $100K and $499K,5.68,8188
+NY,Between $1M and $4.99M,5.08,5234
+NY,Between $500K and $999K,5.31,3362
+NY,Between $5M and $9.99M,3.77,1400
+NY,Greater than $10M,2.89,2565
+NY,Less than $100K,11.31,3759
+OH,Between $100K and $499K,3.58,5090
+OH,Between $1M and $4.99M,4.01,2380
+OH,Between $500K and $999K,5.23,1710
+OH,Between $5M and $9.99M,3.87,576
+OH,Greater than $10M,3.15,906
+OH,Less than $100K,7.29,1981
+OK,Between $100K and $499K,3.42,1259
+OK,Between $1M and $4.99M,4.38,609
+OK,Between $500K and $999K,3.74,516
+OK,Between $5M and $9.99M,2.49,127
+OK,Greater than $10M,1.96,188
+OK,Less than $100K,3.72,451
+OR,Between $100K and $499K,4.43,1952
+OR,Between $1M and $4.99M,4.86,1069
+OR,Between $500K and $999K,4.91,817
+OR,Between $5M and $9.99M,4.08,226
+OR,Greater than $10M,3.18,333
+OR,Less than $100K,11.24,577
+PA,Between $100K and $499K,5.12,6579
+PA,Between $1M and $4.99M,5.24,2916
+PA,Between $500K and $999K,5.26,2132
+PA,Between $5M and $9.99M,3.68,737
+PA,Greater than $10M,2.53,1382
+PA,Less than $100K,12.01,2526
+RI,Between $100K and $499K,5.65,586
+RI,Between $1M and $4.99M,5.75,318
+RI,Between $500K and $999K,5.38,187
+RI,Between $5M and $9.99M,3.57,81
+RI,Greater than $10M,3.17,129
+RI,Less than $100K,11.99,230
+SC,Between $100K and $499K,4.88,1423
+SC,Between $1M and $4.99M,4.56,742
+SC,Between $500K and $999K,5.01,525
+SC,Between $5M and $9.99M,3.66,128
+SC,Greater than $10M,2.14,257
+SC,Less than $100K,4.71,568
+SD,Between $100K and $499K,6.14,545
+SD,Between $1M and $4.99M,6.59,246
+SD,Between $500K and $999K,7.15,176
+SD,Between $5M and $9.99M,4.39,48
+SD,Greater than $10M,2.82,107
+SD,Less than $100K,24.32,186
+TN,Between $100K and $499K,3.63,2399
+TN,Between $1M and $4.99M,5.32,1122
+TN,Between $500K and $999K,4.43,855
+TN,Between $5M and $9.99M,3.43,256
+TN,Greater than $10M,2.33,451
+TN,Less than $100K,7.75,773
+TX,Between $100K and $499K,2.14,7871
+TX,Between $1M and $4.99M,3.72,3670
+TX,Between $500K and $999K,3.2,2998
+TX,Between $5M and $9.99M,3.39,771
+TX,Greater than $10M,2.04,1246
+TX,Less than $100K,2.54,3107
+UT,Between $100K and $499K,3.84,822
+UT,Between $1M and $4.99M,4.87,461
+UT,Between $500K and $999K,3.54,292
+UT,Between $5M and $9.99M,3.93,118
+UT,Greater than $10M,3.35,135
+UT,Less than $100K,12.43,246
+VA,Between $100K and $499K,5.3,3499
+VA,Between $1M and $4.99M,5.9,1912
+VA,Between $500K and $999K,4.93,1320
+VA,Between $5M and $9.99M,5.38,421
+VA,Greater than $10M,4.62,705
+VA,Less than $100K,12.64,1348
+VT,Between $100K and $499K,5.03,636
+VT,Between $1M and $4.99M,5.26,289
+VT,Between $500K and $999K,5.28,236
+VT,Between $5M and $9.99M,4.47,76
+VT,Greater than $10M,3.42,88
+VT,Less than $100K,12.6,190
+WA,Between $100K and $499K,4.15,2947
+WA,Between $1M and $4.99M,4.85,1657
+WA,Between $500K and $999K,4.55,1162
+WA,Between $5M and $9.99M,5.09,320
+WA,Greater than $10M,2.6,571
+WA,Less than $100K,8.23,804
+WI,Between $100K and $499K,6.04,2584
+WI,Between $1M and $4.99M,5.75,1244
+WI,Between $500K and $999K,5.77,894
+WI,Between $5M and $9.99M,4.58,252
+WI,Greater than $10M,3.1,447
+WI,Less than $100K,13.38,947
+WV,Between $100K and $499K,3.66,857
+WV,Between $1M and $4.99M,4.69,375
+WV,Between $500K and $999K,6.02,267
+WV,Between $5M and $9.99M,4.94,59
+WV,Greater than $10M,2.52,138
+WV,Less than $100K,2.14,356
+WY,Between $100K and $499K,4.74,437
+WY,Between $1M and $4.99M,5.26,166
+WY,Between $500K and $999K,6.54,166
+WY,Between $5M and $9.99M,5.42,30
+WY,Greater than $10M,2.86,28
+WY,Less than $100K,10.34,143
