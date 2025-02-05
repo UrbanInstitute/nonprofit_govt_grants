@@ -2,15 +2,15 @@
 # Title: Federal Funding Freeze Blog Post
 # Description: This script contains the code to replicate tables pulled for a
 # blog post containing details on the how badly nonprofits can be affected by 
-# the federal funding freeze
+# the federal funding freeze. We are using data for the 2021 tax year.
 
-# Setup
+# Create necessary folders
 dir.create("data")
 dir.create("data/raw")
 dir.create("data/processed")
 dir.create("R")
 
-# Packages
+# Packages and default datasets
 library(rio)
 library(data.table)
 library(dtplyr)
@@ -19,23 +19,22 @@ library(tidyr)
 library(purrr)
 library(tidylog)
 library(usdata)
-states <- as.character(usdata::state_stats$abbr)
-# Scripts
+states <- as.character(usdata::state_stats$abbr) # 51 states
+
+# Helper Scripts
 source("R/spending_on_hand.R")
 source("R/derive_ein2.R")
 
-# Lets' get the most recent 990 Data in here!
-
-## Lets' compare the coverage between 2022 and 2023
-
 # (1) - Download raw data
 
-# SOI for 2023 Calendar Year
-download.file("https://www.irs.gov/pub/irs-soi/23eoextract990.xlsx", 
-              "data/raw/soi23_raw.xlsx")
 # SOI for 2022 Calendar Year
 download.file("https://www.irs.gov/pub/irs-soi/22eoextract990.xlsx", 
               "data/raw/soi22_raw.xlsx")
+
+# SOI for 2021 Calendar Year
+download.file("https://www.irs.gov/pub/irs-soi/23eoextract990.xlsx", 
+              "data/raw/soi21_raw.xlsx")
+
 # Unified BMF
 download.file("https://nccsdata.s3.amazonaws.com/harmonized/bmf/unified/BMF_UNIFIED_V1.1.csv",
               "data/raw/unified_bmf.csv")

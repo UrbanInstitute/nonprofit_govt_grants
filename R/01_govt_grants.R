@@ -188,3 +188,34 @@ gvt_grnt_byexpense <- gvt_grnt |>
 # (5) - Save data
 rio::export(gvt_grnt_bysubsector, "data/processed/govt_grant_bysubsector.csv")
 rio::export(gvt_grnt_byexpense, "data/processed/govt_grant_byexpense.csv")
+
+
+gvt_grnt |>
+  dplyr::mutate(
+    expense_category = dplyr::case_when(
+      total_expenses < 50000 ~ "Less than $50k",
+      total_expenses >= 50000 &
+        total_expenses < 100000 ~ "Between $50K and $99K",
+      total_expenses >= 100000 &
+        total_expenses < 500000 ~ "Between $100K and $499K",
+      total_expenses >= 500000 &
+        total_expenses < 1000000 ~ "Between $500K and $999K",
+      total_expenses >= 1000000 &
+        total_expenses < 5000000 ~ "Between $1M and $4.99M",
+      total_expenses >= 5000000 &
+        total_expenses < 10000000 ~ "Between $5M and $9.99M",
+      total_expenses >= 10000000 ~ "Greater than $10M",
+      .default = "No expense data available"
+    )
+  ) |>
+  dplyr::mutate(
+    received_government_grant = ifelse(govt_grant > 0, 1, 0)
+  ) |>
+  dplyr::group_by(expense_category) |>
+  dplyr::summarise(
+    number_received_government_grant = round(sum(received_government_grant, na.rm = TRUE), 2),
+    number_nonprofits = dplyr::n_distinct(ein)
+  ) |> 
+  dplyr::mutate(
+    proportion_received_government_grant = round(number_received_government_grant / number_nonprofits, 2)
+  ) |> kableExtra::kable() |> kableExtra::kable_styling()
