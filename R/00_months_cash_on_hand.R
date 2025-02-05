@@ -24,6 +24,7 @@ states <- as.character(usdata::state_stats$abbr) # 51 states
 # Helper Scripts
 source("R/spending_on_hand.R")
 source("R/derive_ein2.R")
+source("R/proportion_govt_grant.R")
 
 # (1) - Download raw data
 
@@ -34,6 +35,16 @@ download.file("https://gt990datalake-rawdata.s3.us-east-1.amazonaws.com/EfileDat
               "data/raw/soi22_raw.xlsx")
 download.file("https://gt990datalake-rawdata.s3.us-east-1.amazonaws.com/EfileData/Extracts/Data/21eoextract990.xlsx", 
               "data/raw/soi21_raw.xlsx")
+
+# Part 08 and 09 Efile data for 2021 tax year
+download.file(
+  "https://nccs-efile.s3.us-east-1.amazonaws.com/parsed/F9-P08-T00-REVENUE-2021.csv",
+  "data/raw/efile_p08_2021.csv"
+)
+download.file(
+  "https://nccs-efile.s3.us-east-1.amazonaws.com/parsed/F9-P09-T00-EXPENSES-2021.csv",
+  "data/raw/efile_p09_2021.csv"
+)
 
 # Unified BMF
 download.file("https://nccsdata.s3.amazonaws.com/harmonized/bmf/unified/BMF_UNIFIED_V1.1.csv",
@@ -124,6 +135,15 @@ tract_rship <- data.table::fread("data/raw/tract_rship.txt",
                                  sep = "|",
                                  select = tract_rship_cols)
 
+# (2.5) Efile data
+
+efile_cols <- list(
+  character = c("ORG_EIN", "TAX_YEAR"),
+  numeric = c("F9_08_REV_CONTR_GOVT_GRANT", "F9_08_REV_TOT_TOT")
+)
+
+efile_21 <- data.table::fread("data/raw/efile_p08_2021.csv", 
+                              select = efile_cols)
 
 # (3) - Wrangle Data
 
@@ -167,40 +187,43 @@ bmf_sample <- unified_bmf |>
     as.integer(ORG_YEAR_LAST) >= 2021
   ) |>
   dplyr::mutate(
-    SUBSECTOR = substr(NTEEV2, 1, 3)
-  )
+    SUBSECTOR = substr(NTEEV2, 1, 3),
+    GEOID_TRACT_10 = substr(CENSUS_BLOCK_FIPS, 1, 11),
+    CENSUS_REGION = case_when(
+      CENSUS_STATE_ABBR %in% c("CT", "ME", "MA", "NH", "RI", "VT") ~ "New England",
+      CENSUS_STATE_ABBR %in% c("NJ", "NY", "PA") ~ "Mid-Atlantic",
+      CENSUS_STATE_ABBR %in% c("IL", "IN", "MI", "OH", "WI") ~ "East North Central",
+      CENSUS_STATE_ABBR %in% c("IA", "KS", "MN", "MO", "NE", "ND", "SD") ~ "West North Central",
+      CENSUS_STATE_ABBR %in% c("DE", "FL", "GA", "MD", "NC", "SC", "VA", "WV", "DC") ~ "South Atlantic",
+      CENSUS_STATE_ABBR %in% c("AL", "KY", "MS", "TN") ~ "East South Central",
+      CENSUS_STATE_ABBR %in% c("AR", "LA", "OK", "TX") ~ "West South Central",
+      CENSUS_STATE_ABBR %in% c("AZ", "CO", "ID", "MT", "NV", "NM", "UT", "WY") ~ "Mountain",
+      CENSUS_STATE_ABBR %in% c("AK", "CA", "HI", "OR", "WA") ~ "Pacific",
+      .default = NA
+    ) # Add census regions based on states
+  ) |>
+  tidylog::left_join(tract_rship, by = "GEOID_TRACT_10") |> # map 2020 tract fips
+  tidylog::left_join(congress_districts_119, by = "GEOID_TRACT_20") # Congressional district data
 
-bmf_2025[, SUBSECTOR := data.table::fcase(
-  stringr::str_starts(NTEE_CD, "A"), "ART",
-  stringr::str_starts(NTEE_CD, "B4") | stringr::str_starts(NTEE_CD, "B5"), "EDU",
-  stringr::str_starts(NTEE_CD, "B"), "UNI",
-  stringr::str_starts(NTEE_CD, "C") | stringr::str_starts(NTEE_CD, "D"), "ENV",
-  stringr::str_starts(NTEE_CD, "E2"), "HOS",
-  stringr::str_starts(NTEE_CD, "E") | 
-    stringr::str_starts(NTEE_CD, "F") | 
-    stringr::str_starts(NTEE_CD, "G") | 
-    stringr::str_starts(NTEE_CD, "H"), "HEL",
-  stringr::str_starts(NTEE_CD, "I") | 
-    stringr::str_starts(NTEE_CD, "J") | 
-    stringr::str_starts(NTEE_CD, "K") | 
-    stringr::str_starts(NTEE_CD, "L") | 
-    stringr::str_starts(NTEE_CD, "M") | 
-    stringr::str_starts(NTEE_CD, "N") | 
-    stringr::str_starts(NTEE_CD, "O") | 
-    stringr::str_starts(NTEE_CD, "P"), "HMS",
-  stringr::str_starts(NTEE_CD, "Q"), "IFA",
-  stringr::str_starts(NTEE_CD, "R") | 
-    stringr::str_starts(NTEE_CD, "S") | 
-    stringr::str_starts(NTEE_CD, "T") | 
-    stringr::str_starts(NTEE_CD, "U") | 
-    stringr::str_starts(NTEE_CD, "V") | 
-    stringr::str_starts(NTEE_CD, "W"), "PSB",
-  stringr::str_starts(NTEE_CD, "X"), "REL",
-  stringr::str_starts(NTEE_CD, "Y"), "MMB",
-  default = "UNU"
-)] # Subsector
+# (3.3) efile data
 
-# (4) Compute metrics - Months of Cash on Hand
+efile_21 <- efile_21 |>
+  dplyr::filter(TAX_YEAR == "2021") |>
+  dplyr::mutate(
+    EIN2 = purrr::pmap_chr(
+      list(ORG_EIN),
+      derive_ein2,
+      .progress = TRUE
+    )
+  ) |>
+  dplyr::select(F9_08_REV_CONTR_GOVT_GRANT, 
+                F9_08_REV_TOT_TOT,
+                EIN2)
+
+
+# (4) Compute metrics 
+
+# (4.1) - Months of Cash on Hand
 
 soi_sample <- soi_sample |>
   dplyr::mutate(
@@ -219,13 +242,58 @@ soi_sample <- soi_sample |>
     .progress = TRUE
   ))
 
-# (5) - Merge with BMF data
+# (4.2) - Proportion of revenue derived from government grants
 
-soi_bmf_merge <- soi_sample |>
+efile_sample <- efile_21 |>
+  dplyr::mutate(
+    proportion_govt_grant = purrr::pmap_dbl(
+      list(
+        F9_08_REV_CONTR_GOVT_GRANT,
+        F9_08_REV_TOT_TOT
+      ),
+      proportion_govt_grant,
+      .progress = TRUE
+    )
+  )
+
+# (5) - Merge datasets and save intermediate data
+
+full_sample_int <- bmf_sample |>
   tidylog::left_join(
-    unified_bmf,
+    soi_sample,
+    by = c("EIN2" = "EIN2")
+  ) |>
+  tidylog::left_join(
+    efile_sample,
     by = c("EIN2" = "EIN2")
   )
+
+data.table::fwrite(full_sample_int, "data/intermediate/full_sample.csv")
+
+# (6) Post process and save intermediate datasets
+
+full_sample_proc <- full_sample_int |>
+  dplyr::select(EIN2,
+                CENSUS_REGION,
+                CENSUS_STATE_ABBR,
+                NAMELSAD_CD119_20,
+                SUBSECTOR,
+                expense_category,
+                rptlndbldgeqptcd,
+                months_cash_on_hand,
+                F9_08_REV_CONTR_GOVT_GRANT,
+                proportion_govt_grant
+                ) |>
+  dplyr::rename(
+    CONGRESS_DISTRICT_NAME = NAMELSAD_CD119_20,
+    TANGIBLE_ASSETS_REPORTED = rptlndbldgeqptcd,
+    GOVERNMENT_GRANT_DOLLAR_AMOUNT = F9_08_REV_CONTR_GOVT_GRANT,
+    PROPORTION_GOVT_GRANT = proportion_govt_grant,
+    EXPENSE_CATEGORY = expense_category,
+    MONTHS_CASH_ON_HAND = months_cash_on_hand 
+  )
+
+data.table::fwrite(full_sample_proc, "data/intermediate/full_sample_processed.csv") # Save intermediate
 
 # (6) - Post processing data (mcoh: months of cash on hand)
 
