@@ -27,111 +27,148 @@ source("R/derive_ein2.R")
 
 # (1) - Download raw data
 
-# SOI for 2022 Calendar Year
-download.file("https://www.irs.gov/pub/irs-soi/22eoextract990.xlsx", 
+# Form 990 SOI for 2023, 2022 and 2021 Calendar Year
+download.file("https://gt990datalake-rawdata.s3.us-east-1.amazonaws.com/EfileData/Extracts/Data/23eoextract990.xlsx", 
+              "data/raw/soi23_raw.xlsx")
+download.file("https://gt990datalake-rawdata.s3.us-east-1.amazonaws.com/EfileData/Extracts/Data/22eoextract990.xlsx", 
               "data/raw/soi22_raw.xlsx")
-
-# SOI for 2021 Calendar Year
-download.file("https://www.irs.gov/pub/irs-soi/23eoextract990.xlsx", 
+download.file("https://gt990datalake-rawdata.s3.us-east-1.amazonaws.com/EfileData/Extracts/Data/21eoextract990.xlsx", 
               "data/raw/soi21_raw.xlsx")
 
 # Unified BMF
 download.file("https://nccsdata.s3.amazonaws.com/harmonized/bmf/unified/BMF_UNIFIED_V1.1.csv",
               "data/raw/unified_bmf.csv")
-# Most recent BMF - 2025
-download.file("https://nccsdata.s3.us-east-1.amazonaws.com/raw/bmf/2025-01-BMF.csv",
-              "data/raw/bmf_2025.csv")
 
-# (2) -  Read in .xlsx files and save to csv, with relevant columns filtered
+# 119th Congressional district to 2020 Tract relationship
+# https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_cd11920_tract20_natl.txt
+download.file("https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_cd11920_tract20_natl.txt",
+              "data/raw/congress_fips.txt")
 
-# (2.1) - Columns to read in
+# 2010 to 2020 Tract relationship
+download.file("https://www2.census.gov/geo/docs/maps-data/data/rel2020/tract/tab20_tract20_tract10_natl.txt",
+              "data/raw/tract_rship.txt")
 
-soi_23_cols <- c(
-  "ein", 
-  "tax_pd",
-  "unrstrctnetasstsend", # unrestricted net assets
-  "lndbldgsequipend", # land, buildings, and equipment
-  "txexmptbndsend", # tax-exempt bond liabilities
-  "secrdmrtgsend", # secured mortgages and notes payable
-  "unsecurednotesend", # unsecured mortgages and notes payable
-  "totfuncexpns", # total functional expenses - same as total expenses
-  "deprcatndepletn" # depreciation
+# (2) -  Read in and filter datasets
+
+# (2.1) - SOI Data
+
+soi_cols <- list(
+  character = c("ein",
+                "EIN",
+                "rptlndbldgeqptcd"),
+  # land, buildings and equipment reported?
+  numeric = c(
+    "tax_pd",
+    "unrstrctnetasstsend",
+    # unrestricted net assets
+    "lndbldgsequipend",
+    # land, buildings, and equipment
+    "txexmptbndsend",
+    # tax-exempt bond liabilities
+    "secrdmrtgsend",
+    # secured mortgages and notes payable
+    "unsecurednotesend",
+    # unsecured mortgages and notes payable
+    "totfuncexpns",
+    # total functional expenses - same as total expenses
+    "deprcatndepletn"
+  ) # depreciation
 )
 
-soi_22_cols <- c(
-  "EIN", 
-  "tax_pd",
-  "unrstrctnetasstsend", # unrestricted net assets
-  "lndbldgsequipend", # land, buildings, and equipment
-  "txexmptbndsend", # tax-exempt bond liabilities
-  "secrdmrtgsend", # secured mortgages and notes payable
-  "unsecurednotesend", # unsecured mortgages and notes payable
-  "totfuncexpns", # total functional expenses - same as total expenses
-  "deprcatndepletn" # depreciation
+# Read in SOI Files and also save them to .csv for easier reading
+soi_23 <- readxl::read_xlsx("data/raw/soi23_raw.xlsx")
+rio::export(soi_23, "data/raw/soi23_raw.csv")
+soi_22 <- readxl::read_xlsx("data/raw/soi22_raw.xlsx")
+rio::export(soi_22, "data/raw/soi22_raw.csv")
+soi_21 <- readxl::read_xlsx("data/raw/soi21_raw.xlsx")
+rio::export(soi_21, "data/raw/soi21_raw.csv")
+
+# Select relevant columns
+soi_23 <- data.table::fread("data/raw/soi23_raw.csv", select = soi_cols)
+soi_22 <- data.table::fread("data/raw/soi22_raw.csv", select = soi_cols)
+soi_21 <- data.table::fread("data/raw/soi21_raw.csv", select = soi_cols)
+
+bmf_cols <- list(
+  character = c(
+    "EIN2",
+    "NTEEV2",
+    "NTEE_IRS",
+    "CENSUS_STATE_ABBR",
+    "ORG_YEAR_LAST",
+    "CENSUS_BLOCK_FIPS"
+  )
 )
 
-soi_numeric_cols <- c(
-  "unrstrctnetasstsend",
-  "lndbldgsequipend",
-  "txexmptbndsend",
-  "secrdmrtgsend",
-  "unsecurednotesend",
-  "totfuncexpns",
-  "deprcatndepletn"
+# (2.2) - Unified BMF
+
+# Unified BMF with relevant columns selected
+unified_bmf <- data.table::fread("data/raw/unified_bmf.csv", 
+                                 select = bmf_cols)
+
+# (2.3) - Congressional District Data
+
+congress_district_cols <- list(
+  character = c("GEOID_TRACT_20", "NAMELSAD_CD119_20")
 )
 
-# SOI Files
-soi_2023 <- readxl::read_xlsx("data/raw/23eoextract990.xlsx")
-rio::export(soi_2023, "data/raw/soi23_raw.csv")
-soi_2022 <- readxl::read_xlsx("data/raw/22eoextract990.xlsx")
-rio::export(soi_2022, "data/raw/soi22_raw.csv")
+congress_districts_119 <- data.table::fread("data/raw/congress_fips.txt", 
+                                            sep = "|",
+                                            select = congress_district_cols)
 
-soi_23 <- data.table::fread("data/raw/soi23_raw.csv", select = soi_23_cols)
-soi_22 <- data.table::fread("data/raw/soi22_raw.csv", select = soi_22_cols)
+# (2.4) 2010 to 2020 Tract relationship
 
-# Unified BMF
-unified_bmf <- data.table::fread(
-  "~/Urban/NCCS/nccstools/harmonize/data/unified/unified_bmf/BMF_UNIFIED_V1.1.csv",
-  select = c("EIN2", "NTEEV2", "CENSUS_STATE_ABBR")
+tract_rship_cols <- list(
+  character = c("GEOID_TRACT_10", "GEOID_TRACT_20")
 )
+tract_rship <- data.table::fread("data/raw/tract_rship.txt",
+                                 sep = "|",
+                                 select = tract_rship_cols)
 
-# 2025 BMF
-bmf_2025 <- data.table::fread("data/raw/bmf_2025.csv", select = c("EIN", 
-                                                                  "STATE", 
-                                                                  "NTEE_CD"))
 
 # (3) - Wrangle Data
 
-# (3.1) - Rename columns
-soi_22 <- soi_22 |>
-  dplyr::rename(ein = EIN)
+# (3.1) - Wrangle SOI data
 
-# (3.2) - Combine SOI datasets into sample
-soi_sample <- data.table::rbindlist(list(soi_22, soi_23))
+data.table::setnames(soi_23, "ein", "EIN")
+soi_raw <- data.table::rbindlist(list(soi_23, soi_22, soi_21))
+soi_sample <- soi_raw |>
+  dplyr::mutate(
+    tax_year = substr(tax_pd, 1, 4)
+  ) |>
+  dplyr::filter(
+    tax_year == "2021"
+  ) |>
+  dplyr::mutate(across(dplyr::all_of(soi_cols$numeric), ~ tidyr::replace_na(., 0)),
+                EIN2 = purrr::pmap_chr(
+                  list(EIN),
+                  derive_ein2,
+                  .progress = TRUE
+                ),
+                expense_category = dplyr::case_when(
+                  totfuncexpns < 50000 ~ "Less than $50K",
+                  totfuncexpns >= 50000 & totfuncexpns < 100000 ~ "Between $50K and $100K",
+                  totfuncexpns >= 100000 &
+                    totfuncexpns < 500000 ~ "Between $100K and $499K",
+                  totfuncexpns >= 500000 &
+                    totfuncexpns < 1000000 ~ "Between $500K and $999K",
+                  totfuncexpns >= 1000000 &
+                    totfuncexpns < 5000000 ~ "Between $1M and $4.99M",
+                  totfuncexpns >= 5000000 &
+                    totfuncexpns < 10000000 ~ "Between $5M and $9.99M",
+                  totfuncexpns >= 10000000 ~ "Greater than $10M",
+                  .default = "No Expenses Provided"
+                )) # set factor levels
 
-# (3.3) - Wrangle datatypes
-soi_sample <- soi_sample |>
-  dplyr::mutate(across(dplyr::all_of(soi_numeric_cols), as.numeric))
+# 318,832 Form 990 tax records
 
-# (3.5) - Process columns
-
-# SOI
-soi_sample <- soi_sample |>
-  dplyr::mutate(tax_year = as.character(substr(tax_pd, 1, 4))) |> # Tax Year
-  dplyr::mutate(EIN2 = purrr::pmap_chr(
-    list(ein),
-    derive_ein2,
-    .progress = TRUE
-  )) |> # EIN2
-  dplyr::filter(tax_year == "2022")
-
-# BMF 2025
-bmf_2025 <- bmf_2025 |>
-  dplyr::mutate(EIN2 = purrr::pmap_chr(
-    list(EIN),
-    derive_ein2,
-    .progress = TRUE
-  )) # EIN2
+# (3.2) - Wrangle BMF Data
+bmf_sample <- unified_bmf |>
+  dplyr::filter(
+    as.integer(ORG_YEAR_LAST) >= 2021
+  ) |>
+  dplyr::mutate(
+    SUBSECTOR = substr(NTEEV2, 1, 3)
+  )
 
 bmf_2025[, SUBSECTOR := data.table::fcase(
   stringr::str_starts(NTEE_CD, "A"), "ART",
@@ -163,14 +200,7 @@ bmf_2025[, SUBSECTOR := data.table::fcase(
   default = "UNU"
 )] # Subsector
 
-# Replace all NAs with zero
-soi_sample <- soi_sample |> 
-  dplyr::mutate(across(dplyr::all_of(soi_numeric_cols), ~ tidyr::replace_na(., 0)))
-
-# (3.4) - Summary
-summary(soi_sample)
-
-# (4) Compute months of cash on hand
+# (4) Compute metrics - Months of Cash on Hand
 
 soi_sample <- soi_sample |>
   dplyr::mutate(
@@ -193,7 +223,7 @@ soi_sample <- soi_sample |>
 
 soi_bmf_merge <- soi_sample |>
   tidylog::left_join(
-    bmf_2025,
+    unified_bmf,
     by = c("EIN2" = "EIN2")
   )
 
@@ -218,19 +248,7 @@ mcoh_bysubsector <- mcoh |>
 # By state and expense category
 mcoh_byexpense <- mcoh |>
   dplyr::mutate(
-    expense_category = dplyr::case_when(
-      total_expenses < 100000 ~ "Less than $100K",
-      total_expenses >= 100000 &
-        total_expenses < 500000 ~ "Between $100K and $499K",
-      total_expenses >= 500000 &
-        total_expenses < 1000000 ~ "Between $500K and $999K",
-      total_expenses >= 1000000 &
-        total_expenses < 5000000 ~ "Between $1M and $4.99M",
-      total_expenses >= 5000000 &
-        total_expenses < 10000000 ~ "Between $5M and $9.99M",
-      total_expenses >= 10000000 ~ "Greater than $10M",
-      .default = "No Expenses Provided"
-    )
+    
   ) |>
   dplyr::group_by(state, expense_category) |>
   dplyr::summarise(
@@ -391,3 +409,10 @@ govt_grant_byexpense <- efile_merge |>
 # clean up codebase
 
 
+
+# bmf Block FIPs are from 2010 Census, district data is from 2010 census
+# relationship file maps 2010 tract to 2020 tract
+# 2020 tract - first 11 digits of 2020 block
+# Use this to map congressional districts at the tract level
+
+length(intersect(as.character(unified_bmf$CENSUS_BLOCK_FIPS), as.character(xwalk$block.census.geoid)))
