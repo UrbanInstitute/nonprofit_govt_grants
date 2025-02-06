@@ -1,8 +1,10 @@
 # Script Header
 # Title: Federal Funding Freeze Blog Post
-# Description: This script contains the code to replicate tables pulled for a
-# blog post containing details on the how badly nonprofits can be affected by 
-# the federal funding freeze. We are using data for the 2021 tax year.
+# Date created: 2025-01-31
+# Date last modified: 2025-01-31
+# Description: This script contains code to download, wrangle, and process data
+# for HTML fact sheets on nonprofits's fiscal sustainability and reliance on 
+# government grants for Tax Year 2021.
 
 # Create necessary folders
 dir.create("data")
