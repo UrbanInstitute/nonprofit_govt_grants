@@ -301,3 +301,4 @@ data.table::fwrite(full_sample_proc, "data/intermediate/full_sample_processed.cs
 
 # common functions
 # update BMF with new data
+# Check that I only included 501c3 public charities
