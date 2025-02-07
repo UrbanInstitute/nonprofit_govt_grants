@@ -109,7 +109,9 @@ bmf_cols <- list(
     "NTEE_IRS",
     "CENSUS_STATE_ABBR",
     "ORG_YEAR_LAST",
-    "CENSUS_BLOCK_FIPS"
+    "CENSUS_BLOCK_FIPS",
+    "BMF_SUBSECTION_CODE",
+    "NCCS_LEVEL_1"
   )
 )
 
@@ -154,6 +156,7 @@ efile_21 <- data.table::fread("data/raw/efile_p08_2021.csv",
 
 data.table::setnames(soi_23, "ein", "EIN")
 soi_raw <- data.table::rbindlist(list(soi_23, soi_22, soi_21))
+
 soi_sample <- soi_raw |>
   dplyr::mutate(
     tax_year = substr(tax_pd, 1, 4)
@@ -187,12 +190,13 @@ soi_sample <- soi_raw |>
 # (3.2) - Wrangle BMF Data
 bmf_sample <- unified_bmf |>
   dplyr::filter(
-    as.integer(ORG_YEAR_LAST) >= 2021
+    as.integer(ORG_YEAR_LAST) >= 2021,
+    BMF_SUBSECTION_CODE == "3" & NCCS_LEVEL_1 == "501C3 CHARITY"
   ) |>
   dplyr::mutate(
     SUBSECTOR = substr(NTEEV2, 1, 3),
     GEOID_TRACT_10 = substr(CENSUS_BLOCK_FIPS, 1, 11),
-    CENSUS_REGION = case_when(
+    CENSUS_REGION = dplyr::case_when(
       CENSUS_STATE_ABBR %in% c("CT", "ME", "MA", "NH", "RI", "VT") ~ "New England",
       CENSUS_STATE_ABBR %in% c("NJ", "NY", "PA") ~ "Mid-Atlantic",
       CENSUS_STATE_ABBR %in% c("IL", "IN", "MI", "OH", "WI") ~ "East North Central",
@@ -301,4 +305,3 @@ data.table::fwrite(full_sample_proc, "data/intermediate/full_sample_processed.cs
 
 # common functions
 # update BMF with new data
-# Check that I only included 501c3 public charities
