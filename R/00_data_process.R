@@ -246,7 +246,6 @@ soi_sample <- soi_sample |>
   ))
 
 # (4.2) - Proportion of revenue derived from government grants
-
 efile_sample <- efile_21 |>
   dplyr::mutate(
     proportion_govt_grant = purrr::pmap_dbl(
@@ -300,10 +299,5 @@ data.table::fwrite(full_sample_proc, "data/intermediate/full_sample_processed.cs
 
 ## TODO
 
-# Figure out 990EZ Plan
-# government grants need to be extracted from efile data - try xml shennanigans
 # common functions
 # update BMF with new data
-# Only include the 50 states
-# put into template
-# clean up codebase
