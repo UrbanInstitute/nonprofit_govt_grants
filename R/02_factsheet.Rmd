@@ -73,21 +73,41 @@ This series of fact sheets provides three 2021 data points at the national and s
 
 Each fact sheet displays these data points for the US or state overall and broken down by subsector and the size of their expenses.
 
-## `r params$geography`
+<div class="under-table-spacing"></div>
 
-### By Size
+# Analysis of `r params$geography`
+
+<div class="over-table-spacing"></div>
+
+#### By Size
 
 ```{r echo=FALSE}
-create_gt_table("data/intermediate/factsheet_test_expense_df.csv", "EXPENSE_CATEGORY", "Size")
+build_gt_table("data/intermediate/factsheet_test_expense_df.csv", "EXPENSE_CATEGORY", "Size")
 ```
 
-### By Subsector
+###### **Source**: *National Center for Charitable Statistics [2021 501(c)(3) Charities PZ Scope](https://urbaninstitute.github.io/nccs/catalogs/catalog-core.html), [2021 Efilers](https://nccs.urban.org/nccs/catalogs/catalog-efile.html) and [Unified  BMF](https://nccs.urban.org/nccs/datasets/bmf/)*
+
+###### **Notes**: *Disclaimers about the data.*
+
+<div class="under-table-spacing"></div>
+
+The same data can be disaggregated by Subsector.
+
+<div class="over-table-spacing"></div>
+
+#### By Subsector
 
 :::main_table
 ```{r echo=FALSE}
-create_gt_table("data/intermediate/factsheet_test_subsector_df.csv", "SUBSECTOR", "Subsector")
+build_gt_table("data/intermediate/factsheet_test_subsector_df.csv", "SUBSECTOR", "Subsector")
 ```
 :::
 
+
+###### **Source**: *National Center for Charitable Statistics [2021 501(c)(3) Charities PZ Scope](https://urbaninstitute.github.io/nccs/catalogs/catalog-core.html), [2021 Efilers](https://nccs.urban.org/nccs/catalogs/catalog-efile.html) and [Unified  BMF](https://nccs.urban.org/nccs/datasets/bmf/)*
+
+###### **Notes**: *Disclaimers about the data.*
+
+<div class="under-table-spacing"></div>
 
 [^1]: Bowman, Woods. 2011. “[Financial Capacity and Sustainability of Ordinary Nonprofits.](https://doi.org/10.1002/nml.20039)” Nonprofit Management & Leadership 22 (1): 37–51. 
