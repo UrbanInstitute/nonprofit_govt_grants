@@ -51,7 +51,7 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 source("R/build_gt_table.R")
 ```
 
-This series of fact sheets provides three 2022 data points at the national and state level:
+This series of fact sheets provides three 2021 data points at the national and state level:
 
 1.	**Number of 501(c)(3) public charities** – These data show the size of the charitable sector in each geography.
 
