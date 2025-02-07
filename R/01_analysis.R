@@ -10,6 +10,7 @@
 library(tidyverse)
 library(data.table)
 library(purrr)
+library(tidyr)
 
 # Load in data
 full_sample_proc <- data.table::fread("data/intermediate/full_sample_processed.csv")
@@ -36,9 +37,9 @@ for (grouping in c("EXPENSE_CATEGORY", "SUBSECTOR")) {
 regions <- c("West South Central", "New England", "South Atlantic", "West North Central", 
              "Mid-Atlantic", "East North Central", "Pacific", "Mountain", 
              "East South Central")
-cross_df <- crossing(group = groupings, region = regions)
+cross_df <- tidyr::crossing(group = groupings, region = regions)
 cross_df %>%
-  pwalk(function(group, region) {
+  purrr::pwalk(function(group, region) {
     factsheet_df_regional <- summarise_data(full_sample_proc, "CENSUS_REGION", region, group)
     data.table::fwrite(
       factsheet_df_regional,
@@ -48,9 +49,9 @@ cross_df %>%
 
 # (3) - Create state level datasets
 states <- unique(usdata::state_stats$abbr)
-cross_df <- crossing(group = groupings, state = states)
+cross_df <- tidyr::crossing(group = groupings, state = states)
 cross_df |> 
-  pwalk(function(group, state) {
+  purrr::pwalk(function(group, state) {
     factsheet_df_state <- summarise_data(full_sample_proc, "CENSUS_STATE_ABBR", state, group)
     data.table::fwrite(
       factsheet_df_state,
