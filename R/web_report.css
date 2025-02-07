@@ -1,0 +1,137 @@
+/* Global Formats */
+  
+  body {
+    max-width: 760px;
+  }
+  
+  .container-fluid {
+  font-family: Lato;
+  padding: 0 0 0 0 ;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000000;
+  }
+  
+  .main-container {
+  font-family: Lato;
+  max-width: 760px;
+  margin-left: 0;
+  margin-right: 0;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000000;
+  }
+  
+  a {
+    color: #1696d2;
+    text-decoration: none;
+  }
+  
+  /* Title Styles */
+  h1 {
+  font: 700 48px/3rem Lato, sans-serif;
+  line-height: 48px;
+  margin: 0 0 .5em;
+  }
+  
+  h2 {
+  font: 700 36px/2.25rem Lato, sans-serif;
+  color: #000000;
+  }
+  
+  h3 {
+  font: 200 30px/2rem Lato, sans-serif;
+  color: #000000;
+  text-transform: uppercase;
+  }
+  
+  h4 {
+  font: 700 24px/1.875rem Lato, sans-serif;
+  font-style: normal;
+  font-variant-ligatures: normal;
+  font-variant-caps: normal;
+  font-variant-numeric: normal;
+  font-variant-east-asian: normal;
+  font-stretch: normal;
+  font-size: 24px;
+  line-height: 30px;
+  }
+  
+  /* Paragraph styles */ 
+  p {
+    font: 1.25rem Lato, sans-serif;
+    margin: 0 0 8px 0;
+    line-height: 1.625;
+    color: #353535;
+  }
+  
+  .source_notes {
+    font: 0.875rem Lato, sans-serif;
+  }
+  
+  /* Image styles */
+  img {
+  padding: 36px 0 32px 0;
+  max-width: 100%;
+  }
+  
+  .navbar {
+  background-color: #1696d2;
+  color: #ffffff;
+  font-weight: bold;
+  }
+  
+  .navbar-default .navbar-brand {
+  color: #FFFFFF;
+  }
+  
+  .navbar-default .navbar-nav>li>a {
+  color: #FFFFFF;
+  }
+  
+  .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+  color: #1696d2;
+  background-color: #FFFFFF;
+  }
+  
+  /* List styles */
+  li {
+  font-size: 16px;
+  }
+  
+  
+  /* Link styles */
+  .a {
+  color: #1696d2;
+  }
+   
+  /* Button Formatting */
+  .btn {
+  border-radius: 0;
+  }
+  
+  /* Horizontal rule */
+  hr {
+  border: 1px solid #d2d2d2;
+  width: 685px;
+  margin-top: 35px;
+  margin-bottom: 35px;
+  }
+
+  @media screen and (max-width: 550px) {
+    p {
+      font: 1.125rem Lato, sans-serif;
+      margin: 0 0 8px 0;
+      line-height: 1.625;
+      color: #353535;
+    }
+  }
+  
+  .gt_table {
+  font-family: Lato !important;
+}
+
+.main_table{
+  margin-top: 50px;
+  width: 1200px;
+}
