@@ -1,0 +1,72 @@
+---
+title: "Nonprofits, Financial Sustainability, and Government Grants in 2022"
+subtitle: "Laura Tomasko, Hannah Martin, Jesse Lecy, Thiyaghessan Poongundranar"
+author: ""
+format: html
+params: 
+    cbsa: "Arizona"
+output:
+  html_document:
+    css: web_report.css
+    self_contained: no
+    # Specifying theme: null will remove bootstrap and other JS/CSS 
+    theme: null
+---
+
+```{=html}
+<!-- this calls Lato font --> 
+<style>
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+</style>
+```
+
+```{=html}
+<!-- this calls crucial iframe resizing script --> 
+<script type="text/javascript" src="https://apps.urban.org/features/dataviz-libs/pym-js/v1.3.2/pym.nprapps.org_pym.v1.min.js">
+</script>
+
+<script>
+var pymChild = new pym.Child({ polling: 500 });
+</script>
+```
+
+```{r rmarkdown-setup, echo=FALSE}
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r r-setup, echo=FALSE}
+library(tidyverse)
+library(urbnthemes)
+library(gt)
+library(gtExtras)
+
+set_urbn_defaults(style = "print")
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+```{r r-scripts, echo=FALSE}
+source("R/build_gt_table.R")
+```
+
+This series of fact sheets provides three 2022 data points at the national and state level:
+
+1. 
+
+
+## Data for `r params$cbsa`
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 
+
+## Table by Expense Category
+
+You can also embed plots, for example:
+
+:::main_table
+```{r echo=FALSE}
+create_gt_table("data/intermediate/factsheet_test_df.csv", "EXPENSE_CATEGORY", "Expense Category")
+```
+:::
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
