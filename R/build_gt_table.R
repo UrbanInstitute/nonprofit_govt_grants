@@ -6,7 +6,7 @@ create_gt_table <- function(df_path, groupby_var, groupby_name) {
   gt_table <- gt_data %>%
     gt() %>%
     cols_label(
-      "{groupby_var}" := "group_name",
+      "{groupby_var}" := groupby_name,
       mean_months_cash_on_hand_tangibleassets = "Mean",
       median_months_cash_on_hand_tangibleassets = "Median",
       mean_months_cash_on_hand_notangibleassets = "Mean",
@@ -69,6 +69,7 @@ create_gt_table <- function(df_path, groupby_var, groupby_name) {
         cells_column_spanners()
       )
     ) |>
+    tab_source_note(source_note = html("<b>Source</b>: National Center for Charitable Statistics 2021 501(c)(3) Charities PZ Scope, available at https://urbaninstitute.github.io/nccs/catalogs/catalog-core.html.")) |>
     opt_horizontal_padding(scale = 3) |>
     opt_vertical_padding(scale = 3)
   return(gt_table)
