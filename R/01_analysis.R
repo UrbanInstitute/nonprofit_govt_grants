@@ -15,7 +15,7 @@ library(purrr)
 full_sample_proc <- data.table::fread("data/intermediate/full_sample_processed.csv")
 
 # Helper scripts
-source("R/create_table.R")
+source("R/summarise_data.R")
 
 #  Create dataset for testing
 factsheet_df <- summarise_data(full_sample_proc, "CENSUS_STATE_ABBR", "CA", "EXPENSE_CATEGORY")
