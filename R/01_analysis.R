@@ -19,8 +19,11 @@ source("R/create_table.R")
 
 #  Create dataset for testing
 factsheet_df <- summarise_data(full_sample_proc, "CENSUS_STATE_ABBR", "CA", "EXPENSE_CATEGORY")
-data.table::fwrite(factsheet_df, "data/intermediate/factsheet_test_df.csv")
+data.table::fwrite(factsheet_df, "data/intermediate/factsheet_test_expense_df.csv")
+factsheet_df <- summarise_data(full_sample_proc, "CENSUS_STATE_ABBR", "CA", "SUBSECTOR")
+data.table::fwrite(factsheet_df, "data/intermediate/factsheet_test_subsector_df.csv")
 
+# Groupings
 groupings <- c("EXPENSE_CATEGORY", "SUBSECTOR")
 
 # (1) - Create national level datasets
