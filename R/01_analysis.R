@@ -1,32 +1,59 @@
+# Script Header
+# Title: Federal Funding Freeze Blog Post
+# Date created: 2025-02-03
+# Date last modified: 2025-02-06
+# Description: This script contains code to analyze data for HTML fact sheets 
+# on nonprofits's fiscal sustainability and reliance on government grants for 
+# Tax Year 2021. It creates data.frames for fact sheets for each disaggregation.
+
+# Packages
+library(tidyverse)
+library(data.table)
+library(purrr)
+
 # Load in data
 full_sample_proc <- data.table::fread("data/intermediate/full_sample_processed.csv")
 
+# Helper scripts
+source("R/create_table.R")
 
-# Sample Arizona - By Subsector
+#  Create dataset for testing
+factsheet_df <- summarise_data(full_sample_proc, "CENSUS_STATE_ABBR", "CA", "EXPENSE_CATEGORY")
+data.table::fwrite(factsheet_df, "data/intermediate/factsheet_test_df.csv")
 
-full_sample_proc |>
-  dplyr::filter(CENSUS_STATE_ABBR == "AZ",
-                TANGIBLE_ASSETS_REPORTED != "") |> # parameter 1 - geography
-  dplyr::group_by(EXPENSE_CATEGORY) |> # parameter 2 - aggregation
-  dplyr::summarise(
-    mean_months_cash_on_hand_tangibleassets = mean(ifelse(TANGIBLE_ASSETS_REPORTED == "Y", MONTHS_CASH_ON_HAND, NA), na.rm = TRUE),
-    median_months_cash_on_hand_tangibleassets = median(ifelse(TANGIBLE_ASSETS_REPORTED == "Y", MONTHS_CASH_ON_HAND, NA), na.rm = TRUE),
-    mean_months_cash_on_hand_notangibleassets = mean(ifelse(TANGIBLE_ASSETS_REPORTED == "N", MONTHS_CASH_ON_HAND, NA), na.rm = TRUE),
-    median_months_cash_on_hand_notangibleassets = median(ifelse(TANGIBLE_ASSETS_REPORTED == "N", MONTHS_CASH_ON_HAND, NA), na.rm = TRUE),
-    proportion_govt_grants_20 = dplyr::n_distinct(ifelse(PROPORTION_GOVT_GRANT >= 0 & PROPORTION_GOVT_GRANT <= 0.2, EIN2, NA)),
-    proportion_govt_grants_40 = dplyr::n_distinct(ifelse(PROPORTION_GOVT_GRANT > 0.2 & PROPORTION_GOVT_GRANT <= 0.4, EIN2, NA)),
-    proportion_govt_grants_60 = dplyr::n_distinct(ifelse(PROPORTION_GOVT_GRANT > 0.4 & PROPORTION_GOVT_GRANT <= 0.6, EIN2, NA)),
-    proportion_govt_grants_80 = dplyr::n_distinct(ifelse(PROPORTION_GOVT_GRANT > 0.6 & PROPORTION_GOVT_GRANT <= 0.8, EIN2, NA)),
-    proportion_govt_grants_100 = dplyr::n_distinct(ifelse(PROPORTION_GOVT_GRANT > 0.8 & PROPORTION_GOVT_GRANT <= 1, EIN2, NA)),
-    total_govt_grants = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT, na.rm = TRUE),
-    total_number_nonprofits = dplyr::n_distinct(EIN2)
-  ) |>
-  dplyr::mutate(
-    dplyr::across(proportion_govt_grants_20:proportion_govt_grants_100, ~.x / total_number_nonprofits * 100)
-  ) |>
-  dplyr::mutate(
-    dplyr::across(proportion_govt_grants_20:proportion_govt_grants_100, round, 2)
-  ) |>
-  View()
+groupings <- c("EXPENSE_CATEGORY", "SUBSECTOR")
 
+# (1) - Create national level datasets
+for (grouping in c("EXPENSE_CATEGORY", "SUBSECTOR")) {
+  factsheet_df_national <- summarise_data(full_sample_proc, "CENSUS_STATE_ABBR", "US", grouping, national = TRUE)
+  data.table::fwrite(factsheet_df_national, paste0("data/processed/national_", tolower(grouping), ".csv"))
+}
 
+# (2) - Create regional datasets
+regions <- c("West South Central", "New England", "South Atlantic", "West North Central", 
+             "Mid-Atlantic", "East North Central", "Pacific", "Mountain", 
+             "East South Central")
+cross_df <- crossing(group = groupings, region = regions)
+cross_df %>%
+  pwalk(function(group, region) {
+    factsheet_df_regional <- summarise_data(full_sample_proc, "CENSUS_REGION", region, group)
+    data.table::fwrite(
+      factsheet_df_regional,
+      paste0("data/processed/regional_", tolower(group), "_", tolower(region), ".csv")
+    )
+  })
+
+# (3) - Create state level datasets
+states <- unique(usdata::state_stats$abbr)
+cross_df <- crossing(group = groupings, state = states)
+cross_df |> 
+  pwalk(function(group, state) {
+    factsheet_df_state <- summarise_data(full_sample_proc, "CENSUS_STATE_ABBR", state, group)
+    data.table::fwrite(
+      factsheet_df_state,
+      paste0("data/processed/state_", tolower(group), "_", tolower(state), ".csv")
+    )
+  })
+
+# TODO
+# Create tables for congressional districts
