@@ -1,0 +1,8 @@
+EXPENSE_CATEGORY,mean_months_cash_on_hand_tangibleassets,median_months_cash_on_hand_tangibleassets,mean_months_cash_on_hand_notangibleassets,median_months_cash_on_hand_notangibleassets,total_govt_grants,proportion_govt_grants_20,proportion_govt_grants_40,proportion_govt_grants_60,proportion_govt_grants_80,proportion_govt_grants_100,total_number_nonprofits
+Between $100K and $499K,-944,0,16,0,"$51,401,446",12.14%,8.626%,10.22%,6.71%,9.27%,313
+Between $1M and $4.99M,0,0,4,0,"$367,082,991",22.97%,13.876%,8.61%,19.62%,7.18%,209
+Between $500K and $999K,0,0,18,4,"$80,877,478",18.75%,14.844%,9.38%,15.62%,11.72%,128
+Between $50K and $100K,-18,0,20,0,"$1,343,611",12.70%,7.937%,6.35%,7.94%,6.35%,63
+Between $5M and $9.99M,-2,0,0,0,"$242,791,310",30.00%,8.000%,14.00%,10.00%,16.00%,50
+Greater than $10M,6,0,18,0,"$2,356,919,017",49.15%,5.085%,8.47%,5.08%,16.95%,59
+Less than $50K,-968,0,146,0,"$620,108",0.92%,1.835%,1.83%,5.50%,2.75%,109
