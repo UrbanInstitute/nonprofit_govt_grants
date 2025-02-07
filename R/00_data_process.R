@@ -209,6 +209,7 @@ bmf_sample <- unified_bmf |>
       .default = NA
     ) # Add census regions based on states
   ) |>
+  dplyr::mutate(SUBSECTOR = ifelse(SUBSECTOR == "", "UNU", SUBSECTOR)) |>
   tidylog::left_join(tract_rship, by = "GEOID_TRACT_10") |> # map 2020 tract fips
   tidylog::left_join(congress_districts_119, by = "GEOID_TRACT_20") # Congressional district data
 
