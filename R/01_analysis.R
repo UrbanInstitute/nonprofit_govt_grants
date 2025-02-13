@@ -1,7 +1,7 @@
 # Script Header
 # Title: Federal Funding Freeze Blog Post
 # Date created: 2025-02-03
-# Date last modified: 2025-02-06
+# Date last modified: 2025-02-13
 # Description: This script contains code to analyze data for HTML fact sheets 
 # on nonprofits's fiscal sustainability and reliance on government grants for 
 # Tax Year 2021. It creates data.frames for fact sheets for each disaggregation.
@@ -17,6 +17,37 @@ full_sample_proc <- data.table::fread("data/intermediate/full_sample_processed.c
 
 # Helper scripts
 source("R/summarise_data.R")
+
+# Pull Massachusetts data for testing
+
+# Massachussets by County
+
+ma_county <- full_sample_proc |>
+  dplyr::filter(CENSUS_STATE_ABBR == "MA") |>
+  dplyr::group_by(CENSUS_COUNTY_NAME) |>
+  dplyr::summarise(
+    number_with_govt_grants = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT > 0, na.rm = TRUE),
+    total_govt_grants = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT, na.rm = TRUE),
+    median_profit_margin = median(PROFIT_MARGIN, na.rm = TRUE),
+    median_profit_margin_no_govt_grants = median(PROFIT_MARGIN_NOGOVTGRANT, na.rm = TRUE),
+    median_days_cash_on_hand = median(DAYS_CASH_ON_HAND, na.rm = TRUE),
+    lessthan30days_cash_on_hand = sum(DAYS_CASH_ON_HAND < 30, na.rm = TRUE),
+    btwn30and90days_cash_on_hand = sum(DAYS_CASH_ON_HAND >= 30 & DAYS_CASH_ON_HAND < 90, na.rm = TRUE),
+    morethan90days_cash_on_hand = sum(DAYS_CASH_ON_HAND >= 90, na.rm = TRUE),
+    median_months_cash_on_hand = median(MONTHS_CASH_ON_HAND, na.rm = TRUE),
+    lessthan1month_cash_on_hand = sum(MONTHS_CASH_ON_HAND < 1, na.rm = TRUE),
+    btwn1and3months_cash_on_hand = sum(MONTHS_CASH_ON_HAND >= 1 & MONTHS_CASH_ON_HAND < 3, na.rm = TRUE),
+    morethan3months_cash_on_hand = sum(MONTHS_CASH_ON_HAND >= 3, na.rm = TRUE)
+  )
+
+numnonprofits_county <- bmf_sample |>
+  dplyr::filter(CENSUS_STATE_ABBR == "MA",
+               ORG_YEAR_LAST >= 2021) |>
+  dplyr::group_by(CENSUS_COUNTY_NAME) |>
+  dplyr::summarise(num_nonprofits = dplyr::n_distinct(EIN2)) |>
+  sf::st_drop_geometry()
+
+ma_county <- tidylog::left_join(ma_county, numnonprofits_county, by = "CENSUS_COUNTY_NAME")
 
 #  Create dataset for testing
 factsheet_df <- summarise_data(full_sample_proc, "CENSUS_STATE_ABBR", "CA", "EXPENSE_CATEGORY")
