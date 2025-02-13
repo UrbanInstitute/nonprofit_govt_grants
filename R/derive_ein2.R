@@ -30,3 +30,21 @@ format_ein <- function(ein) {
     }
   }
 }
+
+format_ein <- function( x, to="id" ) {
+  if( to == "id" )
+  {   
+    x <- stringr::str_pad( x, 9, side="left", pad="0" )
+    sub1 <- substr( x, 1, 2 )
+    sub2 <- substr( x, 3, 9 )
+    ein  <- paste0( "EIN-", sub1, "-", sub2 ) 
+    return(ein)
+  }
+  
+  if( to == "n" )
+  {  
+    x <- gsub( "[^0-9]", "", x )
+    return( x )
+  }
+  
+}

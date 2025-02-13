@@ -73,6 +73,7 @@ bmf_cols <- list(
     "NTEEV2",
     "CENSUS_STATE_ABBR",
     "CENSUS_COUNTY_NAME",
+    "ORG_YEAR_FIRST",
     "ORG_YEAR_LAST",
     "CENSUS_BLOCK_FIPS",
     "BMF_SUBSECTION_CODE",
@@ -82,22 +83,28 @@ bmf_cols <- list(
   )
 )
 
-# (2.2) - Unified BMF
-
 # Unified BMF with relevant columns selected
 unified_bmf <- data.table::fread("data/raw/unified_bmf.csv", 
                                  select = bmf_cols)
 
-# (2.3) - Congressional District Data
+# (2.2) - Congressional District Data
 
 # From Tigris
 cd_tigris <- tigris::congressional_districts()
 cd_transformed <- sf::st_transform(cd_tigris, 4326)
 
-# (2.5) Efile data
+# Merge Congressional districts
+
+bmf_sample <- bmf_sample |>
+  dplyr::filter(!is.na(LATITUDE) & !is.na(LONGITUDE)) |>
+  sf::st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 4326)
+
+bmf_sample <- sf::st_join(bmf_sample, cd_transformed, join = sf::st_intersects)
+
+# (2.3) Efile data
 
 efile_cols <- list(
-  character = c("EIN2", "TAX_YEAR"),
+  character = c("EIN2", "TAX_YEAR", "RETURN_TYPE", "OBJECTID", "URL"),
   numeric = c(
     "F9_08_REV_CONTR_GOVT_GRANT",
     "F9_08_REV_TOT_TOT",
@@ -116,43 +123,29 @@ efile_21_p09_raw <- data.table::fread("data/raw/efile_p09_2021_0225.csv",
                                       select = efile_cols)
 efile_21_p10_raw <- data.table::fread("data/raw/efile_p10_2021_0225.csv",
                                       select = efile_cols)
+
+# (2.4) - SOI Data
+
+soi_cols <- list(
+  character = c("EIN", "ein", "tax_pd"),
+  numeric = c("totfuncexpns")
+)
+
+soi_23 <- data.table::fread("data/raw/soi23_raw.csv", 
+                            select = soi_cols)
+soi_22 <- data.table::fread("data/raw/soi22_raw.csv",
+                            select = soi_cols)
+soi_21 <- data.table::fread("data/raw/soi21_raw.csv",
+                            select = soi_cols)
+
+soi_23 <- soi_23 |>
+  dplyr::rename("EIN" = ein)
+
+soi_sample <- data.table::rbindlist(list(soi_23, soi_22, soi_21))
+
 # (3) - Wrangle Data
 
-# (3.1) - Wrangle SOI data
-
-data.table::setnames(soi_23, "ein", "EIN")
-soi_raw <- data.table::rbindlist(list(soi_23, soi_22, soi_21))
-
-soi_sample <- soi_raw |>
-  dplyr::mutate(
-    tax_year = substr(tax_pd, 1, 4)
-  ) |>
-  dplyr::filter(
-    tax_year == "2021"
-  ) |>
-  dplyr::mutate(across(dplyr::all_of(soi_cols$numeric), ~ tidyr::replace_na(., 0)),
-                EIN2 = purrr::pmap_chr(
-                  list(EIN),
-                  derive_ein2,
-                  .progress = TRUE
-                ),
-                expense_category = dplyr::case_when(
-                  totfuncexpns < 100000 ~ "Less than $100K",
-                  totfuncexpns >= 100000 &
-                    totfuncexpns < 500000 ~ "Between $100K and $499K",
-                  totfuncexpns >= 500000 &
-                    totfuncexpns < 1000000 ~ "Between $500K and $999K",
-                  totfuncexpns >= 1000000 &
-                    totfuncexpns < 5000000 ~ "Between $1M and $4.99M",
-                  totfuncexpns >= 5000000 &
-                    totfuncexpns < 10000000 ~ "Between $5M and $9.99M",
-                  totfuncexpns >= 10000000 ~ "Greater than $10M",
-                  .default = "No Expenses Provided"
-                )) # set factor levels
-
-# 318,832 Form 990 tax records
-
-# (3.2) - Wrangle BMF Data
+# (3.1) - Wrangle BMF Data
 
 bmf_sample <- unified_bmf |>
   dplyr::filter(NCCS_LEVEL_1 == "501C3 CHARITY") |>
@@ -203,24 +196,25 @@ bmf_sample <- bmf_sample |>
     "NAMELSAD20"
   )
 
-# (3.3) efile data
+# (3.2) Wrangle efile data
 
 # Merge all 3 e-file datasets. Left join to Part VIII since that contains the
 # government grant information
 
 efile_sample <- efile_21_p08_raw |>
   tidylog::left_join(
-    efile_21_p09_raw,
-    by = c("EIN2" = "EIN2")
+    efile_21_p09_raw
   ) |>
   tidylog::left_join(
-    efile_21_p10_raw,
-    by = c("EIN2" = "EIN2")
+    efile_21_p10_raw
   )
 
+# Filter datasets. Note: I do not exclude NA values for F9_08_REV_CONTR_GOVT_GRANT
+# because those could be zeros, with the nonprofit not filling them up.
 efile_sample <- efile_sample |>
   dplyr::filter(
-    TAX_YEAR == 2021
+    TAX_YEAR == 2021,
+    RETURN_TYPE == "990"
   ) |>
   dplyr::select(
     EIN2,
@@ -233,6 +227,40 @@ efile_sample <- efile_sample |>
     F9_10_ASSET_PLEDGE_NET_EOY,
     F9_10_ASSET_ACC_NET_EOY
   )
+
+# (3.3) - Wrangle SOI Data
+
+soi_sample <- soi_sample |>
+  dplyr::mutate(
+    tax_year = substr(tax_pd, 1, 4)
+  ) |>
+  dplyr::filter(
+    tax_year == "2021"
+  ) |>
+  dplyr::mutate(EIN2 = format_ein(EIN, to = "n"),
+                expense_category = dplyr::case_when(
+                  totfuncexpns < 100000 ~ "Less than $100K",
+                  totfuncexpns >= 100000 &
+                    totfuncexpns < 500000 ~ "Between $100K and $499K",
+                  totfuncexpns >= 500000 &
+                    totfuncexpns < 1000000 ~ "Between $500K and $999K",
+                  totfuncexpns >= 1000000 &
+                    totfuncexpns < 5000000 ~ "Between $1M and $4.99M",
+                  totfuncexpns >= 5000000 &
+                    totfuncexpns < 10000000 ~ "Between $5M and $9.99M",
+                  totfuncexpns >= 10000000 ~ "Greater than $10M",
+                  .default = "No Expenses Provided"
+                )) |>
+  dplyr::mutate(
+    EIN2 = format_ein(EIN2, to = "id")
+  ) |>
+  dplyr::select(EIN2, expense_category) |>
+  dplyr::rename(EXPENSE_CATEGORY = expense_category)
+
+# Merge with BMF
+
+bmf_sample <- bmf_sample |>
+  tidylog::left_join(soi_sample)
 
 # (4) Compute metrics 
 
@@ -271,27 +299,30 @@ efile_sample <- efile_sample |>
 # (4.2) - Profit Margin - with and without government grants
 
 efile_sample <- efile_sample |>
+  dplyr::mutate(profit_margin = purrr::pmap_dbl(
+    list(F9_08_REV_TOT_TOT, F9_09_EXP_TOT_TOT),
+    profit_margin,
+    .progress = TRUE
+  ))
+
+summary(efile_sample$profit_margin)
+
+# purrr::pmap_dbl does not work for some reason. I will use a rowwise mutate instead
+efile_sample <- efile_sample |>
+  dplyr::rowwise() |>
   dplyr::mutate(
-    profit_margin = purrr::pmap_dbl(
-      list(
-        F9_08_REV_TOT_TOT,
-        F9_09_EXP_TOT_TOT
-      ),
-      profit_margin,
-      .progress = TRUE
-    )
-  ) |>
-  dplyr::mutate(
-    profit_margin_nogovtgrant = purrr::pmap_dbl(
-      list(
+    profit_margin_nogovtgrant = {
+      if (dplyr::cur_group_rows() %% 10000 == 0) cat(".")  # prints a dot every 10000 rows
+      profit_margin(
         F9_08_REV_TOT_TOT,
         F9_09_EXP_TOT_TOT,
         F9_08_REV_CONTR_GOVT_GRANT
-      ),
-      profit_margin,
-      .progress = TRUE
-    )
-  )
+      )
+    }
+  ) |>
+  dplyr::ungroup()
+
+summary(efile_sample$profit_margin_nogovtgrant)
 
 # (5) - Merge datasets and save intermediate data
 
@@ -364,9 +395,19 @@ data.table::fwrite(full_sample_proc, "data/intermediate/full_sample_processed.cs
 ## TODO
 
 # Update EIN2 for the Unified BMF
+# Add 2010 fips to BMF for working with crosswalks - both 2010 and 2020 FIPs
+    # If a tract is changed between 2 census periods, the tract id will change. I don;t know if the block will change. There is not the same versioning convention with the block. That might suggest the block is not identical. Figure out how tract and block ids change between 2010 and 2020. Important to check sizes of the dataset before/after merges. 
 
 # Questions for Jesse
 
-# For the total number of nonprofits, should I use the 2025 BMF?
 # How should I be thinking about duplicate EINs in the efile data or after merging?
-# Is my spatoal join with the congressional districts correct?
+  # Just merge part 08 and part 09
+  # Ammended group and partial returns
+  # figure out which is the correct one - first check for amended returns and then use the amended return. If there are multiple, sort by timestamp or filing data. For group returns, if it is a federated organization, I would file one group return for the headquarter org and then file a second return for all of the organizations. The first one they would not check its a group return and the second one they would. The easy is to just drop the group returns. When doing state level analaysis, the group returns are not useful. The headquarters would just be the headquarter in whatever state. Partial returns - use the column for number of days within the tax filing. If you petition the IRS to change your fiscal year, from june to december then what happens is you have to file a partial return to fill the gap. So your fiscal year would end in june and you would file a new return for july to december so that you are falling within compliance fora partial year. If its like a very specific sample, you would have to adjust those numbers individually. Easy way to do it is just to drop those cases. Typically you would have a prior year return for the organization. It would be easier yto use 1 of those 2 years instead of using the partials because it's complicated due to grant cycles etc. Typically we've just thrown those out. If there are duplicates after all this then that's a problem. From the index there were 8 cases with distinct object IDs and identical filings - my best guess is the connection was unstable when submitting and they hit submit again. If I am finding duplicated EINs, it just means something went wrong.
+
+
+
+# Integrate nccstools with nccsdata - common functions for data pulls
+# efile - merge both packages. keep in R, see if they are doing anything better and integrate it
+# if we can speed it up with AWS functions - disaggregate into scripts or turn
+# into an internal package etc.
