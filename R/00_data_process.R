@@ -27,10 +27,10 @@ library(tigris)
 states <- as.character(usdata::state_stats$abbr) # 51 states
 
 # Helper Scripts
-source("R/spending_on_hand.R") # Formula to calculate months/days cash on hand
 source("R/derive_ein2.R") # Function to derive EIN2
-source("R/cash_on_hand.R") # Function to calculate cash on hand
+source("R/cash_on_hand.R") # Functions to calculate cash on hand by either day or month
 source("R/profit_margin.R") # Function to calculate profit margin
+source("R/operating_reserve_ratio.R") # Function to calculate operating reserve ratio
 
 # (1) - Download raw data
 
@@ -95,8 +95,9 @@ cd_transformed <- sf::st_transform(cd_tigris, 4326)
 
 # Merge Congressional districts
 
-bmf_sample <- bmf_sample |>
-  dplyr::filter(!is.na(LATITUDE) & !is.na(LONGITUDE)) |>
+bmf_sample <- unified_bmf |>
+  dplyr::filter(!is.na(LATITUDE),
+                !is.na(LONGITUDE)) |>
   sf::st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 4326)
 
 bmf_sample <- sf::st_join(bmf_sample, cd_transformed, join = sf::st_intersects)
