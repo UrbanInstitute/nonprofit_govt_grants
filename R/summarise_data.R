@@ -93,15 +93,18 @@ summarise_data <- function(data, geo_var, geo, group_var, national = FALSE) {
       total_govt_grants = scales::dollar(total_govt_grants),
       dplyr::across(
         mean_months_cash_on_hand_tangibleassets:median_months_cash_on_hand_notangibleassets,
-        scales::number,
+        scales::comma,
         2
       )
-    ) |> dplyr::select(
+    ) 
+    dplyr::select(
       !!sym(group_var),
       mean_months_cash_on_hand_tangibleassets,
       median_months_cash_on_hand_tangibleassets,
       mean_months_cash_on_hand_notangibleassets,
       median_months_cash_on_hand_notangibleassets,
+      median_days_cash_on_hand,
+      median_profit_margin,
       total_govt_grants,
       proportion_govt_grants_20,
       proportion_govt_grants_40,
@@ -111,4 +114,264 @@ summarise_data <- function(data, geo_var, geo, group_var, national = FALSE) {
       total_number_nonprofits
     )
   return(factsheet_df)
+}
+
+summarize_by_region <- function(group_var) {
+  # Create the grouped summary
+  region_summary <- full_sample_proc |>
+    dplyr::filter(CENSUS_STATE_ABBR == "MA") |>
+    dplyr::group_by(.data[[group_var]]) |>
+    dplyr::summarise(
+      number_reporting_govt_grants = dplyr::n(),
+      total_govt_grants = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT, na.rm = TRUE),
+      median_profit_margin = median(PROFIT_MARGIN, na.rm = TRUE),
+      median_profit_margin_no_govt_grants = median(PROFIT_MARGIN_NOGOVTGRANT, na.rm = TRUE),
+      median_days_cash_on_hand = median(DAYS_CASH_ON_HAND, na.rm = TRUE),
+      lessthan30days_cash_on_hand = sum(DAYS_CASH_ON_HAND < 30, na.rm = TRUE),
+      btwn30and90days_cash_on_hand = sum(DAYS_CASH_ON_HAND >= 30 & DAYS_CASH_ON_HAND < 90, na.rm = TRUE),
+      morethan90days_cash_on_hand = sum(DAYS_CASH_ON_HAND >= 90, na.rm = TRUE),
+      median_months_cash_on_hand = median(MONTHS_CASH_ON_HAND, na.rm = TRUE),
+      lessthan1month_cash_on_hand = sum(MONTHS_CASH_ON_HAND < 1, na.rm = TRUE),
+      btwn1and3months_cash_on_hand = sum(MONTHS_CASH_ON_HAND >= 1 & MONTHS_CASH_ON_HAND < 3, na.rm = TRUE),
+      morethan3months_cash_on_hand = sum(MONTHS_CASH_ON_HAND >= 3, na.rm = TRUE)
+    )
+  
+  # Get number of nonprofits
+  numnonprofits_region <- bmf_sample |>
+    dplyr::filter(CENSUS_STATE_ABBR == "MA",
+                  ORG_YEAR_LAST >= 2021) |>
+    dplyr::group_by(.data[[group_var]]) |>
+    dplyr::summarise(num_nonprofits = dplyr::n()) |>
+    sf::st_drop_geometry()
+  
+  # Join the datasets
+  region_summary <- tidylog::left_join(region_summary, 
+                                       numnonprofits_region, 
+                                       by = group_var)
+  
+  # Format the numbers
+  region_summary <- region_summary |>
+    dplyr::mutate(
+      total_govt_grants = scales::dollar(total_govt_grants),
+      median_profit_margin = scales::percent(median_profit_margin, accuracy = 0.01),
+      median_profit_margin_no_govt_grants = scales::percent(median_profit_margin_no_govt_grants,
+                                                            accuracy = 0.01),
+      median_days_cash_on_hand = scales::number(median_days_cash_on_hand),
+      median_months_cash_on_hand = scales::number(median_months_cash_on_hand),
+      lessthan30days_cash_on_hand = scales::percent(lessthan30days_cash_on_hand / number_reporting_govt_grants, accuracy = 0.01),
+      btwn30and90days_cash_on_hand = scales::percent(btwn30and90days_cash_on_hand / number_reporting_govt_grants, accuracy = 0.01),
+      morethan90days_cash_on_hand = scales::percent(morethan90days_cash_on_hand / number_reporting_govt_grants, accuracy = 0.01),
+      lessthan1month_cash_on_hand = scales::percent(lessthan1month_cash_on_hand / number_reporting_govt_grants, accuracy = 0.01),
+      btwn1and3months_cash_on_hand = scales::percent(btwn1and3months_cash_on_hand / number_reporting_govt_grants, accuracy = 0.01),
+      morethan3months_cash_on_hand = scales::percent(morethan3months_cash_on_hand / number_reporting_govt_grants, accuracy = 0.01)
+    ) |> 
+    dplyr::select(
+      !!sym(group_var),
+      num_nonprofits,
+      number_reporting_govt_grants,
+      total_govt_grants,
+      median_profit_margin,
+      median_profit_margin_no_govt_grants,
+      median_days_cash_on_hand,
+      lessthan30days_cash_on_hand,
+      btwn30and90days_cash_on_hand,
+      morethan90days_cash_on_hand,
+      median_months_cash_on_hand,
+      lessthan1month_cash_on_hand,
+      btwn1and3months_cash_on_hand,
+      morethan3months_cash_on_hand
+    ) |>
+    dplyr::rename(
+      "Region Name" = !!sym(group_var),
+      "Total Number of Nonprofits" = num_nonprofits,
+      "Number of 990 Filers reporting Government Grants" = number_reporting_govt_grants,
+      "Total Government Grants ($USD)" = total_govt_grants,
+      "Median Profit Margin (%)" = median_profit_margin,
+      "Median Profit Margin (Without Government Grants) (%)" = median_profit_margin_no_govt_grants,
+      "Median Days Cash on Hand" = median_days_cash_on_hand,
+      "% With Less than 30 Days Cash on Hand" = lessthan30days_cash_on_hand,
+      "% With Between 30 and 90 Days Cash on Hand" = btwn30and90days_cash_on_hand,
+      "% With More than 90 Days Cash on Hand" = morethan90days_cash_on_hand,
+      "Median Months Cash on Hand" = median_months_cash_on_hand,
+      "% With Less than 1 Month Cash on Hand" = lessthan1month_cash_on_hand,
+      "% With Between 1 and 3 Months Cash on Hand" = btwn1and3months_cash_on_hand,
+      "% With More than 3 Months Cash on Hand" = morethan3months_cash_on_hand
+    )
+  
+  return(region_summary)
+}
+
+summarize_state <- function() {
+  # Create the state summary
+  state_summary <- full_sample_proc |>
+    dplyr::filter(CENSUS_STATE_ABBR == "MA") |>
+    dplyr::summarise(
+      number_reporting_govt_grants = dplyr::n(),
+      total_govt_grants = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT, na.rm = TRUE),
+      median_profit_margin = median(PROFIT_MARGIN, na.rm = TRUE),
+      median_profit_margin_no_govt_grants = median(PROFIT_MARGIN_NOGOVTGRANT, na.rm = TRUE),
+      median_days_cash_on_hand = median(DAYS_CASH_ON_HAND, na.rm = TRUE),
+      lessthan30days_cash_on_hand = sum(DAYS_CASH_ON_HAND < 30, na.rm = TRUE),
+      btwn30and90days_cash_on_hand = sum(DAYS_CASH_ON_HAND >= 30 & DAYS_CASH_ON_HAND < 90, na.rm = TRUE),
+      morethan90days_cash_on_hand = sum(DAYS_CASH_ON_HAND >= 90, na.rm = TRUE),
+      median_months_cash_on_hand = median(MONTHS_CASH_ON_HAND, na.rm = TRUE),
+      lessthan1month_cash_on_hand = sum(MONTHS_CASH_ON_HAND < 1, na.rm = TRUE),
+      btwn1and3months_cash_on_hand = sum(MONTHS_CASH_ON_HAND >= 1 & MONTHS_CASH_ON_HAND < 3, na.rm = TRUE),
+      morethan3months_cash_on_hand = sum(MONTHS_CASH_ON_HAND >= 3, na.rm = TRUE)
+    )
+  
+  # Get total number of nonprofits
+  total_nonprofits <- bmf_sample |>
+    dplyr::filter(CENSUS_STATE_ABBR == "MA",
+                  ORG_YEAR_LAST >= 2021) |>
+    dplyr::summarise(num_nonprofits = dplyr::n()) |>
+    sf::st_drop_geometry()
+  
+  # Add total nonprofits to state summary
+  state_summary$num_nonprofits <- total_nonprofits$num_nonprofits
+  
+  # Format the numbers
+  state_summary <- state_summary |>
+    dplyr::mutate(
+      total_govt_grants = scales::dollar(total_govt_grants),
+      median_profit_margin = scales::percent(median_profit_margin, accuracy = 0.01),
+      median_profit_margin_no_govt_grants = scales::percent(median_profit_margin_no_govt_grants,
+                                                            accuracy = 0.01),
+      median_days_cash_on_hand = scales::number(median_days_cash_on_hand),
+      median_months_cash_on_hand = scales::number(median_months_cash_on_hand),
+      lessthan30days_cash_on_hand = scales::percent(lessthan30days_cash_on_hand / number_reporting_govt_grants, accuracy = 0.01),
+      btwn30and90days_cash_on_hand = scales::percent(btwn30and90days_cash_on_hand / number_reporting_govt_grants, accuracy = 0.01),
+      morethan90days_cash_on_hand = scales::percent(morethan90days_cash_on_hand / number_reporting_govt_grants, accuracy = 0.01),
+      lessthan1month_cash_on_hand = scales::percent(lessthan1month_cash_on_hand / number_reporting_govt_grants, accuracy = 0.01),
+      btwn1and3months_cash_on_hand = scales::percent(btwn1and3months_cash_on_hand / number_reporting_govt_grants, accuracy = 0.01),
+      morethan3months_cash_on_hand = scales::percent(morethan3months_cash_on_hand / number_reporting_govt_grants, accuracy = 0.01)
+    ) |> 
+    dplyr::select(
+      num_nonprofits,
+      number_reporting_govt_grants,
+      total_govt_grants,
+      median_profit_margin,
+      median_profit_margin_no_govt_grants,
+      median_days_cash_on_hand,
+      lessthan30days_cash_on_hand,
+      btwn30and90days_cash_on_hand,
+      morethan90days_cash_on_hand,
+      median_months_cash_on_hand,
+      lessthan1month_cash_on_hand,
+      btwn1and3months_cash_on_hand,
+      morethan3months_cash_on_hand
+    ) |>
+    dplyr::rename(
+      "Total Number of Nonprofits" = num_nonprofits,
+      "Number of 990 Filers reporting Government Grants" = number_reporting_govt_grants,
+      "Total Government Grants ($USD)" = total_govt_grants,
+      "Median Profit Margin (%)" = median_profit_margin,
+      "Median Profit Margin (Without Government Grants) (%)" = median_profit_margin_no_govt_grants,
+      "Median Days Cash on Hand" = median_days_cash_on_hand,
+      "% With Less than 30 Days Cash on Hand" = lessthan30days_cash_on_hand,
+      "% With Between 30 and 90 Days Cash on Hand" = btwn30and90days_cash_on_hand,
+      "% With More than 90 Days Cash on Hand" = morethan90days_cash_on_hand,
+      "Median Months Cash on Hand" = median_months_cash_on_hand,
+      "% With Less than 1 Month Cash on Hand" = lessthan1month_cash_on_hand,
+      "% With Between 1 and 3 Months Cash on Hand" = btwn1and3months_cash_on_hand,
+      "% With More than 3 Months Cash on Hand" = morethan3months_cash_on_hand
+    )
+  
+  return(state_summary)
+}
+
+
+#' Summarize Nonprofit Financial Data
+#'
+#' @param data The input dataframe
+#' @param group_var Optional grouping variable name as string (e.g., "CENSUS_STATE_NAME")
+#' @param group_var_rename Optional new name for the grouping variable (e.g., "State")
+#'
+#' @return A dataframe with summarized nonprofit financial metrics
+summarize_nonprofit_data <- function(data, group_var = NULL, group_var_rename = NULL) {
+  
+  # Start the pipeline
+  summary <- data
+  
+  # Add grouping if specified
+  if (!is.null(group_var)) {
+    summary <- summary |>
+      dplyr::group_by(.data[[group_var]])
+  }
+  
+  # Perform summarization
+  summary <- summary |>
+    dplyr::summarise(
+      num_990filers_govgrants = dplyr::n(),
+      total_govt_grants = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT, na.rm = TRUE),
+      median_profit_margin = median(PROFIT_MARGIN, na.rm = TRUE),
+      median_profit_margin_no_govt_grants = median(PROFIT_MARGIN_NOGOVTGRANT, na.rm = TRUE),
+      number_at_risk = sum(AT_RISK_NUM, na.rm = TRUE),
+      mcoh_less3 = sum(MONTHS_CASH_ON_HAND < 3, na.rm = TRUE),
+      mcoh_less3_jesse = sum(MONTHS_CASH_ON_HAND_JESSE < 3, na.rm = TRUE),
+      operating_reserve_ratio = mean(OPERATING_RESERVE_RATIO < 0.5, na.rm = TRUE)
+    ) |>
+    dplyr::mutate(proportion_at_risk = number_at_risk / num_990filers_govgrants)
+  
+  # Select columns
+  if (!is.null(group_var)) {
+    summary <- summary |>
+      dplyr::select(
+        !!sym(group_var),
+        num_990filers_govgrants,
+        total_govt_grants,
+        median_profit_margin,
+        median_profit_margin_no_govt_grants,
+        proportion_at_risk,
+        mcoh_less3,
+        mcoh_less3_jesse,
+        operating_reserve_ratio
+      )
+  } else {
+    summary <- summary |>
+      dplyr::select(
+        num_990filers_govgrants,
+        total_govt_grants,
+        median_profit_margin,
+        median_profit_margin_no_govt_grants,
+        proportion_at_risk,
+        mcoh_less3,
+        mcoh_less3_jesse,
+        operating_reserve_ratio
+      )
+  }
+  
+  # Format numbers
+  summary <- summary |>
+    dplyr::mutate(
+      total_govt_grants = scales::dollar(total_govt_grants),
+      median_profit_margin = scales::percent(median_profit_margin, accuracy = 0.01),
+      median_profit_margin_no_govt_grants = scales::percent(median_profit_margin_no_govt_grants, accuracy = 0.01),
+      proportion_at_risk = scales::percent(proportion_at_risk, accuracy = 0.01),
+      mcoh_less3 = scales::percent(mcoh_less3 / num_990filers_govgrants, accuracy = 0.01),
+      mcoh_less3_jesse = scales::percent(mcoh_less3_jesse / num_990filers_govgrants, accuracy = 0.01),
+      operating_reserve_ratio = scales::percent(operating_reserve_ratio, accuracy = 0.01)
+    )
+  
+  # Rename columns
+  rename_list <- list(
+    "Number of 990 Filers reporting Government Grants" = "num_990filers_govgrants",
+    "Total Government Grants ($USD)" = "total_govt_grants",
+    "Median Operating Surplus (%)" = "median_profit_margin",
+    "Median Operating Surplus (Without Government Grants) (%)" = "median_profit_margin_no_govt_grants",
+    "Proportion of Nonprofits at Risk" = "proportion_at_risk",
+    "% With Less than 3 Months Cash on Hand" = "mcoh_less3",
+    "% With Less than 3 Months Cash on Hand (Jesse)" = "mcoh_less3_jesse",
+    "Operating Reserve Ratio < 0.5" = "operating_reserve_ratio"
+  )
+  
+  # Add group variable rename if provided
+  if (!is.null(group_var) && !is.null(group_var_rename)) {
+    rename_list[[group_var_rename]] <- group_var
+  }
+  
+  summary <- summary |>
+    dplyr::rename(!!!rename_list)
+  
+  return(summary)
 }
