@@ -7,11 +7,9 @@ output:
   html_document:
     css: web_report.css
     self_contained: false
-    theme: null
   pdf_document: default
 params:
   geography: California
-format: html
 ---
 
 ```{=html}
@@ -51,6 +49,7 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 source("R/build_gt_table.R")
 ```
 
+
 This series of fact sheets provides three 2021 data points at the national and state level:
 
 1.	**Number of 501(c)(3) public charities** – These data show the size of the charitable sector in each geography.
@@ -82,32 +81,37 @@ Each fact sheet displays these data points for the US or state overall and broke
 #### By Size
 
 ```{r echo=FALSE}
-build_gt_table("data/intermediate/factsheet_test_expense_df.csv", "EXPENSE_CATEGORY", "Size")
+ma_county <- readxl::read_xlsx("data/intermediate/massachussets_data.xlsx", sheet = 1)
+ma_congressional <- readxl::read_xlsx("data/intermediate/massachussets_data.xlsx", sheet = 2)
+ma_size <- readxl::read_xlsx("data/intermediate/massachussets_data.xlsx", sheet = 3)
+ma_subsector <- readxl::read_xlsx("data/intermediate/massachussets_data.xlsx", sheet = 4)
+
 ```
+
+## {.tabset}
+
+### County
+```{r}
+ma_county |> gt()
+```
+
+### Congressional Districts
+```{r}
+ma_congressional |> gt()
+```
+
+### Size
+```{r}
+ma_size |> gt()
+```
+
+### Subsector
+```{r}
+ma_subsector |> gt()
+```
+
+## {-}
 
 ###### **Source**: *National Center for Charitable Statistics [2021 501(c)(3) Charities PZ Scope](https://urbaninstitute.github.io/nccs/catalogs/catalog-core.html), [2021 Efilers](https://nccs.urban.org/nccs/catalogs/catalog-efile.html) and [Unified  BMF](https://nccs.urban.org/nccs/datasets/bmf/)*
 
 ###### **Notes**: *Disclaimers about the data.*
-
-<div class="under-table-spacing"></div>
-
-The same data can be disaggregated by Subsector.
-
-<div class="over-table-spacing"></div>
-
-#### By Subsector
-
-:::main_table
-```{r echo=FALSE}
-build_gt_table("data/intermediate/factsheet_test_subsector_df.csv", "SUBSECTOR", "Subsector")
-```
-:::
-
-
-###### **Source**: *National Center for Charitable Statistics [2021 501(c)(3) Charities PZ Scope](https://urbaninstitute.github.io/nccs/catalogs/catalog-core.html), [2021 Efilers](https://nccs.urban.org/nccs/catalogs/catalog-efile.html) and [Unified  BMF](https://nccs.urban.org/nccs/datasets/bmf/)*
-
-###### **Notes**: *Disclaimers about the data.*
-
-<div class="under-table-spacing"></div>
-
-[^1]: Bowman, Woods. 2011. “[Financial Capacity and Sustainability of Ordinary Nonprofits.](https://doi.org/10.1002/nml.20039)” Nonprofit Management & Leadership 22 (1): 37–51. 
