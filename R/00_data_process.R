@@ -45,6 +45,10 @@ download.file("https://gt990datalake-rawdata.s3.us-east-1.amazonaws.com/EfileDat
 # (1.2) - Part 08 and 09 Efile data for 2021 tax year
 
 ## New datasets created on 11 feb 2025
+download.file(
+  "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P01-T00-SUMMARY-2021.csv",
+  "data/raw/efile_p01_2021_0225.csv"
+)
 
 download.file(
   "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P08-T00-REVENUE-2021.csv",
@@ -77,10 +81,9 @@ bmf_cols <- list(
     "ORG_YEAR_LAST",
     "CENSUS_BLOCK_FIPS",
     "BMF_SUBSECTION_CODE",
-    "NCCS_LEVEL_1",
-    "LATITUDE",
-    "LONGITUDE"
-  )
+    "NCCS_LEVEL_1"
+  ),
+  numeric = c("LATITUDE", "LONGITUDE")
 )
 
 # Unified BMF with relevant columns selected
@@ -92,15 +95,6 @@ unified_bmf <- data.table::fread("data/raw/unified_bmf.csv",
 # From Tigris
 cd_tigris <- tigris::congressional_districts()
 cd_transformed <- sf::st_transform(cd_tigris, 4326)
-
-# Merge Congressional districts
-
-bmf_sample <- unified_bmf |>
-  dplyr::filter(!is.na(LATITUDE),
-                !is.na(LONGITUDE)) |>
-  sf::st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 4326)
-
-bmf_sample <- sf::st_join(bmf_sample, cd_transformed, join = sf::st_intersects)
 
 # (2.3) Efile data
 
@@ -114,16 +108,22 @@ efile_cols <- list(
     "F9_10_ASSET_CASH_EOY",
     "F9_10_ASSET_SAVING_EOY",
     "F9_10_ASSET_PLEDGE_NET_EOY",
-    "F9_10_ASSET_ACC_NET_EOY"
+    "F9_10_ASSET_ACC_NET_EOY",
+    "F9_10_NAFB_UNRESTRICT_EOY",
+    "F9_10_ASSET_LAND_BLDG_NET_EOY", 
+    "F9_10_LIAB_TAX_EXEMPT_BOND_EOY", 
+    "F9_10_LIAB_MTG_NOTE_EOY",
+    "F9_10_LIAB_NOTE_UNSEC_EOY",
+    "F9_01_EXP_TOT_CY",
+    "F9_09_EXP_DEPREC_TOT",
+    "F9_01_NAFB_TOT_EOY"
   )
 )
 
-efile_21_p08_raw <- data.table::fread("data/raw/efile_p08_2021_0225.csv", 
-                              select = efile_cols)
-efile_21_p09_raw <- data.table::fread("data/raw/efile_p09_2021_0225.csv",
-                                      select = efile_cols)
-efile_21_p10_raw <- data.table::fread("data/raw/efile_p10_2021_0225.csv",
-                                      select = efile_cols)
+efile_21_p08_raw <- data.table::fread("data/raw/efile_p08_2021_0225.csv", select = efile_cols)
+efile_21_p09_raw <- data.table::fread("data/raw/efile_p09_2021_0225.csv", select = efile_cols)
+efile_21_p10_raw <- data.table::fread("data/raw/efile_p10_2021_0225.csv", select = efile_cols)
+efile_21_p01_raw <- data.table::fread("data/raw/efile_p01_2021_0225.csv", select = efile_cols)
 
 # (2.4) - SOI Data
 
@@ -192,6 +192,7 @@ bmf_sample <- bmf_sample |>
     "CENSUS_REGION",
     "CENSUS_STATE_ABBR",
     "CENSUS_COUNTY_NAME",
+    "ORG_YEAR_FIRST", 
     "ORG_YEAR_LAST",
     "SUBSECTOR",
     "NAMELSAD20"
@@ -208,7 +209,14 @@ efile_sample <- efile_21_p08_raw |>
   ) |>
   tidylog::left_join(
     efile_21_p10_raw
+  ) |>
+  tidylog::left_join(
+    efile_21_p01_raw
   )
+
+# Optional: To save memory
+rm(efile_21_p08_raw, efile_21_p09_raw, efile_21_p10_raw, efile_21_p01_raw)
+gc()
 
 # Filter datasets. Note: I do not exclude NA values for F9_08_REV_CONTR_GOVT_GRANT
 # because those could be zeros, with the nonprofit not filling them up.
@@ -218,15 +226,23 @@ efile_sample <- efile_sample |>
     RETURN_TYPE == "990"
   ) |>
   dplyr::select(
-    EIN2,
-    F9_08_REV_CONTR_GOVT_GRANT,
-    F9_08_REV_TOT_TOT,
-    F9_09_EXP_TOT_TOT,
-    F9_09_EXP_DEPREC_PROG,
-    F9_10_ASSET_CASH_EOY,
-    F9_10_ASSET_SAVING_EOY,
-    F9_10_ASSET_PLEDGE_NET_EOY,
-    F9_10_ASSET_ACC_NET_EOY
+    "EIN2",
+    "F9_08_REV_CONTR_GOVT_GRANT",
+    "F9_08_REV_TOT_TOT",
+    "F9_09_EXP_TOT_TOT",
+    "F9_09_EXP_DEPREC_PROG",
+    "F9_09_EXP_DEPREC_TOT",
+    "F9_10_ASSET_CASH_EOY",
+    "F9_10_ASSET_SAVING_EOY",
+    "F9_10_ASSET_PLEDGE_NET_EOY",
+    "F9_10_ASSET_ACC_NET_EOY",
+    "F9_10_NAFB_UNRESTRICT_EOY",
+    "F9_10_ASSET_LAND_BLDG_NET_EOY",
+    "F9_10_LIAB_TAX_EXEMPT_BOND_EOY",
+    "F9_10_LIAB_MTG_NOTE_EOY",
+    "F9_10_LIAB_NOTE_UNSEC_EOY",
+    "F9_01_EXP_TOT_CY",
+    "F9_01_NAFB_TOT_EOY"
   )
 
 # (3.3) - Wrangle SOI Data
@@ -258,7 +274,7 @@ soi_sample <- soi_sample |>
   dplyr::select(EIN2, expense_category) |>
   dplyr::rename(EXPENSE_CATEGORY = expense_category)
 
-# Merge with BMF
+# Merge with BMF - If you need SOI columns
 
 bmf_sample <- bmf_sample |>
   tidylog::left_join(soi_sample)
@@ -271,31 +287,34 @@ efile_sample <- efile_sample |>
   dplyr::mutate(
     months_cash_on_hand = purrr::pmap_dbl(
       list(
-        F9_10_ASSET_CASH_EOY,
-        F9_10_ASSET_SAVING_EOY,
-        F9_10_ASSET_PLEDGE_NET_EOY,
-        F9_10_ASSET_ACC_NET_EOY,
-        F9_09_EXP_TOT_TOT,
-        F9_09_EXP_DEPREC_PROG
+        F9_10_NAFB_UNRESTRICT_EOY,
+        F9_10_ASSET_LAND_BLDG_NET_EOY,
+        F9_10_LIAB_TAX_EXEMPT_BOND_EOY,
+        F9_10_LIAB_MTG_NOTE_EOY,
+        F9_10_LIAB_NOTE_UNSEC_EOY,
+        F9_01_EXP_TOT_CY,
+        F9_09_EXP_DEPREC_TOT
       ),
-      calculate_cash_duration,
-      unit = "months",
+      months_cash_on_hand,
       .progress = TRUE
     ),
-    days_cash_on_hand = purrr::pmap_dbl(
+    months_cash_on_hand_jesse = purrr::pmap_dbl(
       list(
         F9_10_ASSET_CASH_EOY,
         F9_10_ASSET_SAVING_EOY,
         F9_10_ASSET_PLEDGE_NET_EOY,
         F9_10_ASSET_ACC_NET_EOY,
-        F9_09_EXP_TOT_TOT,
+        F9_01_EXP_TOT_CY,
         F9_09_EXP_DEPREC_PROG
       ),
       calculate_cash_duration,
-      unit = "days",
+      unit = "months",
       .progress = TRUE
     )
   )
+
+summary(efile_sample$months_cash_on_hand)
+summary(efile_sample$months_cash_on_hand_jesse)
 
 # (4.2) - Profit Margin - with and without government grants
 
@@ -324,6 +343,29 @@ efile_sample <- efile_sample |>
   dplyr::ungroup()
 
 summary(efile_sample$profit_margin_nogovtgrant)
+
+# (4.4) At Risk Indicator Variable
+
+efile_sample <- efile_sample |>
+  dplyr::mutate(
+    at_risk = ifelse(profit_margin >= 0 & profit_margin_nogovtgrant < 0, 1, 0)
+  )
+
+summary(efile_sample$at_risk)
+table(efile_sample$at_risk)
+
+# (4.3) Operating Reserve Ratio
+
+efile_sample <- efile_sample |>
+  dplyr::mutate(
+    operating_reserve_ratio = purrr::pmap_dbl(
+      list(F9_01_NAFB_TOT_EOY, F9_01_EXP_TOT_CY),
+      operating_reserve_ratio,
+      .progress = TRUE
+    )
+  )
+
+summary(efile_sample$operating_reserve_ratio)
 
 # (5) - Merge datasets and save intermediate data
 
@@ -378,8 +420,10 @@ full_sample_proc <- full_sample_int |>
                 F9_08_REV_CONTR_GOVT_GRANT,
                 profit_margin,
                 profit_margin_nogovtgrant,
+                at_risk,
                 months_cash_on_hand,
-                days_cash_on_hand
+                months_cash_on_hand_jesse,
+                operating_reserve_ratio
                 ) |>
   dplyr::rename(
     CONGRESS_DISTRICT_NAME = NAMELSAD20,
@@ -387,14 +431,17 @@ full_sample_proc <- full_sample_int |>
     EXPENSE_CATEGORY = expense_category,
     PROFIT_MARGIN = profit_margin,
     PROFIT_MARGIN_NOGOVTGRANT = profit_margin_nogovtgrant,
+    AT_RISK_NUM = at_risk,
     MONTHS_CASH_ON_HAND = months_cash_on_hand,
-    DAYS_CASH_ON_HAND = days_cash_on_hand
+    MONTHS_CASH_ON_HAND_JESSE = months_cash_on_hand_jesse,
+    OPERATING_RESERVE_RATIO = operating_reserve_ratio
   )
 
 data.table::fwrite(full_sample_proc, "data/intermediate/full_sample_processed.csv")
 
 ## TODO
 
+# change days_cash_on_hand to months_cash_on_hand_jesse
 # Update EIN2 for the Unified BMF
 # Add 2010 fips to BMF for working with crosswalks - both 2010 and 2020 FIPs
     # If a tract is changed between 2 census periods, the tract id will change. I don;t know if the block will change. There is not the same versioning convention with the block. That might suggest the block is not identical. Figure out how tract and block ids change between 2010 and 2020. Important to check sizes of the dataset before/after merges. 
