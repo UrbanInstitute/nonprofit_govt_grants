@@ -92,17 +92,17 @@ purrr::walk2(
   datasets,
   names(datasets),
   function(df, name) {
-    data.table::fwrite(df, paste0("data/intermediate/national_", name, ".csv"))
+    data.table::fwrite(df, paste0("data/intermediate/national_thiya_", name, ".csv"))
   }
 )
 
 library(writexl)
 write_xlsx(list(
-  "Sheet1" = national,
-  "Sheet2" = national_bystate,
-  "Sheet3" = national_bysize,
-  "Sheet4" = national_bysubsector
-), path = "data/intermediate/national.xlsx")
+  "National" = national,
+  "State" = national_bystate,
+  "Size" = national_bysize,
+  "Subsector" = national_bysubsector
+), path = "data/intermediate/national_thiya.xlsx")
 
 # Pull Massachusetts data for testing
 
