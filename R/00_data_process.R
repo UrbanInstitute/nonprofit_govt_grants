@@ -203,16 +203,13 @@ bmf_sample <- bmf_sample |>
 # Merge all 3 e-file datasets. Left join to Part VIII since that contains the
 # government grant information
 
+
 efile_sample <- efile_21_p08_raw |>
-  tidylog::left_join(
-    efile_21_p09_raw
-  ) |>
-  tidylog::left_join(
-    efile_21_p10_raw
-  ) |>
-  tidylog::left_join(
-    efile_21_p01_raw
-  )
+  dplyr::filter(!is.na(F9_08_REV_CONTR_GOVT_GRANT),
+                F9_08_REV_CONTR_GOVT_GRANT != 0) |>
+  tidylog::left_join(efile_21_p09_raw) |>
+  tidylog::left_join(efile_21_p10_raw) |>
+  tidylog::left_join(efile_21_p01_raw)
 
 # Optional: To save memory
 rm(efile_21_p08_raw, efile_21_p09_raw, efile_21_p10_raw, efile_21_p01_raw)
@@ -410,10 +407,16 @@ full_sample_proc <- full_sample_int |>
       TRUE ~ "Unclassified"  # Default case for unmatched codes
     )
   ) |>
+  dplyr::filter(
+    CENSUS_STATE_ABBR %in% states
+  ) |>
+  dplyr::mutate(
+    CENSUS_STATE_NAME = usdata::abbr2state(CENSUS_STATE_ABBR)
+  ) |>
   dplyr::select(EIN2,
                 CENSUS_REGION,
                 CENSUS_COUNTY_NAME,
-                CENSUS_STATE_ABBR,
+                CENSUS_STATE_NAME,
                 NAMELSAD20,
                 SUBSECTOR,
                 expense_category,
