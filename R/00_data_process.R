@@ -125,6 +125,12 @@ efile_21_p09_raw <- data.table::fread("data/raw/efile_p09_2021_0225.csv", select
 efile_21_p10_raw <- data.table::fread("data/raw/efile_p10_2021_0225.csv", select = efile_cols)
 efile_21_p01_raw <- data.table::fread("data/raw/efile_p01_2021_0225.csv", select = efile_cols)
 
+efile_21_p08_raw |>
+  dplyr::filter(TAX_YEAR == 2021,
+                RETURN_TYPE == "990"),
+                F9_08_REV_CONTR_GOVT_GRANT != 0) |>
+  dplyr::summarise(n = dplyr::n())
+
 # (2.4) - SOI Data
 
 soi_cols <- list(
@@ -345,7 +351,7 @@ summary(efile_sample$profit_margin_nogovtgrant)
 
 efile_sample <- efile_sample |>
   dplyr::mutate(
-    at_risk = ifelse(profit_margin >= 0 & profit_margin_nogovtgrant < 0, 1, 0)
+    at_risk = ifelse(profit_margin_nogovtgrant < 0, 1, 0)
   )
 
 summary(efile_sample$at_risk)
@@ -373,7 +379,7 @@ full_sample_int <- efile_sample |>
   )
 
 data.table::fwrite(full_sample_int, "data/intermediate/full_sample.csv")
-
+full_sample_int <- data.table::fread("data/intermediate/full_sample.csv")
 # (6) Post process and save intermediate datasets
 
 full_sample_proc <- full_sample_int |>
@@ -462,3 +468,6 @@ data.table::fwrite(full_sample_proc, "data/intermediate/full_sample_processed.cs
 # efile - merge both packages. keep in R, see if they are doing anything better and integrate it
 # if we can speed it up with AWS functions - disaggregate into scripts or turn
 # into an internal package etc.
+
+# Notes: The number of filers won't be the total by state because some nonprofits
+# are outside the 51 states

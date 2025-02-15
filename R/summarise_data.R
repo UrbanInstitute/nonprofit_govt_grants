@@ -288,13 +288,16 @@ summarize_state <- function() {
 #' @param group_var_rename Optional new name for the grouping variable (e.g., "State")
 #'
 #' @return A dataframe with summarized nonprofit financial metrics
-summarize_nonprofit_data <- function(data, group_var = NULL, group_var_rename = NULL) {
+summarize_nonprofit_data <- function(data, group_var = NULL, group_var_rename = NULL, qc = FALSE) {
   
   # Start the pipeline
   summary <- data
   
   # Add grouping if specified
-  if (!is.null(group_var)) {
+  if (qc){
+    summary <- summary |>
+      dplyr::group_by(CENSUS_STATE_NAME, .data[[group_var]])
+  } else if (!is.null(group_var)) {
     summary <- summary |>
       dplyr::group_by(.data[[group_var]])
   }
@@ -314,7 +317,21 @@ summarize_nonprofit_data <- function(data, group_var = NULL, group_var_rename = 
     dplyr::mutate(proportion_at_risk = number_at_risk / num_990filers_govgrants)
   
   # Select columns
-  if (!is.null(group_var)) {
+  if (qc){
+    summary <- summary |>
+      dplyr::select(
+        CENSUS_STATE_NAME,
+        !!sym(group_var),
+        num_990filers_govgrants,
+        total_govt_grants,
+        median_profit_margin,
+        median_profit_margin_no_govt_grants,
+        proportion_at_risk,
+        mcoh_less3,
+        mcoh_less3_jesse,
+        operating_reserve_ratio
+      )
+  } else if (!is.null(group_var)) {
     summary <- summary |>
       dplyr::select(
         !!sym(group_var),
@@ -342,16 +359,18 @@ summarize_nonprofit_data <- function(data, group_var = NULL, group_var_rename = 
   }
   
   # Format numbers
-  summary <- summary |>
-    dplyr::mutate(
-      total_govt_grants = scales::dollar(total_govt_grants),
-      median_profit_margin = scales::percent(median_profit_margin, accuracy = 0.01),
-      median_profit_margin_no_govt_grants = scales::percent(median_profit_margin_no_govt_grants, accuracy = 0.01),
-      proportion_at_risk = scales::percent(proportion_at_risk, accuracy = 0.01),
-      mcoh_less3 = scales::percent(mcoh_less3 / num_990filers_govgrants, accuracy = 0.01),
-      mcoh_less3_jesse = scales::percent(mcoh_less3_jesse / num_990filers_govgrants, accuracy = 0.01),
-      operating_reserve_ratio = scales::percent(operating_reserve_ratio, accuracy = 0.01)
-    )
+  if (qc == FALSE){
+    summary <- summary |>
+      dplyr::mutate(
+        total_govt_grants = scales::dollar(total_govt_grants),
+        median_profit_margin = scales::percent(median_profit_margin, accuracy = 0.01),
+        median_profit_margin_no_govt_grants = scales::percent(median_profit_margin_no_govt_grants, accuracy = 0.01),
+        proportion_at_risk = scales::percent(proportion_at_risk, accuracy = 0.01),
+        mcoh_less3 = scales::percent(mcoh_less3 / num_990filers_govgrants, accuracy = 0.01),
+        mcoh_less3_jesse = scales::percent(mcoh_less3_jesse / num_990filers_govgrants, accuracy = 0.01),
+        operating_reserve_ratio = scales::percent(operating_reserve_ratio, accuracy = 0.01)
+      )
+  }
   
   # Rename columns
   rename_list <- list(
