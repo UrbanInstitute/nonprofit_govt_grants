@@ -1,17 +1,16 @@
 # Script Header
 # Title: Federal Funding Freeze Blog Post
 # Date created: 2025-01-31
-# Date last modified: 2025-02-12
+# Date last modified: 2025-02-17
 # Description: This script contains code to download, wrangle, and process data
 # for HTML fact sheets on nonprofits's fiscal sustainability and reliance on 
 # government grants for Tax Year 2021.
 
-# Create necessary folders
+# Create necessary folders to store data
 dir.create("data")
 dir.create("data/raw")
 dir.create("data/intermediate")
 dir.create("data/processed")
-dir.create("R")
 
 # Packages and default datasets
 library(rio)
@@ -24,10 +23,10 @@ library(tidylog)
 library(usdata)
 library(sf)
 library(tigris)
-states <- as.character(usdata::state_stats$abbr) # 51 states
+states <- as.character(usdata::state_stats$abbr) # Names of 50 states + DC
 
 # Helper Scripts
-source("R/derive_ein2.R") # Function to derive EIN2
+source("R/format_ein.R") # Function to format ein to EIN 2
 source("R/cash_on_hand.R") # Functions to calculate cash on hand by either day or month
 source("R/profit_margin.R") # Function to calculate profit margin
 source("R/operating_reserve_ratio.R") # Function to calculate operating reserve ratio
@@ -42,7 +41,7 @@ download.file("https://gt990datalake-rawdata.s3.us-east-1.amazonaws.com/EfileDat
 download.file("https://gt990datalake-rawdata.s3.us-east-1.amazonaws.com/EfileData/Extracts/Data/21eoextract990.xlsx", 
               "data/raw/soi21_raw.xlsx")
 
-# (1.2) - Part 08 and 09 Efile data for 2021 tax year
+# (1.2) - Part 01, 08, 09 and 10 Efile data for tax year 2021
 
 ## New datasets created on 11 feb 2025
 download.file(
@@ -63,11 +62,11 @@ download.file(
   "data/raw/efile_p10_2021_0225.csv"
 )
 
-# (1.3) - BMF Data
+# (1.3) - Unified BMF Data
 download.file("https://nccsdata.s3.amazonaws.com/harmonized/bmf/unified/BMF_UNIFIED_V1.1.csv",
               "data/raw/unified_bmf.csv")
 
-# (2) -  Load Data
+# (2) -  Load in Data with the necessary columns and datatypes
 
 # (2.1) - BMF Data
 
@@ -86,7 +85,6 @@ bmf_cols <- list(
   numeric = c("LATITUDE", "LONGITUDE")
 )
 
-# Unified BMF with relevant columns selected
 unified_bmf <- data.table::fread("data/raw/unified_bmf.csv", 
                                  select = bmf_cols)
 
@@ -101,11 +99,11 @@ cd_transformed <- sf::st_transform(cd_tigris, 4326)
 efile_cols <- list(
   character = c("EIN2", "TAX_YEAR", "RETURN_TYPE", "OBJECTID", "URL"),
   numeric = c(
-    "F9_08_REV_CONTR_GOVT_GRANT",
-    "F9_08_REV_TOT_TOT",
-    "F9_09_EXP_TOT_TOT",
-    "F9_09_EXP_DEPREC_PROG",
-    "F9_10_ASSET_CASH_EOY",
+    "F9_08_REV_CONTR_GOVT_GRANT", # Total government grants - Part 8
+    "F9_08_REV_TOT_TOT", # Total revenue - Part 8
+    "F9_09_EXP_TOT_TOT", # Total expenses - Part 8
+    "F9_09_EXP_DEPREC_PROG", # Depreciation - Part 9
+    "F9_10_ASSET_CASH_EOY", # Total Cash - Part 10
     "F9_10_ASSET_SAVING_EOY",
     "F9_10_ASSET_PLEDGE_NET_EOY",
     "F9_10_ASSET_ACC_NET_EOY",
@@ -114,7 +112,8 @@ efile_cols <- list(
     "F9_10_LIAB_TAX_EXEMPT_BOND_EOY", 
     "F9_10_LIAB_MTG_NOTE_EOY",
     "F9_10_LIAB_NOTE_UNSEC_EOY",
-    "F9_01_EXP_TOT_CY",
+    "F9_01_EXP_TOT_CY", # Total Expenses - Part 1
+    "F9_01_REV_TOT_CY", # Total revenue - Part 1
     "F9_09_EXP_DEPREC_TOT",
     "F9_01_NAFB_TOT_EOY"
   )
@@ -125,13 +124,40 @@ efile_21_p09_raw <- data.table::fread("data/raw/efile_p09_2021_0225.csv", select
 efile_21_p10_raw <- data.table::fread("data/raw/efile_p10_2021_0225.csv", select = efile_cols)
 efile_21_p01_raw <- data.table::fread("data/raw/efile_p01_2021_0225.csv", select = efile_cols)
 
-efile_21_p08_raw |>
-  dplyr::filter(TAX_YEAR == 2021,
-                RETURN_TYPE == "990"),
-                F9_08_REV_CONTR_GOVT_GRANT != 0) |>
-  dplyr::summarise(n = dplyr::n())
+## Get counts and the relevant summary stats for testing.
 
-# (2.4) - SOI Data
+### Number of 990 e-file records for 2021 from part 08
+numrec_w_part08 <- efile_21_p08_raw |>
+  dplyr::filter(
+    TAX_YEAR == "2021",
+    RETURN_TYPE == "990"
+  ) |>
+  nrow()
+
+### Number of 990 e-file records for 2021 reporting government grants
+numrec_w_gvgrnt <- efile_21_p08_raw |>
+  dplyr::filter(
+    !is.na(F9_08_REV_CONTR_GOVT_GRANT) &
+      F9_08_REV_CONTR_GOVT_GRANT != 0,
+    TAX_YEAR == "2021",
+    RETURN_TYPE == "990"
+  ) |>
+  nrow()
+
+### Total government grants reported in 2021
+total_gvgrnt <- efile_21_p08_raw |>
+  dplyr::filter(
+    !is.na(F9_08_REV_CONTR_GOVT_GRANT) &
+      F9_08_REV_CONTR_GOVT_GRANT != 0,
+    TAX_YEAR == "2021",
+    RETURN_TYPE == "990"
+  ) |>
+  dplyr::summarise(
+    total_gvgrnt = sum(F9_08_REV_CONTR_GOVT_GRANT)
+  ) |>
+  dplyr::pull(total_gvgrnt) # $298,466,270,662
+
+# (2.4) - SOI Data (currently unused, do not run this step if you do not need it)
 
 soi_cols <- list(
   character = c("EIN", "ein", "tax_pd"),
@@ -169,7 +195,7 @@ bmf_sample <- unified_bmf |>
       CENSUS_STATE_ABBR %in% c("AR", "LA", "OK", "TX") ~ "West South Central",
       CENSUS_STATE_ABBR %in% c("AZ", "CO", "ID", "MT", "NV", "NM", "UT", "WY") ~ "Mountain",
       CENSUS_STATE_ABBR %in% c("AK", "CA", "HI", "OR", "WA") ~ "Pacific",
-      .default = NA
+      .default = "Unmapped"
     ),
     EIN2 = format_ein(EIN2, to = "n")
   ) |>
@@ -178,37 +204,27 @@ bmf_sample <- unified_bmf |>
     EIN2 = format_ein(EIN2, to = "id")
   )
 
+## QC Check - No extra rows were dropped outside of filter statement
+
+nrow(bmf_sample) == nrow(unified_bmf[unified_bmf$NCCS_LEVEL_1 == "501C3 CHARITY"])
+
 # Merge Congressional districts
 
 bmf_sample <- bmf_sample |>
-  dplyr::filter(!is.na(LATITUDE) & !is.na(LONGITUDE)) |>
   sf::st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 4326)
 
 bmf_sample <- sf::st_join(bmf_sample, cd_transformed, join = sf::st_intersects)
 
-# Save intermediate dataset
+# Save intermediate dataset after spatial join. This is the BMF sample
 
 data.table::fwrite(bmf_sample, "data/intermediate/bmf_sample.csv")
-
-# Select relevant columns
-
-bmf_sample <- bmf_sample |>
-  dplyr::select(
-    "EIN2",
-    "CENSUS_REGION",
-    "CENSUS_STATE_ABBR",
-    "CENSUS_COUNTY_NAME",
-    "ORG_YEAR_FIRST", 
-    "ORG_YEAR_LAST",
-    "SUBSECTOR",
-    "NAMELSAD20"
-  )
+rm(unified_bmf, cd_tigris, cd_transformed)
+gc()
 
 # (3.2) Wrangle efile data
 
 # Merge all 3 e-file datasets. Left join to Part VIII since that contains the
 # government grant information
-
 
 efile_sample <- efile_21_p08_raw |>
   dplyr::filter(!is.na(F9_08_REV_CONTR_GOVT_GRANT),
@@ -217,12 +233,20 @@ efile_sample <- efile_21_p08_raw |>
   tidylog::left_join(efile_21_p10_raw) |>
   tidylog::left_join(efile_21_p01_raw)
 
-# Optional: To save memory
+nrow(efile_sample) == numrec_w_gvgrnt #11 records have been added
+sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt  # $298,469,954,367, $3 million added
+
+## Isolate duplicates
+
+duplicates <- efile_sample |>
+  dplyr::group_by(EIN2) |>
+  dplyr::filter(dplyr::n() > 1)
+
+## Optional: To save memory
 rm(efile_21_p08_raw, efile_21_p09_raw, efile_21_p10_raw, efile_21_p01_raw)
 gc()
 
-# Filter datasets. Note: I do not exclude NA values for F9_08_REV_CONTR_GOVT_GRANT
-# because those could be zeros, with the nonprofit not filling them up.
+## Wrangle
 efile_sample <- efile_sample |>
   dplyr::filter(
     TAX_YEAR == 2021,
@@ -245,8 +269,12 @@ efile_sample <- efile_sample |>
     "F9_10_LIAB_MTG_NOTE_EOY",
     "F9_10_LIAB_NOTE_UNSEC_EOY",
     "F9_01_EXP_TOT_CY",
+    "F9_01_REV_TOT_CY",
     "F9_01_NAFB_TOT_EOY"
   )
+
+nrow(efile_sample) == numrec_w_gvgrnt #TRUE
+sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt  # TRUE
 
 # (3.3) - Wrangle SOI Data
 
@@ -284,51 +312,22 @@ bmf_sample <- bmf_sample |>
 
 # (4) Compute metrics 
 
-# (4.1) - Days and Months of Cash on Hand
+# (4.1) - Profit Margin - with and without government grants
 
-efile_sample <- efile_sample |>
-  dplyr::mutate(
-    months_cash_on_hand = purrr::pmap_dbl(
-      list(
-        F9_10_NAFB_UNRESTRICT_EOY,
-        F9_10_ASSET_LAND_BLDG_NET_EOY,
-        F9_10_LIAB_TAX_EXEMPT_BOND_EOY,
-        F9_10_LIAB_MTG_NOTE_EOY,
-        F9_10_LIAB_NOTE_UNSEC_EOY,
-        F9_01_EXP_TOT_CY,
-        F9_09_EXP_DEPREC_TOT
-      ),
-      months_cash_on_hand,
-      .progress = TRUE
-    ),
-    months_cash_on_hand_jesse = purrr::pmap_dbl(
-      list(
-        F9_10_ASSET_CASH_EOY,
-        F9_10_ASSET_SAVING_EOY,
-        F9_10_ASSET_PLEDGE_NET_EOY,
-        F9_10_ASSET_ACC_NET_EOY,
-        F9_01_EXP_TOT_CY,
-        F9_09_EXP_DEPREC_PROG
-      ),
-      calculate_cash_duration,
-      unit = "months",
-      .progress = TRUE
-    )
-  )
-
-summary(efile_sample$months_cash_on_hand)
-summary(efile_sample$months_cash_on_hand_jesse)
-
-# (4.2) - Profit Margin - with and without government grants
+# The tails are fat so we will get extreme values
+create_sorted_plot(efile_sample, "F9_01_REV_TOT_CY")
+create_sorted_plot(efile_sample, "F9_01_EXP_TOT_CY")
 
 efile_sample <- efile_sample |>
   dplyr::mutate(profit_margin = purrr::pmap_dbl(
-    list(F9_08_REV_TOT_TOT, F9_09_EXP_TOT_TOT),
+    list(F9_01_REV_TOT_CY, F9_01_EXP_TOT_CY),
     profit_margin,
     .progress = TRUE
   ))
 
 summary(efile_sample$profit_margin)
+
+create_sorted_plot(efile_sample, "profit_margin")
 
 # purrr::pmap_dbl does not work for some reason. I will use a rowwise mutate instead
 efile_sample <- efile_sample |>
@@ -337,8 +336,8 @@ efile_sample <- efile_sample |>
     profit_margin_nogovtgrant = {
       if (dplyr::cur_group_rows() %% 10000 == 0) cat(".")  # prints a dot every 10000 rows
       profit_margin(
-        F9_08_REV_TOT_TOT,
-        F9_09_EXP_TOT_TOT,
+        F9_01_REV_TOT_CY,
+        F9_01_EXP_TOT_CY,
         F9_08_REV_CONTR_GOVT_GRANT
       )
     }
@@ -347,7 +346,9 @@ efile_sample <- efile_sample |>
 
 summary(efile_sample$profit_margin_nogovtgrant)
 
-# (4.4) At Risk Indicator Variable
+create_sorted_plot(efile_sample, "profit_margin_nogovtgrant")
+
+# (4.4) At Risk Indicator Variable - if profit margin negative
 
 efile_sample <- efile_sample |>
   dplyr::mutate(
@@ -356,30 +357,24 @@ efile_sample <- efile_sample |>
 
 summary(efile_sample$at_risk)
 table(efile_sample$at_risk)
+# 39,514 not at risk, 77,717 at risk
 
-# (4.3) Operating Reserve Ratio
-
-efile_sample <- efile_sample |>
-  dplyr::mutate(
-    operating_reserve_ratio = purrr::pmap_dbl(
-      list(F9_01_NAFB_TOT_EOY, F9_01_EXP_TOT_CY),
-      operating_reserve_ratio,
-      .progress = TRUE
-    )
-  )
-
-summary(efile_sample$operating_reserve_ratio)
-
-# (5) - Merge datasets and save intermediate data
+# (5) - Merge datasets and save intermediate data. Merge by the most recent BMF record
 
 full_sample_int <- efile_sample |>
   tidylog::left_join(
-    bmf_sample,
-    by = c("EIN2" = "EIN2")
+    bmf_sample <- bmf_sample |>
+      dplyr::arrange(ORG_YEAR_LAST),
+    by = c("EIN2" = "EIN2"),
+    multiple = "last"
   )
 
+sum(full_sample_int$at_risk) == 77717 # TRUE
+sum(full_sample_int$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt # TRUE
+nrow(full_sample_int) == numrec_w_gvgrnt # TRUE
+
 data.table::fwrite(full_sample_int, "data/intermediate/full_sample.csv")
-full_sample_int <- data.table::fread("data/intermediate/full_sample.csv")
+
 # (6) Post process and save intermediate datasets
 
 full_sample_proc <- full_sample_int |>
@@ -410,14 +405,18 @@ full_sample_proc <- full_sample_int |>
       SUBSECTOR == "UNU" ~ "Unclassified",
       SUBSECTOR == "UNI" ~ "Universities",
       SUBSECTOR == "HOS" ~ "Hospitals",
-      TRUE ~ "Unclassified"  # Default case for unmatched codes
+      .default = "Unclassified"  # Default case for unmatched codes
     )
   ) |>
-  dplyr::filter(
-    CENSUS_STATE_ABBR %in% states
-  ) |>
   dplyr::mutate(
-    CENSUS_STATE_NAME = usdata::abbr2state(CENSUS_STATE_ABBR)
+    CENSUS_STATE_NAME = dplyr::case_when(
+      CENSUS_STATE_ABBR %in% states ~ usdata::abbr2state(CENSUS_STATE_ABBR),
+      CENSUS_STATE_ABBR %in% c("AS", "GU", "MP", "PR", "VI") ~ "Other US Jurisdictions",
+      .default = "Unmapped"
+    ),
+    CONGRESS_DISTRICT_NAME = ifelse(
+      is.na(NAMELSAD20, "Unmapped", NAMELSAD20)
+    )
   ) |>
   dplyr::select(EIN2,
                 CENSUS_REGION,
@@ -429,10 +428,7 @@ full_sample_proc <- full_sample_int |>
                 F9_08_REV_CONTR_GOVT_GRANT,
                 profit_margin,
                 profit_margin_nogovtgrant,
-                at_risk,
-                months_cash_on_hand,
-                months_cash_on_hand_jesse,
-                operating_reserve_ratio
+                at_risk
                 ) |>
   dplyr::rename(
     CONGRESS_DISTRICT_NAME = NAMELSAD20,
@@ -440,11 +436,17 @@ full_sample_proc <- full_sample_int |>
     EXPENSE_CATEGORY = expense_category,
     PROFIT_MARGIN = profit_margin,
     PROFIT_MARGIN_NOGOVTGRANT = profit_margin_nogovtgrant,
-    AT_RISK_NUM = at_risk,
-    MONTHS_CASH_ON_HAND = months_cash_on_hand,
-    MONTHS_CASH_ON_HAND_JESSE = months_cash_on_hand_jesse,
-    OPERATING_RESERVE_RATIO = operating_reserve_ratio
+    AT_RISK_NUM = at_risk
   )
+
+##  Check Counts
+sum(table(full_sample_proc$CENSUS_REGION)) == numrec_w_gvgrnt
+sum(table(full_sample_proc$CENSUS_STATE_NAME)) == numrec_w_gvgrnt
+sum(table(full_sample_proc$EXPENSE_CATEGORY)) == numrec_w_gvgrnt
+sum(table(full_sample_proc$SUBSECTOR)) == numrec_w_gvgrnt
+sum(table(full_sample_proc$CONGRESS_DISTRICT_NAME)) == numrec_w_gvgrnt
+sum(full_sample_proc$AT_RISK_NUM) == 77717
+sum(full_sample_proc$GOVERNMENT_GRANT_DOLLAR_AMOUNT) == total_gvgrnt
 
 data.table::fwrite(full_sample_proc, "data/intermediate/full_sample_processed.csv")
 
