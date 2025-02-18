@@ -1,41 +1,29 @@
-#' Download IRS Form 990 E-File Data
-#' @description Downloads specified Form 990 E-File parts from NCCS AWS server
+#' Download Files from URLs
+#' @description Downloads files from provided URLs and saves them with specified names
 #' 
-#' @param year numeric scalar. Tax year to download (e.g. 2021)
-#' @param date character scalar. Date suffix for saved files (e.g. "0225") 
+#' @param file_map named list. Names are output filenames, values are URLs
 #' @param path character scalar. Directory path to save files
-#' @param parts named list. Form 990 parts to download with part codes as names and file suffixes as values
 #' 
 #' @return NULL. Downloads files to specified path
 #' 
 #' @examples
-#' parts <- list(
-#'   p01 = "F9-P01-T00-SUMMARY",
-#'   p08 = "F9-P08-T00-REVENUE"
+#' # Example with efile data
+#' efile_files <- list(
+#'   "efile_p01_2021_0225.csv" = "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P01-T00-SUMMARY-2021.csv",
+#'   "efile_p08_2021_0225.csv" = "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P08-T00-REVENUE-2021.csv"
 #' )
-#' download_efile(2021, "0225", "data/raw", parts)
-download_efile <- function(year, date, path, parts) {
+#' download_files(efile_files, "data/raw")
+#'
+#' # Example with BMF data
+#' bmf_files <- list(
+#'   "unified_bmf.csv" = "https://nccsdata.s3.amazonaws.com/harmonized/bmf/unified/BMF_UNIFIED_V1.1.csv"
+#' )
+#' download_files(bmf_files, "data/raw")
+download_files <- function(file_map, path) {
   
-  # Base URL 
-  base_url <- "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025"
-  
-  # Download each part
-  for(p in names(parts)) {
-    
-    # Construct URLs and filenames
-    url <- file.path(base_url, paste0(parts[[p]], "-", year, ".csv"))
-    filename <- file.path(path, paste0("efile_", p, "_", year, "_", date, ".csv"))
-    
-    # Download file
-    download.file(url, filename)
+  for(filename in names(file_map)) {
+    url <- file_map[[filename]]
+    full_path <- file.path(path, filename)
+    download.file(url, full_path)
   }
 }
-
-# Example usage with default parts:
-# default_parts <- list(
-#   p01 = "F9-P01-T00-SUMMARY",
-#   p08 = "F9-P08-T00-REVENUE", 
-#   p09 = "F9-P09-T00-EXPENSES",
-#   p10 = "F9-P10-T00-BALANCE-SHEET"
-# )
-# download_efile(2021, "0225", "data/raw", default_parts)
