@@ -1,0 +1,2930 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="" />
+
+
+<title>03_state_tables.knit</title>
+
+<script src="kentucky_files/header-attrs-2.29/header-attrs.js"></script>
+<script src="kentucky_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="kentucky_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="kentucky_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="kentucky_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="kentucky_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="kentucky_files/navigation-1.1/tabsets.js"></script>
+<link href="kentucky_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="kentucky_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="web_report.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<!-- this calls Lato font --> 
+<style>
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+</style>
+<!-- this calls crucial iframe resizing script --> 
+<script type="text/javascript" src="https://apps.urban.org/features/dataviz-libs/pym-js/v1.3.2/pym.nprapps.org_pym.v1.min.js">
+</script>
+
+<script>
+var pymChild = new pym.Child({ polling: 500 });
+</script>
+<div
+id="kentucky---financial-risk-of-nonprofits-receiving-government-grants"
+class="section level1">
+<h1>Kentucky - Financial Risk of Nonprofits Receiving Government
+Grants</h1>
+<div class="over-table-spacing">
+
+</div>
+<div id="section" class="section level2 tabset">
+<h2 class="tabset"></h2>
+<div id="by-counties" class="section level3">
+<h3>By Counties</h3>
+<div id="bxkdiedlnj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bxkdiedlnj table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#bxkdiedlnj thead, #bxkdiedlnj tbody, #bxkdiedlnj tfoot, #bxkdiedlnj tr, #bxkdiedlnj td, #bxkdiedlnj th {
+  border-style: none;
+}
+
+#bxkdiedlnj p {
+  margin: 0;
+  padding: 0;
+}
+
+#bxkdiedlnj .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#bxkdiedlnj .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#bxkdiedlnj .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#bxkdiedlnj .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#bxkdiedlnj .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bxkdiedlnj .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bxkdiedlnj .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bxkdiedlnj .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#bxkdiedlnj .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#bxkdiedlnj .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#bxkdiedlnj .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#bxkdiedlnj .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#bxkdiedlnj .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#bxkdiedlnj .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#bxkdiedlnj .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#bxkdiedlnj .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#bxkdiedlnj .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#bxkdiedlnj .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#bxkdiedlnj .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxkdiedlnj .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#bxkdiedlnj .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#bxkdiedlnj .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#bxkdiedlnj .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxkdiedlnj .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#bxkdiedlnj .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#bxkdiedlnj .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bxkdiedlnj .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxkdiedlnj .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#bxkdiedlnj .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bxkdiedlnj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#bxkdiedlnj .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bxkdiedlnj .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bxkdiedlnj .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxkdiedlnj .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bxkdiedlnj .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bxkdiedlnj .gt_left {
+  text-align: left;
+}
+
+#bxkdiedlnj .gt_center {
+  text-align: center;
+}
+
+#bxkdiedlnj .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#bxkdiedlnj .gt_font_normal {
+  font-weight: normal;
+}
+
+#bxkdiedlnj .gt_font_bold {
+  font-weight: bold;
+}
+
+#bxkdiedlnj .gt_font_italic {
+  font-style: italic;
+}
+
+#bxkdiedlnj .gt_super {
+  font-size: 65%;
+}
+
+#bxkdiedlnj .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#bxkdiedlnj .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#bxkdiedlnj .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#bxkdiedlnj .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#bxkdiedlnj .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#bxkdiedlnj .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#bxkdiedlnj .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#bxkdiedlnj .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#bxkdiedlnj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="County">County</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="No.-of-990-Filers-w/-Gov-Grants">No. of 990 Filers w/ Gov Grants</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Total-Gov-Grants-($)">Total Gov Grants ($)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Operating-Surplus-(%)">Operating Surplus (%)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Operating-Surplus-w/o-Gov-Grants-(%)">Operating Surplus w/o Gov Grants (%)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Share-of-990-Filers-w/-Gov-Grants-at-Risk">Share of 990 Filers w/ Gov Grants at Risk</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="County" class="gt_row gt_left">Adair County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$7,156,516</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">5.62%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-4.19%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Allen County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">4</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$494,834</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">26.34%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">14.21%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">25.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Anderson County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$193,279</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">18.52%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">5.09%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Ballard County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$489,939</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.47%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-80.32%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Barren County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">9</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$11,033,339</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">4.59%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-16.98%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">88.89%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Bell County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">7</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$12,579,678</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-3.25%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-45.76%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">85.71%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Boone County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">11</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$5,212,953</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.56%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">2.87%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">45.45%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Bourbon County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">4</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$898,338</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">19.19%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-3.55%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">75.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Boyd County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">17</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$24,070,041</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">7.00%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-10.72%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">64.71%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Boyle County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">14</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$1,544,214</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">5.56%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-10.92%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">64.29%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Bracken County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$243,801</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">3.45%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-54.72%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Breathitt County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">4</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$10,759,010</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">13.96%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-40.08%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">50.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Breckinridge County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$3,235,039</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.06%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">1.98%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">50.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Bullitt County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">8</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$1,454,634</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">12.78%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">6.45%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">25.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Butler County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">3</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$296,481</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">7.18%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-8.74%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">66.67%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Caldwell County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$4,051,120</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.79%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-17.99%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Calloway County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">6</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$944,795</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">7.96%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-40.06%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">66.67%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Campbell County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">21</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$24,954,986</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">6.14%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-16.82%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">80.95%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Carroll County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">3</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$3,184,277</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">10.80%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-4.33%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">66.67%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Carter County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$15,320,045</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-11.13%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-65.72%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Christian County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">15</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$20,610,359</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">3.27%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-61.04%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">80.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Clark County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">8</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,896,874</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">2.49%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-51.22%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">87.50%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Clay County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">3</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$14,242,805</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-7.44%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-75.43%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Clinton County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$1,243,671</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">9.14%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-0.09%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">50.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Crittenden County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$5,637</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-13.47%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-24.21%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Cumberland County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">3</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$24,275,603</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">3.10%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">0.69%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">33.33%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Daviess County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">37</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$82,587,269</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">13.95%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-10.89%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">64.86%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Edmonson County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$1,647,378</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">19.45%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-5.94%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">50.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Estill County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$25,500</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">22.25%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">11.05%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">50.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Fayette County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">152</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$384,703,357</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.86%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-7.56%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">65.79%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Fleming County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$7,378,071</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">2.79%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-94.72%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Floyd County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">11</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$42,413,220</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">6.18%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-81.49%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">81.82%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Franklin County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">29</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$191,869,128</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">1.88%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-61.61%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">68.97%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Fulton County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$101,080</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">23.39%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-76.54%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Gallatin County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$4,284,002</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">4.84%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-44.77%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Garrard County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$525</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-21.31%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-21.96%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Grant County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$175,818</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">19.50%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-48.18%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Graves County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">11</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$21,803,438</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">13.18%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-46.64%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">72.73%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Grayson County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$3,514,347</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-257.75%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-344.33%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Greenup County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$4,879,825</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">5.48%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-88.79%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Hardin County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">21</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$37,169,295</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">11.07%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-16.04%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">66.67%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Harlan County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">5</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$5,684,353</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">9.29%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-26.75%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">80.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Harrison County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$146,300</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">15.50%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">0.99%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Hart County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$8,843</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">44.38%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">43.55%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Henderson County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">18</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$4,233,255</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">3.86%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-11.80%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">72.22%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Hickman County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$53,784</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">5.92%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-19.37%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Hopkins County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">14</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$12,545,026</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.32%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-13.72%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">64.29%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Jackson County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$4,550</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-4.23%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-12.61%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Jefferson County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">299</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$707,442,952</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">9.47%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-5.63%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">61.87%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Jessamine County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">9</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$9,532,261</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">14.18%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-3.98%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">55.56%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Johnson County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">5</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$21,906,771</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">4.45%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-67.38%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">80.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Kenton County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">45</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$119,715,122</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">10.46%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-4.01%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">60.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Knott County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">4</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,997,554</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-7.37%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-40.04%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">50.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Knox County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">4</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$13,113,041</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">3.12%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-46.60%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Larue County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$26,062</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">49.72%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">29.95%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Laurel County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">16</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$21,702,150</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">0.48%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-72.14%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">87.50%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Lawrence County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$727,219</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">10.43%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">4.17%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Lee County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$9,660,718</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">41.12%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-24.85%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Letcher County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">4</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$10,096,344</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-1.41%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-42.25%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">75.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Lewis County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">4</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$10,923,762</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-2.23%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-22.73%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">75.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Lincoln County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$1,153,795</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">10.69%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-30.48%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Livingston County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">3</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,818,292</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">6.88%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-7.17%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">66.67%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Logan County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">3</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$360,698</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">20.20%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-57.23%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">66.67%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Lyon County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$170,552</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">10.81%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-46.81%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Madison County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">20</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$93,705,379</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">21.43%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-7.76%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">65.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Magoffin County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$32,894</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">3.37%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-12.22%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Marion County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">5</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$23,432,853</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.91%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-5.72%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">80.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Marshall County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">5</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,199,979</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">5.42%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-1.63%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">60.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Mason County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">8</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$5,869,781</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">0.05%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-22.14%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">87.50%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">McCracken County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">23</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$17,764,213</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">18.13%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">3.92%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">47.83%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">McCreary County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,000</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">16.67%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">16.56%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Meade County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">3</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$361,698</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">6.56%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-78.79%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">66.67%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Mercer County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">5</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$1,526,478</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">11.86%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-11.41%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">60.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Metcalfe County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$16,000</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">46.76%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">38.22%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Monroe County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$3,349,442</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.88%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-5.36%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Montgomery County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">10</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$8,251,476</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">4.54%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-22.06%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">90.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Morgan County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$18,214,902</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-0.46%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-89.35%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Muhlenberg County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$4,073,285</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">30.46%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">1.76%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">50.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Nelson County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">10</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$3,536,483</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">15.30%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">4.17%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">40.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Ohio County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$466,785</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-9.02%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-22.92%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Oldham County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">9</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,764,330</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">11.39%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">4.35%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">33.33%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Owsley County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">5</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,279,835</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.83%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-64.15%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Pendleton County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$46,047</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-8.05%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-26.85%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">50.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Perry County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">19</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$97,707,399</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">2.76%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-39.39%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">84.21%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Pike County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">14</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$9,013,523</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">7.73%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">1.56%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">42.86%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Powell County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$49,078</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">20.81%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">8.34%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Pulaski County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">12</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$34,850,521</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">4.47%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-45.44%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">75.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Rockcastle County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$181,569</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">6.42%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">4.82%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">50.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Rowan County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">8</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$13,498,203</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">6.24%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-52.41%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">75.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Russell County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">6</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$24,485,737</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">4.14%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-69.49%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">83.33%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Scott County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">13</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$4,882,633</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">12.69%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-3.95%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">53.85%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Shelby County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">8</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,854,199</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">6.91%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-23.96%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">75.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Simpson County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">9</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,124,538</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">4.04%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-7.04%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">66.67%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Taylor County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">3</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$14,039,483</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">5.93%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-4.24%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Todd County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$243,391</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">40.26%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">34.98%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">0.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Trigg County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">4</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$4,872,253</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">17.54%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-17.51%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">50.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Union County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">5</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$991,472</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">3.53%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-0.65%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">60.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Warren County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">44</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$83,153,932</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">15.31%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-12.04%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">59.09%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Washington County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$927,425</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">9.35%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-5.82%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Webster County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">2</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$4,164,696</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">-32.44%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-48.42%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Whitley County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">7</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$14,560,603</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">12.83%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-48.39%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">57.14%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Wolfe County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$243,224</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">16.79%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-58.60%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">100.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Woodford County</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">5</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$7,753,443</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">3.83%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-5.32%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">80.00%</td></tr>
+    <tr><td headers="County" class="gt_row gt_left">Total</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1155</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,437,459,107</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">9.27%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-10.71%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">65.54%</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+<div id="by-congressional-districts" class="section level3">
+<h3>By Congressional Districts</h3>
+<div id="bwgbgsentw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bwgbgsentw table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#bwgbgsentw thead, #bwgbgsentw tbody, #bwgbgsentw tfoot, #bwgbgsentw tr, #bwgbgsentw td, #bwgbgsentw th {
+  border-style: none;
+}
+
+#bwgbgsentw p {
+  margin: 0;
+  padding: 0;
+}
+
+#bwgbgsentw .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#bwgbgsentw .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#bwgbgsentw .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#bwgbgsentw .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#bwgbgsentw .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bwgbgsentw .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bwgbgsentw .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bwgbgsentw .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#bwgbgsentw .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#bwgbgsentw .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#bwgbgsentw .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#bwgbgsentw .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#bwgbgsentw .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#bwgbgsentw .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#bwgbgsentw .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#bwgbgsentw .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#bwgbgsentw .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#bwgbgsentw .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#bwgbgsentw .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bwgbgsentw .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#bwgbgsentw .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#bwgbgsentw .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#bwgbgsentw .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bwgbgsentw .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#bwgbgsentw .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#bwgbgsentw .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bwgbgsentw .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bwgbgsentw .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#bwgbgsentw .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bwgbgsentw .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#bwgbgsentw .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bwgbgsentw .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bwgbgsentw .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bwgbgsentw .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bwgbgsentw .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bwgbgsentw .gt_left {
+  text-align: left;
+}
+
+#bwgbgsentw .gt_center {
+  text-align: center;
+}
+
+#bwgbgsentw .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#bwgbgsentw .gt_font_normal {
+  font-weight: normal;
+}
+
+#bwgbgsentw .gt_font_bold {
+  font-weight: bold;
+}
+
+#bwgbgsentw .gt_font_italic {
+  font-style: italic;
+}
+
+#bwgbgsentw .gt_super {
+  font-size: 65%;
+}
+
+#bwgbgsentw .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#bwgbgsentw .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#bwgbgsentw .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#bwgbgsentw .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#bwgbgsentw .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#bwgbgsentw .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#bwgbgsentw .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#bwgbgsentw .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#bwgbgsentw div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Congressional-District">Congressional District</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="No.-of-990-Filers-w/-Gov-Grants">No. of 990 Filers w/ Gov Grants</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Total-Gov-Grants-($)">Total Gov Grants ($)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Operating-Surplus-(%)">Operating Surplus (%)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Operating-Surplus-w/o-Gov-Grants-(%)">Operating Surplus w/o Gov Grants (%)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Share-of-990-Filers-w/-Gov-Grants-at-Risk">Share of 990 Filers w/ Gov Grants at Risk</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Congressional District" class="gt_row gt_left">Congressional District 1</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">199</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$393,383,423</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.44%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-11.34%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">66.83%</td></tr>
+    <tr><td headers="Congressional District" class="gt_row gt_left">Congressional District 2</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">151</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$232,839,181</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">13.95%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-8.63%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">60.26%</td></tr>
+    <tr><td headers="Congressional District" class="gt_row gt_left">Congressional District 3</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">295</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$707,168,641</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">9.47%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-5.72%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">61.69%</td></tr>
+    <tr><td headers="Congressional District" class="gt_row gt_left">Congressional District 4</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">118</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$185,255,203</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">9.54%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-10.87%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">65.25%</td></tr>
+    <tr><td headers="Congressional District" class="gt_row gt_left">Congressional District 5</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">160</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$397,015,967</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">5.01%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-33.02%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">75.00%</td></tr>
+    <tr><td headers="Congressional District" class="gt_row gt_left">Congressional District 6</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">232</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$521,796,692</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">9.68%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-8.25%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">66.38%</td></tr>
+    <tr><td headers="Congressional District" class="gt_row gt_left">Total</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1155</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,437,459,107</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">9.27%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-10.71%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">65.54%</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+<div id="by-size" class="section level3">
+<h3>By Size</h3>
+<div id="ydwyosjuyq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ydwyosjuyq table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ydwyosjuyq thead, #ydwyosjuyq tbody, #ydwyosjuyq tfoot, #ydwyosjuyq tr, #ydwyosjuyq td, #ydwyosjuyq th {
+  border-style: none;
+}
+
+#ydwyosjuyq p {
+  margin: 0;
+  padding: 0;
+}
+
+#ydwyosjuyq .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: hidden;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ydwyosjuyq .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ydwyosjuyq .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ydwyosjuyq .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ydwyosjuyq .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ydwyosjuyq .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ydwyosjuyq .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ydwyosjuyq .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ydwyosjuyq .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ydwyosjuyq .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ydwyosjuyq .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ydwyosjuyq .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ydwyosjuyq .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ydwyosjuyq .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ydwyosjuyq .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ydwyosjuyq .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ydwyosjuyq .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ydwyosjuyq .gt_row {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ydwyosjuyq .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ydwyosjuyq .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ydwyosjuyq .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ydwyosjuyq .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ydwyosjuyq .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ydwyosjuyq .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ydwyosjuyq .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ydwyosjuyq .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ydwyosjuyq .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ydwyosjuyq .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ydwyosjuyq .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ydwyosjuyq .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ydwyosjuyq .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ydwyosjuyq .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ydwyosjuyq .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ydwyosjuyq .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ydwyosjuyq .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ydwyosjuyq .gt_left {
+  text-align: left;
+}
+
+#ydwyosjuyq .gt_center {
+  text-align: center;
+}
+
+#ydwyosjuyq .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ydwyosjuyq .gt_font_normal {
+  font-weight: normal;
+}
+
+#ydwyosjuyq .gt_font_bold {
+  font-weight: bold;
+}
+
+#ydwyosjuyq .gt_font_italic {
+  font-style: italic;
+}
+
+#ydwyosjuyq .gt_super {
+  font-size: 65%;
+}
+
+#ydwyosjuyq .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ydwyosjuyq .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ydwyosjuyq .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ydwyosjuyq .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ydwyosjuyq .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ydwyosjuyq .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ydwyosjuyq .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ydwyosjuyq .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ydwyosjuyq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" style="table-layout:fixed;" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <colgroup>
+    <col/>
+    <col/>
+    <col/>
+    <col/>
+    <col/>
+    <col/>
+    <col style="width:5px;"/>
+  </colgroup>
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="font-weight: bold;" scope="col" id="Size">Size</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-weight: bold;" scope="col" id="No.-of-990-Filers-w/-Gov-Grants">No. of 990 Filers w/ Gov Grants</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-weight: bold;" scope="col" id="Total-Gov-Grants-($)">Total Gov Grants ($)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-weight: bold;" scope="col" id="Operating-Surplus-(%)">Operating Surplus (%)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-weight: bold;" scope="col" id="Operating-Surplus-w/o-Gov-Grants-(%)">Operating Surplus w/o Gov Grants (%)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-weight: bold;" scope="col" id="Share-of-990-Filers-w/-Gov-Grants-at-Risk">Share of 990 Filers w/ Gov Grants at Risk</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="font-weight: bold;" scope="col" id="color"></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Size" class="gt_row gt_left" style="border-right-width: 1px; border-right-style: solid; border-right-color: #d2d2d2; font-weight: bold;">Less than $100K</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">71</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$4,268,054</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">33.93%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-17.93%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">60.56%</td>
+<td headers="color" class="gt_row gt_right" style="background-color: #FFF2CF; color: #000000;"></td></tr>
+    <tr><td headers="Size" class="gt_row gt_left" style="border-right-width: 1px; border-right-style: solid; border-right-color: #d2d2d2; font-weight: bold;">Between $100K and $499K</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">383</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$34,891,065</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">11.24%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-10.57%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">62.40%</td>
+<td headers="color" class="gt_row gt_right" style="background-color: #FCE39E; color: #000000;"></td></tr>
+    <tr><td headers="Size" class="gt_row gt_left" style="border-right-width: 1px; border-right-style: solid; border-right-color: #d2d2d2; font-weight: bold;">Between $500K and $999K</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">179</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$46,127,253</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">10.00%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-11.43%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">63.69%</td>
+<td headers="color" class="gt_row gt_right" style="background-color: #FDD870; color: #000000;"></td></tr>
+    <tr><td headers="Size" class="gt_row gt_left" style="border-right-width: 1px; border-right-style: solid; border-right-color: #d2d2d2; font-weight: bold;">Between $1M and $4.99M</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">272</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$226,866,230</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.61%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-11.32%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">68.75%</td>
+<td headers="color" class="gt_row gt_right" style="background-color: #E88E2D; color: #000000;"></td></tr>
+    <tr><td headers="Size" class="gt_row gt_left" style="border-right-width: 1px; border-right-style: solid; border-right-color: #d2d2d2; font-weight: bold;">Between $5M and $9.99M</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">76</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$208,701,799</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.18%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-13.11%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">73.68%</td>
+<td headers="color" class="gt_row gt_right" style="background-color: #CA5800; color: #FFFFFF;"></td></tr>
+    <tr><td headers="Size" class="gt_row gt_left" style="border-right-width: 1px; border-right-style: solid; border-right-color: #d2d2d2; font-weight: bold;">Greater than $10M</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">174</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$1,916,604,706</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">5.61%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-6.21%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">67.82%</td>
+<td headers="color" class="gt_row gt_right" style="background-color: #FDBF11; color: #000000;"></td></tr>
+    <tr><td headers="Size" class="gt_row gt_left" style="border-right-width: 1px; border-right-style: solid; border-right-color: #d2d2d2; font-weight: bold;">Total</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1155</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,437,459,107</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">9.27%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-10.71%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">65.54%</td>
+<td headers="color" class="gt_row gt_right" style="background-color: #FCCB41; color: #000000;"></td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+<div id="by-subsector" class="section level3">
+<h3>By Subsector</h3>
+<div id="zrdgdqerpc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zrdgdqerpc table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#zrdgdqerpc thead, #zrdgdqerpc tbody, #zrdgdqerpc tfoot, #zrdgdqerpc tr, #zrdgdqerpc td, #zrdgdqerpc th {
+  border-style: none;
+}
+
+#zrdgdqerpc p {
+  margin: 0;
+  padding: 0;
+}
+
+#zrdgdqerpc .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#zrdgdqerpc .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#zrdgdqerpc .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#zrdgdqerpc .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#zrdgdqerpc .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zrdgdqerpc .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zrdgdqerpc .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zrdgdqerpc .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#zrdgdqerpc .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#zrdgdqerpc .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#zrdgdqerpc .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#zrdgdqerpc .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#zrdgdqerpc .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#zrdgdqerpc .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#zrdgdqerpc .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#zrdgdqerpc .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#zrdgdqerpc .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#zrdgdqerpc .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#zrdgdqerpc .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zrdgdqerpc .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#zrdgdqerpc .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#zrdgdqerpc .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#zrdgdqerpc .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zrdgdqerpc .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#zrdgdqerpc .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#zrdgdqerpc .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zrdgdqerpc .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zrdgdqerpc .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#zrdgdqerpc .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zrdgdqerpc .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#zrdgdqerpc .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zrdgdqerpc .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zrdgdqerpc .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zrdgdqerpc .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zrdgdqerpc .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zrdgdqerpc .gt_left {
+  text-align: left;
+}
+
+#zrdgdqerpc .gt_center {
+  text-align: center;
+}
+
+#zrdgdqerpc .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#zrdgdqerpc .gt_font_normal {
+  font-weight: normal;
+}
+
+#zrdgdqerpc .gt_font_bold {
+  font-weight: bold;
+}
+
+#zrdgdqerpc .gt_font_italic {
+  font-style: italic;
+}
+
+#zrdgdqerpc .gt_super {
+  font-size: 65%;
+}
+
+#zrdgdqerpc .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#zrdgdqerpc .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#zrdgdqerpc .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#zrdgdqerpc .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#zrdgdqerpc .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#zrdgdqerpc .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#zrdgdqerpc .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#zrdgdqerpc .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#zrdgdqerpc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Subsector">Subsector</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="No.-of-990-Filers-w/-Gov-Grants">No. of 990 Filers w/ Gov Grants</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Total-Gov-Grants-($)">Total Gov Grants ($)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Operating-Surplus-(%)">Operating Surplus (%)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Operating-Surplus-w/o-Gov-Grants-(%)">Operating Surplus w/o Gov Grants (%)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Share-of-990-Filers-w/-Gov-Grants-at-Risk">Share of 990 Filers w/ Gov Grants at Risk</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="Subsector" class="gt_row gt_left">Arts, Culture, and Humanities</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">102</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$49,472,739</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">18.76%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-2.58%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">51.96%</td></tr>
+    <tr><td headers="Subsector" class="gt_row gt_left">Education (Excluding Universities)</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">94</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$58,885,503</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.49%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-8.30%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">68.09%</td></tr>
+    <tr><td headers="Subsector" class="gt_row gt_left">Environment and Animals</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">43</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$14,968,183</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">14.17%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">3.84%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">48.84%</td></tr>
+    <tr><td headers="Subsector" class="gt_row gt_left">Health (Excluding Hospitals)</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">123</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$331,727,508</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">6.87%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-16.27%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">71.54%</td></tr>
+    <tr><td headers="Subsector" class="gt_row gt_left">Hospitals</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">33</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$246,518,162</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">11.41%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-1.15%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">54.55%</td></tr>
+    <tr><td headers="Subsector" class="gt_row gt_left">Human Services</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">362</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$299,973,456</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.30%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-15.56%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">69.89%</td></tr>
+    <tr><td headers="Subsector" class="gt_row gt_left">International, Foreign Affairs</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">10</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$912,676</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">3.88%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-6.99%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">60.00%</td></tr>
+    <tr><td headers="Subsector" class="gt_row gt_left">Public, Societal Benefit</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">86</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$207,709,507</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.41%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-25.35%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">68.60%</td></tr>
+    <tr><td headers="Subsector" class="gt_row gt_left">Religion Related</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">26</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$14,062,102</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">15.95%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">6.41%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">42.31%</td></tr>
+    <tr><td headers="Subsector" class="gt_row gt_left">Unclassified</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">261</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$1,103,826,757</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">8.41%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-11.39%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">67.82%</td></tr>
+    <tr><td headers="Subsector" class="gt_row gt_left">Universities</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">15</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$109,402,514</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">9.52%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">3.13%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">46.67%</td></tr>
+    <tr><td headers="Subsector" class="gt_row gt_left">Total</td>
+<td headers="No. of 990 Filers w/ Gov Grants" class="gt_row gt_right">1155</td>
+<td headers="Total Gov Grants ($)" class="gt_row gt_right">$2,437,459,107</td>
+<td headers="Operating Surplus (%)" class="gt_row gt_right">9.27%</td>
+<td headers="Operating Surplus w/o Gov Grants (%)" class="gt_row gt_right">-10.71%</td>
+<td headers="Share of 990 Filers w/ Gov Grants at Risk" class="gt_row gt_right">65.54%</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<div id="section-1" class="section level2 unnumbered">
+<h2 class="unnumbered"></h2>
+<div
+id="source-national-center-for-charitable-statistics-2021-501c3-charities-pz-scope-2021-efilers-and-unified-bmf"
+class="section level6">
+<h6><strong>Source</strong>: <em>National Center for Charitable
+Statistics <a
+href="https://urbaninstitute.github.io/nccs/catalogs/catalog-core.html">2021
+501(c)(3) Charities PZ Scope</a>, <a
+href="https://nccs.urban.org/nccs/catalogs/catalog-efile.html">2021
+Efilers</a> and <a
+href="https://nccs.urban.org/nccs/datasets/bmf/">Unified
+BMF</a></em></h6>
+</div>
+<div id="notes-disclaimers-about-the-data." class="section level6">
+<h6><strong>Notes</strong>: <em>Disclaimers about the data.</em></h6>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
