@@ -26,45 +26,23 @@ library(tigris)
 states <- as.character(usdata::state_stats$abbr) # Names of 50 states + DC
 
 # Helper Scripts
+source("R/data.R")
+source("R/download_data.R") # Function to download efile data
 source("R/format_ein.R") # Function to format ein to EIN 2
-source("R/cash_on_hand.R") # Functions to calculate cash on hand by either day or month
 source("R/profit_margin.R") # Function to calculate profit margin
-source("R/operating_reserve_ratio.R") # Function to calculate operating reserve ratio
 
 # (1) - Download raw data
 
-# (1.1) - Form 990 SOI for 2023, 2022 and 2021 Calendar Year
-download.file("https://gt990datalake-rawdata.s3.us-east-1.amazonaws.com/EfileData/Extracts/Data/23eoextract990.xlsx", 
-              "data/raw/soi23_raw.xlsx")
-download.file("https://gt990datalake-rawdata.s3.us-east-1.amazonaws.com/EfileData/Extracts/Data/22eoextract990.xlsx", 
-              "data/raw/soi22_raw.xlsx")
-download.file("https://gt990datalake-rawdata.s3.us-east-1.amazonaws.com/EfileData/Extracts/Data/21eoextract990.xlsx", 
-              "data/raw/soi21_raw.xlsx")
+# (1.1) - Part 01, 08, 09 and 10 Efile data for tax year 2021. These are new efile datasets created on 11 feb 2025. 
 
-# (1.2) - Part 01, 08, 09 and 10 Efile data for tax year 2021
+download_files(efile_urls, "data/raw")
 
-## New datasets created on 11 feb 2025
-download.file(
-  "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P01-T00-SUMMARY-2021.csv",
-  "data/raw/efile_p01_2021_0225.csv"
-)
+# (1.2) - Unified BMF Data
 
-download.file(
-  "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P08-T00-REVENUE-2021.csv",
-  "data/raw/efile_p08_2021_0225.csv"
-)
-download.file(
-  "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P09-T00-EXPENSES-2021.csv",
-  "data/raw/efile_p09_2021_0225.csv"
-)
-download.file(
-  "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P10-T00-BALANCE-SHEET-2021.csv",
-  "data/raw/efile_p10_2021_0225.csv"
-)
+download_files(bmf_urls, "data/raw")
 
-# (1.3) - Unified BMF Data
-download.file("https://nccsdata.s3.amazonaws.com/harmonized/bmf/unified/BMF_UNIFIED_V1.1.csv",
-              "data/raw/unified_bmf.csv")
+# (1.3) - Non-US Based nonprofits
+download_files(xx_urls, "data/raw")
 
 # (2) -  Load in Data with the necessary columns and datatypes
 
@@ -88,11 +66,41 @@ bmf_cols <- list(
 unified_bmf <- data.table::fread("data/raw/unified_bmf.csv", 
                                  select = bmf_cols)
 
-# (2.2) - Congressional District Data
+# (2.2) - Tigris data. We want to ensure our sample is complete or at the very least aware of the presence of missing states, counties and/or districts.
 
-# From Tigris
+## State data
+state_tigris <- tigris::states()
+state_tigris <- state_tigris |>
+  dplyr::select("STATEFP", "STUSPS", "NAME") |>
+  dplyr::rename(
+    "CENSUS_STATE_FIPS" = STATEFP,
+    "CENSUS_STATE_ABBR" = STUSPS,
+    "CENSUS_STATE_NAME" = NAME
+  )
+
+## County Data
+county_tigris <- tigris::counties()
+county_tigris <- county_tigris |>
+  dplyr::select(STATEFP, NAMELSAD, COUNTYFP) |>
+  dplyr::rename(
+    "CENSUS_STATE_FIPS" = STATEFP,
+    "CENSUS_COUNTY_NAME" = NAMELSAD,
+    "CENSUS_COUNTY_FIPS" = COUNTYFP
+  )
+
+## Congressional Districts (2020)
 cd_tigris <- tigris::congressional_districts()
 cd_transformed <- sf::st_transform(cd_tigris, 4326)
+cd_transformed <- cd_transformed |>
+  dplyr::rename("CENSUS_STATE_FIPS" = STATEFP20)
+
+## Map states to counties
+county_state <- data.frame(county_tigris) |>
+  tidylog::left_join(data.frame(state_tigris), by = "CENSUS_STATE_FIPS")
+
+## Map congressional districts to states
+district_state <- data.frame(cd_transformed) |>
+  tidylog::left_join(data.frame(state_tigris), by = "CENSUS_STATE_FIPS")
 
 # (2.3) Efile data
 
@@ -104,18 +112,18 @@ efile_cols <- list(
     "F9_09_EXP_TOT_TOT", # Total expenses - Part 8
     "F9_09_EXP_DEPREC_PROG", # Depreciation - Part 9
     "F9_10_ASSET_CASH_EOY", # Total Cash - Part 10
-    "F9_10_ASSET_SAVING_EOY",
-    "F9_10_ASSET_PLEDGE_NET_EOY",
-    "F9_10_ASSET_ACC_NET_EOY",
-    "F9_10_NAFB_UNRESTRICT_EOY",
-    "F9_10_ASSET_LAND_BLDG_NET_EOY", 
-    "F9_10_LIAB_TAX_EXEMPT_BOND_EOY", 
-    "F9_10_LIAB_MTG_NOTE_EOY",
-    "F9_10_LIAB_NOTE_UNSEC_EOY",
-    "F9_01_EXP_TOT_CY", # Total Expenses - Part 1
-    "F9_01_REV_TOT_CY", # Total revenue - Part 1
-    "F9_09_EXP_DEPREC_TOT",
-    "F9_01_NAFB_TOT_EOY"
+    "F9_10_ASSET_SAVING_EOY", # Savings and temporary cash investments, end of year - Part 10
+    "F9_10_ASSET_PLEDGE_NET_EOY", # Pledges and grants receivable, net, end of year - Part 10
+    "F9_10_ASSET_ACC_NET_EOY", # Net accounts receivable, end of year - Part 10
+    "F9_10_NAFB_UNRESTRICT_EOY", # Net assets without donor restrictions, end of year - Part 10
+    "F9_10_ASSET_LAND_BLDG_NET_EOY", # Net value including lands, buildings, and equipment, end of year - Part 10
+    "F9_10_LIAB_TAX_EXEMPT_BOND_EOY", # Tax exempt bond liabilities, end of year - Part 10
+    "F9_10_LIAB_MTG_NOTE_EOY", # Secured mortgages and notes payable to unrelated third parties, end of year - Part 10
+    "F9_10_LIAB_NOTE_UNSEC_EOY", # Unsecured notes and loans payable to unrelated third parties, end of year - Part 10
+    "F9_01_EXP_TOT_CY", # Total expenses, current year - Part 1
+    "F9_01_REV_TOT_CY", # Total revenue, current year - Part 1
+    "F9_09_EXP_DEPREC_TOT", # Depreciation, depletion, and amortization - Part 9
+    "F9_01_NAFB_TOT_EOY" # Net assets or fund balances, end of year - Part 1
   )
 )
 
@@ -126,55 +134,56 @@ efile_21_p01_raw <- data.table::fread("data/raw/efile_p01_2021_0225.csv", select
 
 ## Get counts and the relevant summary stats for testing.
 
+### Foreign nonprofits
+## Check for foreign nonprofits
+eo_xx <- data.table::fread("data/raw/foreign_nonprofits.csv")
+eo_xx <- eo_xx |>
+  dplyr::mutate(
+    EIN2 = format_ein(EIN, to = "n")
+  ) |>
+  dplyr::mutate(
+    EIN2 = format_ein(EIN2, to = "id")
+  )
+length(intersect(efile_21_p08_raw$EIN2, eo_xx$EIN2)) 
+### 537 EINs are foreign
+foreign_ein <- unique(eo_xx$EIN2)
+
 ### Number of 990 e-file records for 2021 from part 08
 numrec_w_part08 <- efile_21_p08_raw |>
   dplyr::filter(
     TAX_YEAR == "2021",
-    RETURN_TYPE == "990"
+    RETURN_TYPE == "990",
+    ! EIN2 %in% foreign_ein
   ) |>
   nrow()
+### 322, 959
 
 ### Number of 990 e-file records for 2021 reporting government grants
 numrec_w_gvgrnt <- efile_21_p08_raw |>
   dplyr::filter(
     !is.na(F9_08_REV_CONTR_GOVT_GRANT) &
       F9_08_REV_CONTR_GOVT_GRANT != 0,
+    ! EIN2 %in% foreign_ein,
     TAX_YEAR == "2021",
     RETURN_TYPE == "990"
   ) |>
   nrow()
+### 117,034
 
 ### Total government grants reported in 2021
 total_gvgrnt <- efile_21_p08_raw |>
   dplyr::filter(
     !is.na(F9_08_REV_CONTR_GOVT_GRANT) &
       F9_08_REV_CONTR_GOVT_GRANT != 0,
+    ! EIN2 %in% foreign_ein,
     TAX_YEAR == "2021",
     RETURN_TYPE == "990"
   ) |>
   dplyr::summarise(
     total_gvgrnt = sum(F9_08_REV_CONTR_GOVT_GRANT)
   ) |>
-  dplyr::pull(total_gvgrnt) # $298,466,270,662
-
-# (2.4) - SOI Data (currently unused, do not run this step if you do not need it)
-
-soi_cols <- list(
-  character = c("EIN", "ein", "tax_pd"),
-  numeric = c("totfuncexpns")
-)
-
-soi_23 <- data.table::fread("data/raw/soi23_raw.csv", 
-                            select = soi_cols)
-soi_22 <- data.table::fread("data/raw/soi22_raw.csv",
-                            select = soi_cols)
-soi_21 <- data.table::fread("data/raw/soi21_raw.csv",
-                            select = soi_cols)
-
-soi_23 <- soi_23 |>
-  dplyr::rename("EIN" = ein)
-
-soi_sample <- data.table::rbindlist(list(soi_23, soi_22, soi_21))
+  dplyr::pull(total_gvgrnt)
+### $280,622,907,982
 
 # (3) - Wrangle Data
 
@@ -205,18 +214,15 @@ bmf_sample <- unified_bmf |>
   )
 
 ## QC Check - No extra rows were dropped outside of filter statement
-
 nrow(bmf_sample) == nrow(unified_bmf[unified_bmf$NCCS_LEVEL_1 == "501C3 CHARITY"])
 
-# Merge Congressional districts
-
+# Map BMF coordinates to Congressional districts
 bmf_sample <- bmf_sample |>
   sf::st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 4326)
 
 bmf_sample <- sf::st_join(bmf_sample, cd_transformed, join = sf::st_intersects)
 
 # Save intermediate dataset after spatial join. This is the BMF sample
-
 data.table::fwrite(bmf_sample, "data/intermediate/bmf_sample.csv")
 rm(unified_bmf, cd_tigris, cd_transformed)
 gc()
@@ -228,19 +234,16 @@ gc()
 
 efile_sample <- efile_21_p08_raw |>
   dplyr::filter(!is.na(F9_08_REV_CONTR_GOVT_GRANT),
-                F9_08_REV_CONTR_GOVT_GRANT != 0) |>
+                F9_08_REV_CONTR_GOVT_GRANT != 0,
+                ! EIN2 %in% foreign_ein) |>
   tidylog::left_join(efile_21_p09_raw) |>
   tidylog::left_join(efile_21_p10_raw) |>
   tidylog::left_join(efile_21_p01_raw)
 
-nrow(efile_sample) == numrec_w_gvgrnt #11 records have been added
-sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt  # $298,469,954,367, $3 million added
-
-## Isolate duplicates
-
-duplicates <- efile_sample |>
-  dplyr::group_by(EIN2) |>
-  dplyr::filter(dplyr::n() > 1)
+nrow(efile_sample) == numrec_w_gvgrnt 
+### 11 records have been added
+sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt  
+### $280,626,591,687, $3.68 million added
 
 ## Optional: To save memory
 rm(efile_21_p08_raw, efile_21_p09_raw, efile_21_p10_raw, efile_21_p01_raw)
@@ -276,45 +279,11 @@ efile_sample <- efile_sample |>
 nrow(efile_sample) == numrec_w_gvgrnt #TRUE
 sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt  # TRUE
 
-# (3.3) - Wrangle SOI Data
-
-soi_sample <- soi_sample |>
-  dplyr::mutate(
-    tax_year = substr(tax_pd, 1, 4)
-  ) |>
-  dplyr::filter(
-    tax_year == "2021"
-  ) |>
-  dplyr::mutate(EIN2 = format_ein(EIN, to = "n"),
-                expense_category = dplyr::case_when(
-                  totfuncexpns < 100000 ~ "Less than $100K",
-                  totfuncexpns >= 100000 &
-                    totfuncexpns < 500000 ~ "Between $100K and $499K",
-                  totfuncexpns >= 500000 &
-                    totfuncexpns < 1000000 ~ "Between $500K and $999K",
-                  totfuncexpns >= 1000000 &
-                    totfuncexpns < 5000000 ~ "Between $1M and $4.99M",
-                  totfuncexpns >= 5000000 &
-                    totfuncexpns < 10000000 ~ "Between $5M and $9.99M",
-                  totfuncexpns >= 10000000 ~ "Greater than $10M",
-                  .default = "No Expenses Provided"
-                )) |>
-  dplyr::mutate(
-    EIN2 = format_ein(EIN2, to = "id")
-  ) |>
-  dplyr::select(EIN2, expense_category) |>
-  dplyr::rename(EXPENSE_CATEGORY = expense_category)
-
-# Merge with BMF - If you need SOI columns
-
-bmf_sample <- bmf_sample |>
-  tidylog::left_join(soi_sample)
-
 # (4) Compute metrics 
 
 # (4.1) - Profit Margin - with and without government grants
 
-# The tails are fat so we will get extreme values
+# Explore Data - The tails are fat so we will get extreme values
 create_sorted_plot(efile_sample, "F9_01_REV_TOT_CY")
 create_sorted_plot(efile_sample, "F9_01_EXP_TOT_CY")
 
@@ -357,9 +326,9 @@ efile_sample <- efile_sample |>
 
 summary(efile_sample$at_risk)
 table(efile_sample$at_risk)
-# 39,514 not at risk, 77,717 at risk
+# 39,475 not at risk, 77,559 at risk
 
-# (5) - Merge datasets and save intermediate data. Merge by the most recent BMF record
+# (5) - Merge with the geographic data from the Unified BMF
 
 full_sample_int <- efile_sample |>
   tidylog::left_join(
@@ -369,13 +338,134 @@ full_sample_int <- efile_sample |>
     multiple = "last"
   )
 
-sum(full_sample_int$at_risk) == 77717 # TRUE
+sum(full_sample_int$at_risk) == sum(efile_sample$at_risk) # TRUE
 sum(full_sample_int$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt # TRUE
 nrow(full_sample_int) == numrec_w_gvgrnt # TRUE
 
-data.table::fwrite(full_sample_int, "data/intermediate/full_sample.csv")
+# (6) - Geographic post processing. Map null geographies with coordinates but without state, county, or district information. Ensure sample contains all possible state and county/district combinations.
 
-# (6) Post process and save intermediate datasets
+# (6.1) - Missing state information
+
+# Identify records with missing state but valid geometry
+null_geoms <- full_sample_int |>
+  dplyr::filter(is.na(CENSUS_STATE_ABBR) | CENSUS_STATE_ABBR == "",
+                !sf::st_is_empty(geometry)) |>
+  dplyr::select(EIN2, geometry) |>
+  sf::st_as_sf()
+
+# Transform counties to WGS84
+county_transformed <- sf::st_transform(county_tigris, 4326)
+
+# Spatial join with counties
+null_county <- sf::st_join(null_geoms, 
+                           county_transformed, 
+                           join = sf::st_intersects)
+
+# Create state FIPS to abbreviation lookup
+state_lookup <- setNames(state_tigris$CENSUS_STATE_ABBR, 
+                         state_tigris$CENSUS_STATE_FIPS)
+
+# Add state abbreviations to county-matched records
+null_county <- null_county |>
+  dplyr::mutate(CENSUS_STATE_ABBR = state_lookup[CENSUS_STATE_FIPS])
+
+# Create EIN to state abbreviation lookup
+ein_lookup <- setNames(null_county$CENSUS_STATE_ABBR, 
+                       null_county$EIN2)
+
+# Update original dataset with filled state abbreviations
+full_sample_int <- full_sample_int |>
+  dplyr::mutate(
+    CENSUS_STATE_ABBR = ifelse(EIN2 %in% null_county$EIN2,
+                               ein_lookup[EIN2], 
+                               CENSUS_STATE_ABBR)
+  )
+
+# (6.2) - Missing County Information
+
+# Identify records with missing state but valid geometry
+null_geoms <- full_sample_int |>
+  dplyr::filter(is.na(CENSUS_COUNTY_NAME) | CENSUS_COUNTY_NAME == "",
+                !sf::st_is_empty(geometry)) |>
+  dplyr::select(EIN2, geometry) |>
+  sf::st_as_sf()
+
+# Spatial join with counties
+null_county <- sf::st_join(null_geoms, 
+                           county_transformed, 
+                           join = sf::st_intersects)
+
+# Create EIN to state abbreviation lookup
+ein_lookup <- setNames(null_county$CENSUS_COUNTY_NAME, 
+                       null_county$EIN2)
+
+# Update original dataset with imputed counties
+full_sample_int <- full_sample_int |>
+  dplyr::mutate(
+    CENSUS_COUNTY_NAME = ifelse(EIN2 %in% null_county$EIN2,
+                               ein_lookup[EIN2], 
+                               CENSUS_COUNTY_NAME)
+  )
+
+# Check that all counties are in the sample
+sample_county <- full_sample_int |>
+  dplyr::select(CENSUS_STATE_ABBR, CENSUS_COUNTY_NAME) |>
+  dplyr::distinct()
+
+absent_counties <- data.frame(county_state) |>
+  dplyr::filter(! CENSUS_COUNTY_NAME %in% sample_county$CENSUS_COUNTY_NAME) |>
+  dplyr::select(CENSUS_STATE_ABBR, CENSUS_COUNTY_NAME)
+
+data.table::fwrite(absent_counties, "data/intermediate/absent_counties.csv")
+
+# 179 counties are not in the sample
+
+# (6.2) - Missing Congressional District Information. Unnecessary after mapping the missing state information
+
+# Identify records with missing state but valid geometry
+null_geoms <- full_sample_int |>
+  dplyr::filter(is.na(CENSUS_STATE_ABBR) | CENSUS_STATE_ABBR == "",
+                !sf::st_is_empty(geometry)) |>
+  dplyr::select(EIN2, geometry) |>
+  sf::st_as_sf()
+
+# Spatial join with congressional districts
+null_districts <- sf::st_join(null_geoms, 
+                              cd_transformed, 
+                              join = sf::st_intersects)
+
+# Add state abbreviations to county-matched records
+null_districts <- null_districts |>
+  dplyr::mutate(CENSUS_STATE_ABBR = state_lookup[CENSUS_STATE_FIPS])
+
+# Create EIN to state abbreviation lookup
+ein_lookup <- setNames(null_districts$CENSUS_STATE_ABBR, 
+                       null_districts$EIN2)
+
+# Update original dataset with filled state abbreviations
+full_sample_int <- full_sample_int |>
+  dplyr::mutate(
+    CENSUS_STATE_ABBR = ifelse(EIN2 %in% null_county$EIN2,
+                               ein_lookup[EIN2], 
+                               CENSUS_STATE_ABBR)
+  )
+
+# Check that all districts are in the sample
+sample_district <- full_sample_int |>
+  dplyr::select(CENSUS_STATE_ABBR, NAMELSAD20) |>
+  dplyr::distinct()
+
+absent_districts <- data.frame(district_state) |>
+  dplyr::filter(! NAMELSAD20 %in% sample_district$NAMELSAD20) |>
+  dplyr::select(CENSUS_STATE_ABBR, NAMELSAD20)
+
+# All districts are in the sample but not all counties
+
+data.table::fwrite(absent_counties, "data/intermediate/absent_counties.csv")
+
+# (7) Post process and save intermediate datasets
+
+data.table::fwrite(full_sample_int, "data/intermediate/full_sample.csv")
 
 full_sample_proc <- full_sample_int |>
   dplyr::mutate(
@@ -414,22 +504,25 @@ full_sample_proc <- full_sample_int |>
       CENSUS_STATE_ABBR %in% c("AS", "GU", "MP", "PR", "VI") ~ "Other US Jurisdictions",
       .default = "Unmapped"
     ),
-    CONGRESS_DISTRICT_NAME = ifelse(
-      is.na(NAMELSAD20, "Unmapped", NAMELSAD20)
-    )
+    CONGRESS_DISTRICT_NAME = ifelse(is.na(NAMELSAD20), "Unmapped", NAMELSAD20)
   ) |>
-  dplyr::select(EIN2,
-                CENSUS_REGION,
-                CENSUS_COUNTY_NAME,
-                CENSUS_STATE_NAME,
-                NAMELSAD20,
-                SUBSECTOR,
-                expense_category,
-                F9_08_REV_CONTR_GOVT_GRANT,
-                profit_margin,
-                profit_margin_nogovtgrant,
-                at_risk
-                ) |>
+  dplyr::select(
+    EIN2,
+    CENSUS_REGION,
+    CENSUS_COUNTY_NAME,
+    CENSUS_STATE_NAME,
+    NAMELSAD20,
+    SUBSECTOR,
+    expense_category,
+    F9_08_REV_CONTR_GOVT_GRANT,
+    profit_margin,
+    profit_margin_nogovtgrant,
+    at_risk
+  ) |>
+  dplyr::mutate(
+    CENSUS_REGION = ifelse(is.na(CENSUS_REGION), "Unmapped", CENSUS_REGION),
+    NAMELSAD20 = ifelse(is.na(NAMELSAD20), "Unmapped", NAMELSAD20)
+  ) |>
   dplyr::rename(
     CONGRESS_DISTRICT_NAME = NAMELSAD20,
     GOVERNMENT_GRANT_DOLLAR_AMOUNT = F9_08_REV_CONTR_GOVT_GRANT,
@@ -445,7 +538,7 @@ sum(table(full_sample_proc$CENSUS_STATE_NAME)) == numrec_w_gvgrnt
 sum(table(full_sample_proc$EXPENSE_CATEGORY)) == numrec_w_gvgrnt
 sum(table(full_sample_proc$SUBSECTOR)) == numrec_w_gvgrnt
 sum(table(full_sample_proc$CONGRESS_DISTRICT_NAME)) == numrec_w_gvgrnt
-sum(full_sample_proc$AT_RISK_NUM) == 77717
+sum(full_sample_proc$AT_RISK_NUM) == sum(efile_sample$at_risk)
 sum(full_sample_proc$GOVERNMENT_GRANT_DOLLAR_AMOUNT) == total_gvgrnt
 
 data.table::fwrite(full_sample_proc, "data/intermediate/full_sample_processed.csv")
