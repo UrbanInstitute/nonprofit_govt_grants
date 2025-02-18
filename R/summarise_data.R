@@ -309,10 +309,7 @@ summarize_nonprofit_data <- function(data, group_var = NULL, group_var_rename = 
       total_govt_grants = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT, na.rm = TRUE),
       median_profit_margin = median(PROFIT_MARGIN, na.rm = TRUE),
       median_profit_margin_no_govt_grants = median(PROFIT_MARGIN_NOGOVTGRANT, na.rm = TRUE),
-      number_at_risk = sum(AT_RISK_NUM, na.rm = TRUE),
-      mcoh_less3 = sum(MONTHS_CASH_ON_HAND < 3, na.rm = TRUE),
-      mcoh_less3_jesse = sum(MONTHS_CASH_ON_HAND_JESSE < 3, na.rm = TRUE),
-      operating_reserve_ratio = mean(OPERATING_RESERVE_RATIO < 0.5, na.rm = TRUE)
+      number_at_risk = sum(AT_RISK_NUM, na.rm = TRUE)
     ) |>
     dplyr::mutate(proportion_at_risk = number_at_risk / num_990filers_govgrants)
   
@@ -326,10 +323,7 @@ summarize_nonprofit_data <- function(data, group_var = NULL, group_var_rename = 
         total_govt_grants,
         median_profit_margin,
         median_profit_margin_no_govt_grants,
-        proportion_at_risk,
-        mcoh_less3,
-        mcoh_less3_jesse,
-        operating_reserve_ratio
+        proportion_at_risk
       )
   } else if (!is.null(group_var)) {
     summary <- summary |>
@@ -339,10 +333,7 @@ summarize_nonprofit_data <- function(data, group_var = NULL, group_var_rename = 
         total_govt_grants,
         median_profit_margin,
         median_profit_margin_no_govt_grants,
-        proportion_at_risk,
-        mcoh_less3,
-        mcoh_less3_jesse,
-        operating_reserve_ratio
+        proportion_at_risk
       )
   } else {
     summary <- summary |>
@@ -351,10 +342,7 @@ summarize_nonprofit_data <- function(data, group_var = NULL, group_var_rename = 
         total_govt_grants,
         median_profit_margin,
         median_profit_margin_no_govt_grants,
-        proportion_at_risk,
-        mcoh_less3,
-        mcoh_less3_jesse,
-        operating_reserve_ratio
+        proportion_at_risk
       )
   }
   
@@ -365,23 +353,17 @@ summarize_nonprofit_data <- function(data, group_var = NULL, group_var_rename = 
         total_govt_grants = scales::dollar(total_govt_grants),
         median_profit_margin = scales::percent(median_profit_margin, accuracy = 0.01),
         median_profit_margin_no_govt_grants = scales::percent(median_profit_margin_no_govt_grants, accuracy = 0.01),
-        proportion_at_risk = scales::percent(proportion_at_risk, accuracy = 0.01),
-        mcoh_less3 = scales::percent(mcoh_less3 / num_990filers_govgrants, accuracy = 0.01),
-        mcoh_less3_jesse = scales::percent(mcoh_less3_jesse / num_990filers_govgrants, accuracy = 0.01),
-        operating_reserve_ratio = scales::percent(operating_reserve_ratio, accuracy = 0.01)
+        proportion_at_risk = scales::percent(proportion_at_risk, accuracy = 0.01)
       )
   }
   
   # Rename columns
   rename_list <- list(
-    "Number of 990 Filers reporting Government Grants" = "num_990filers_govgrants",
-    "Total Government Grants ($USD)" = "total_govt_grants",
-    "Median Operating Surplus (%)" = "median_profit_margin",
-    "Median Operating Surplus (Without Government Grants) (%)" = "median_profit_margin_no_govt_grants",
-    "Proportion of Nonprofits at Risk" = "proportion_at_risk",
-    "% With Less than 3 Months Cash on Hand" = "mcoh_less3",
-    "% With Less than 3 Months Cash on Hand (Jesse)" = "mcoh_less3_jesse",
-    "Operating Reserve Ratio < 0.5" = "operating_reserve_ratio"
+    "No. of 990 Filers w/ Gov Grants" = "num_990filers_govgrants",
+    "Total Gov Grants ($)" = "total_govt_grants",
+    "Operating Surplus (%)" = "median_profit_margin",
+    "Operating Surplus w/o Gov Grants (%)" = "median_profit_margin_no_govt_grants",
+    "Share of 990 Filers w/ Gov Grants at Risk" = "proportion_at_risk"
   )
   
   # Add group variable rename if provided

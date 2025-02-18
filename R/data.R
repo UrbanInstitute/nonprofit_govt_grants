@@ -9,3 +9,7 @@ efile_urls <- list(
 bmf_urls <- list(
   "unified_bmf.csv" = "https://nccsdata.s3.amazonaws.com/harmonized/bmf/unified/BMF_UNIFIED_V1.1.csv"
 )
+
+xx_urls <- list(
+  "foreign_nonprofits.csv" = "https://www.irs.gov/pub/irs-soi/eo_xx.csv"
+)

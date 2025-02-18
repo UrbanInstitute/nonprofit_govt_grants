@@ -1,0 +1,138 @@
+---
+title: "Nonprofits, Financial Sustainability, and Government Grants in 2022"
+author: 
+subtitle: '<span style="font-size: 14pt; text-transform: capitalize;">Laura Tomasko,
+  Jesse Lecy, Hannah Martin, Thiyaghessan Poongundranar</span>'
+output:
+  html_document:
+    css: web_report.css
+    self_contained: false
+    theme: null
+  pdf_document: default
+params:
+  geography: California
+format: html
+---
+
+```{=html}
+<!-- this calls Lato font --> 
+<style>
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+</style>
+```
+
+```{=html}
+<!-- this calls crucial iframe resizing script --> 
+<script type="text/javascript" src="https://apps.urban.org/features/dataviz-libs/pym-js/v1.3.2/pym.nprapps.org_pym.v1.min.js">
+</script>
+
+<script>
+var pymChild = new pym.Child({ polling: 500 });
+</script>
+```
+
+```{r rmarkdown-setup, echo=FALSE}
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r r-setup, echo=FALSE}
+library(tidyverse)
+library(urbnthemes)
+library(gt)
+library(gtExtras)
+
+set_urbn_defaults(style = "print")
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+```{r r-scripts, echo=FALSE}
+source("R/build_gt_table.R")
+```
+
+This series of fact sheets provides three 2021 data points at the national and state level:
+
+1.	**Number of 501(c)(3) public charities** – These data show the size of the charitable sector in each geography.
+
+2.	**These 501(c)(3) public charities’ months of spending on hand** – Months of spending on hand measures nonprofits’ sustainability. It indicates the number of months a nonprofit could maintain its operational spending if it suddenly lost all its revenue. Experts recommend nonprofits maintain at least three months of spending on hand[^1]. 
+
+    We use the following formula to calculate months of spending on hand:
+
+    $$ 12 * \frac{\text{unrestricted net assets} - (\text{land, buildings, and equipment} - \text{tax-exempt bond liabilities} - \text{mortgages and notes payable})}{\text{total expenses} - \text{depreciation}} $$
+
+    Using lines from the Form 990, this can formula can be written as follows:
+
+    $$ 12 * \frac{\text{Part 10 line 27 EOY} - (\text{Part 10 line 10c EOY} - \text{Part 10 line 20 EOY} - \text{Part 10 line 23 EOY} - \text{Part 10 line 24 EOY})}{\text{Part 01 line 18 CY} - \text{Part 09 line 22 col A}} $$
+
+    We have separated the number of months of spending on hand into two categories: with and without tangible assets. Tangible assets include land, buildings, and equipment.
+
+3. **The aggregate dollar amount of government grants these 501(c)(3) public charities received** – These data point toward the importance of government grants to charities in each geography. 
+
+4. **Distribution of Government Grant Revenue** - This metric shows what percentage of nonprofits in each area receive different levels of government grant funding, ranging from those highly dependent (80-100% of revenue) to those less reliant (0-20% of revenue) on government grants. The distribution is broken into five categories: 0-20%, 20-40%, 40-60%, 60-80%, and 80-100% of total revenue.
+
+Each fact sheet displays these data points for the US or state overall and broken down by subsector and the size of their expenses.
+
+<div class="under-table-spacing"></div>
+
+# Analysis of `r params$geography`
+
+<div class="over-table-spacing"></div>
+
+#### By Size
+
+```{r echo=FALSE}
+tables_ls <- build_gt_table("data/intermediate/factsheet_test_expense_df.csv", "EXPENSE_CATEGORY", "Size")
+```
+
+## Results {.tabset}
+
+### Months of Cash on Hand
+```{r}
+tables_ls[[1]]
+```
+
+### Government Grants
+```{r}
+tables_ls[[2]]
+```
+
+## {-}
+
+###### **Source**: *National Center for Charitable Statistics [2021 501(c)(3) Charities PZ Scope](https://urbaninstitute.github.io/nccs/catalogs/catalog-core.html), [2021 Efilers](https://nccs.urban.org/nccs/catalogs/catalog-efile.html) and [Unified  BMF](https://nccs.urban.org/nccs/datasets/bmf/)*
+
+###### **Notes**: *Disclaimers about the data.*
+
+<div class="under-table-spacing"></div>
+
+The same data can be disaggregated by Subsector.
+
+<div class="over-table-spacing"></div>
+
+#### By Subsector
+
+```{r echo=FALSE}
+tables_ls <- build_gt_table("data/intermediate/factsheet_test_subsector_df.csv", "SUBSECTOR", "Subsector")
+```
+
+### Months of Cash on Hand
+```{r}
+tables_ls[[1]]
+```
+
+### Government Grants
+```{r}
+tables_ls[[2]]
+```
+
+## {-}
+
+
+
+###### **Source**: *National Center for Charitable Statistics [2021 501(c)(3) Charities PZ Scope](https://urbaninstitute.github.io/nccs/catalogs/catalog-core.html), [2021 Efilers](https://nccs.urban.org/nccs/catalogs/catalog-efile.html) and [Unified  BMF](https://nccs.urban.org/nccs/datasets/bmf/)*
+
+###### **Notes**: *Disclaimers about the data.*
+
+<div class="under-table-spacing"></div>
+
+[^1]: Bowman, Woods. 2011. “[Financial Capacity and Sustainability of Ordinary Nonprofits.](https://doi.org/10.1002/nml.20039)” Nonprofit Management & Leadership 22 (1): 37–51. 
