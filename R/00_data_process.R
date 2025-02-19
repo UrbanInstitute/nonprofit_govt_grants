@@ -5,6 +5,9 @@
 # Description: This script contains code to download, wrangle, and process data
 # for HTML fact sheets on nonprofits's fiscal sustainability and reliance on 
 # government grants for Tax Year 2021.
+### Details:
+# (1) - Download Data
+# (2) - Load in and filter data
 
 # Create necessary folders to store data
 dir.create("data")
@@ -462,6 +465,7 @@ null_geoms <- full_sample_int |>
                 !sf::st_is_empty(geometry)) |>
   dplyr::select(EIN2, geometry) |>
   sf::st_as_sf()
+### 12 records
 
 # Transform counties to WGS84
 county_transformed <- sf::st_transform(county_tigris, 4326)
@@ -499,6 +503,7 @@ null_geoms <- full_sample_int |>
                 !sf::st_is_empty(geometry)) |>
   dplyr::select(EIN2, geometry) |>
   sf::st_as_sf()
+### 12 records all with 0 coordinates
 
 # Spatial join with counties
 null_county <- sf::st_join(null_geoms, 
@@ -611,8 +616,7 @@ full_sample_proc <- full_sample_int |>
   dplyr::mutate(
     CENSUS_STATE_NAME = dplyr::case_when(
       CENSUS_STATE_ABBR %in% states ~ usdata::abbr2state(CENSUS_STATE_ABBR),
-      CENSUS_STATE_ABBR %in% c("AS", "GU", "MP", "PR", "VI") ~ "Other U.S. Territories",
-      .default = "Unmapped"
+      .default = "Other US Jurisdictions/Unmapped"
     ),
     CONGRESS_DISTRICT_NAME = ifelse(is.na(NAMELSAD20), "Unmapped", NAMELSAD20)
   ) |>
