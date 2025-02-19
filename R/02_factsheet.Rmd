@@ -1,15 +1,14 @@
 ---
-title: "Nonprofits, Financial Sustainability, and Government Grants in 2022"
+title: ""
 author: 
-subtitle: '<span style="font-size: 14pt; text-transform: capitalize;">Laura Tomasko,
-  Jesse Lecy, Hannah Martin, Thiyaghessan Poongundranar</span>'
+subtitle: ''
 output:
   html_document:
     css: web_report.css
     self_contained: false
   pdf_document: default
 params:
-  geography: California
+  geography: US
 ---
 
 ```{=html}
@@ -45,69 +44,226 @@ set_urbn_defaults(style = "print")
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-```{r r-scripts, echo=FALSE}
-source("R/build_gt_table.R")
-```
-
-
-This series of fact sheets provides three 2021 data points at the national and state level:
-
-1.	**Number of 501(c)(3) public charities** – These data show the size of the charitable sector in each geography.
-
-2.	**These 501(c)(3) public charities’ months of spending on hand** – Months of spending on hand measures nonprofits’ sustainability. It indicates the number of months a nonprofit could maintain its operational spending if it suddenly lost all its revenue. Experts recommend nonprofits maintain at least three months of spending on hand[^1]. 
-
-    We use the following formula to calculate months of spending on hand:
-
-    $$ 12 * \frac{\text{unrestricted net assets} - (\text{land, buildings, and equipment} - \text{tax-exempt bond liabilities} - \text{mortgages and notes payable})}{\text{total expenses} - \text{depreciation}} $$
-
-    Using lines from the Form 990, this can formula can be written as follows:
-
-    $$ 12 * \frac{\text{Part 10 line 27 EOY} - (\text{Part 10 line 10c EOY} - \text{Part 10 line 20 EOY} - \text{Part 10 line 23 EOY} - \text{Part 10 line 24 EOY})}{\text{Part 01 line 18 CY} - \text{Part 09 line 22 col A}} $$
-
-    We have separated the number of months of spending on hand into two categories: with and without tangible assets. Tangible assets include land, buildings, and equipment.
-
-3. **The aggregate dollar amount of government grants these 501(c)(3) public charities received** – These data point toward the importance of government grants to charities in each geography. 
-
-4. **Distribution of Government Grant Revenue** - This metric shows what percentage of nonprofits in each area receive different levels of government grant funding, ranging from those highly dependent (80-100% of revenue) to those less reliant (0-20% of revenue) on government grants. The distribution is broken into five categories: 0-20%, 20-40%, 40-60%, 60-80%, and 80-100% of total revenue.
-
-Each fact sheet displays these data points for the US or state overall and broken down by subsector and the size of their expenses.
-
-<div class="under-table-spacing"></div>
-
 # Analysis of `r params$geography`
 
 <div class="over-table-spacing"></div>
 
-#### By Size
-
-```{r echo=FALSE}
-ma_county <- readxl::read_xlsx("data/intermediate/massachussets_data.xlsx", sheet = 1)
-ma_congressional <- readxl::read_xlsx("data/intermediate/massachussets_data.xlsx", sheet = 2)
-ma_size <- readxl::read_xlsx("data/intermediate/massachussets_data.xlsx", sheet = 3)
-ma_subsector <- readxl::read_xlsx("data/intermediate/massachussets_data.xlsx", sheet = 4)
-
+```{r r-data, echo=FALSE}
+national_bystate <- data.table::fread("data/processed/national_bystate.csv")
+national_bysize <- data.table::fread("data/processed/national_bysize.csv")
+national_bysubsector <- data.table::fread("data/processed/national_bysubsector.csv")
 ```
 
 ## {.tabset}
 
-### County
+### State
 ```{r}
-ma_county |> gt()
-```
-
-### Congressional Districts
-```{r}
-ma_congressional |> gt()
+national_bystate  |> mutate(State = factor(
+  State,
+  levels = c(
+    "Alabama",
+    "Alaska",
+    "Arizona",
+    "Arkansas",
+    "California",
+    "Colorado",
+    "Connecticut",
+    "Delaware",
+    "District of Columbia",
+    "Florida",
+    "Georgia",
+    "Hawaii",
+    "Idaho",
+    "Illinois",
+    "Indiana",
+    "Iowa",
+    "Kansas",
+    "Kentucky",
+    "Louisiana",
+    "Maine",
+    "Maryland",
+    "Massachusetts",
+    "Michigan",
+    "Minnesota",
+    "Mississippi",
+    "Missouri",
+    "Montana",
+    "Nebraska",
+    "Nevada",
+    "New Hampshire",
+    "New Jersey",
+    "New Mexico",
+    "New York",
+    "North Carolina",
+    "North Dakota",
+    "Ohio",
+    "Oklahoma",
+    "Oregon",
+    "Other U.S. Territories",
+    "Pennsylvania",
+    "Rhode Island",
+    "South Carolina",
+    "South Dakota",
+    "Tennessee",
+    "Texas",
+    "Utah",
+    "Vermont",
+    "Virginia",
+    "Washington",
+    "West Virginia",
+    "Wisconsin",
+    "Wyoming",
+    "Other US Jurisdictions/Unmapped",
+    "Total"
+  )
+)) |>
+  arrange(State) |>
+  dplyr::mutate(color = "") |>
+  gt() |>
+  data_color(
+    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    target_columns = color,
+    method = "auto",
+    palette = c(
+      "#FFF2CF",
+      "#FCE39E",
+      "#FDD870",
+      "#FCCB41",
+      "#FDBF11",
+      "#E88E2D",
+      "#CA5800",
+      "#843215"
+    )
+  ) |>
+  cols_width(color ~ px(5)) |>
+  cols_label(color = "") |>
+  cols_align(align = "left", columns = c("State")) |>
+  tab_style(
+    style = cell_borders(
+      sides = "right",
+      color = "#d2d2d2",
+      weight = px(1)
+    ),
+    locations = cells_body(columns = 1)
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = list(cells_body(columns = 1), cells_column_labels())
+  ) |>
+  tab_options(table.border.top.style = "hidden",
+              data_row.padding = px(10))
 ```
 
 ### Size
 ```{r}
-ma_size |> gt()
+national_bysize |> mutate(Size = factor(
+  Size,
+  levels = c(
+    "Less than $100K",
+    "Between $100K and $499K",
+    "Between $500K and $999K",
+    "Between $1M and $4.99M",
+    "Between $5M and $9.99M",
+    "Greater than $10M",
+    "Total"
+  )
+)) |>
+  arrange(Size) |>
+   dplyr::mutate(color = "") |>
+  gt() |>
+  data_color(
+    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    target_columns = color,
+    method = "auto",
+    palette = c("#FFF2CF", "#FCE39E", "#FDD870", "#FCCB41", "#FDBF11", "#E88E2D", "#CA5800", "#843215")
+    ) |>
+    cols_width(color ~ px(5)) |>
+  cols_label(
+    color = ""  # This sets the column name to an empty string
+) |>
+  cols_align(
+    align = "left",
+    columns = c("Size")
+  ) |>
+  tab_style(
+    style = cell_borders(
+      sides = "right",
+      color = "#d2d2d2",
+      weight = px(1)
+    ),
+    locations = cells_body(
+      columns = 1
+    )
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = list(
+      cells_body(columns = 1),  # First column
+      cells_column_labels()      # All headers
+    )
+  ) |>
+  tab_options(
+    table.border.top.style = "hidden",
+    data_row.padding = px(10)
+  )
 ```
 
 ### Subsector
 ```{r}
-ma_subsector |> gt()
+national_bysubsector |> mutate(Subsector = factor(
+  Subsector,
+  levels = c(
+    "Arts, Culture, and Humanities",
+    "Education (Excluding Universities)",
+    "Environment and Animals",
+    "Health (Excluding Hospitals)",
+    "Hospitals",
+    "Human Services",
+    "International, Foreign Affairs",
+    "Mutual/Membership Benefit",
+    "Public, Societal Benefit",
+    "Religion Related",
+    "Universities",
+    "Unclassified",
+    "Total"
+  )
+)) |>
+  arrange(Subsector) |>
+  dplyr::mutate(color = "") |>
+  gt() |>
+  data_color(
+    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    target_columns = color,
+    method = "auto",
+    palette = c(
+      "#FFF2CF",
+      "#FCE39E",
+      "#FDD870",
+      "#FCCB41",
+      "#FDBF11",
+      "#E88E2D",
+      "#CA5800",
+      "#843215"
+    )
+  ) |>
+  cols_width(color ~ px(5)) |>
+  cols_label(color = "") |>
+  cols_align(align = "left", columns = c("Subsector")) |>
+  tab_style(
+    style = cell_borders(
+      sides = "right",
+      color = "#d2d2d2",
+      weight = px(1)
+    ),
+    locations = cells_body(columns = 1)
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = list(cells_body(columns = 1), cells_column_labels())
+  ) |>
+  tab_options(table.border.top.style = "hidden",
+              data_row.padding = px(10))
+                
 ```
 
 ## {-}
