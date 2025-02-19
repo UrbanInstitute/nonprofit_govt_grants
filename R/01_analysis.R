@@ -23,7 +23,7 @@ dir.create("data/processed/state_overviews", showWarnings = FALSE)
 source("R/summarise_data.R")
 
 # Load in data
-full_sample_proc <- data.table::fread("data/intermediate/full_sample_processed.csv")
+full_sample_proc <- data.table::fread("data/processed/full_sample_processed.csv")
 absent_counties <- data.table::fread("data/intermediate/absent_counties.csv")
 
 # (1) - National Summaries
@@ -62,22 +62,46 @@ writexl::write_xlsx(list(
   "State" = national_bystate,
   "Size" = national_bysize,
   "Subsector" = national_bysubsector
-), path = "data/processed/national_combined.xlsx")
+), path = "data/processed/national_overview.xlsx")
 
 # (2) - State level summary
 states <- as.character(usdata::state_stats$state)
 
 for (state in states) {
+  
+  cat("Processing ", state, "\n")
+  
   state_sample <- full_sample_proc |>
     dplyr::filter(CENSUS_STATE_NAME == state)
+  
+  missing_county <- absent_counties |>
+    dplyr::mutate(
+      CENSUS_STATE_NAME = usdata::abbr2state(CENSUS_STATE_ABBR)
+    ) |>
+    dplyr::mutate(
+      CENSUS_STATE_NAME = ifelse(is.na(CENSUS_STATE_NAME), 
+                                 "Other US Jurisdictions/Unmapped", 
+                                 CENSUS_STATE_NAME),
+      `No. of 990 Filers w/ Gov Grants` = 0,
+      `Total Gov Grants ($)` = "0",
+      `Operating Surplus (%)` = "0",
+      `Operating Surplus w/o Gov Grants (%)` = "0",
+      `Share of 990 Filers w/ Gov Grants at Risk` = "0"
+    ) |>
+    dplyr::select(! CENSUS_STATE_ABBR) |>
+    dplyr::rename(County = CENSUS_COUNTY_NAME) |>
+    dplyr::filter(CENSUS_STATE_NAME == state) |>
+    dplyr::select(! CENSUS_STATE_NAME)
+  
   
   state_overall <- summarize_nonprofit_data(state_sample)
   
   state_bycounty <- summarize_nonprofit_data(state_sample,
                                              group_var = "CENSUS_COUNTY_NAME",
                                              group_var_rename = "County") |>
+    dplyr::bind_rows(missing_county)
     dplyr::bind_rows(dplyr::mutate(state_overall, County = "Total"))
-  
+    
   state_bydistrict <- summarize_nonprofit_data(state_sample,
                                                group_var = "CONGRESS_DISTRICT_NAME",
                                                group_var_rename = "Congressional District") |>
@@ -123,62 +147,76 @@ for (state in states) {
   
 }
 
-# (3) - QC Dataset
+# (3) - Quality Assurance QA Dataset. This dataset is used to provide teams with an overview of all the data. These are not used for external publication.
 
-qc <- full_sample_proc |>
-  dplyr::mutate(
-    state_name = CENSUS_STATE_NAME
-  )
+# (3.1) - Create second state column to aggregate all observations by state.
+qa <- full_sample_proc |>
+  dplyr::mutate(state_name = CENSUS_STATE_NAME)
+## National aggregates
+qa_national <- summarize_nonprofit_data(qa) |>
+  dplyr::mutate(CENSUS_STATE_NAME = "Total",
+                `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`))
+  
 
-qc_state <- summarize_nonprofit_data(qc,
+# (3.2) - QA by state
+qa_state <- summarize_nonprofit_data(qa,
                                      group_var = "state_name",
-                                     group_var_rename = "state_name",
+                                     group_var_rename = "State",
                                      qc = TRUE) |>
-  janitor::adorn_totals("row", c("No. of 990 Filers w/ Gov Grants",
-                        "Total Gov Grants ($)")) |>
   dplyr::mutate(
     `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`),
     `Total Gov Grants ($)` = scales::dollar(`Total Gov Grants ($)`),
     `Operating Surplus (%)` = scales::percent(`Operating Surplus (%)`, accuracy = 0.01),
     `Operating Surplus w/o Gov Grants (%)` = scales::percent(`Operating Surplus w/o Gov Grants (%)`, accuracy = 0.01),
     `Share of 990 Filers w/ Gov Grants at Risk` = scales::percent(`Share of 990 Filers w/ Gov Grants at Risk`, accuracy = 0.01)
-  )
+  ) |>
+  dplyr::bind_rows(dplyr::mutate(qa_national, State = "Total"))
 
-qc_district <- summarize_nonprofit_data(full_sample_proc,
+qc_state <- summarize_nonprofit_data(qa,
+                                     group_var = "state_name",
+                                     group_var_rename = "State",
+                                     qc = TRUE) |>
+  dplyr::mutate(
+    `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`),
+    `Total Gov Grants ($)` = scales::dollar(`Total Gov Grants ($)`),
+    `Operating Surplus (%)` = scales::percent(`Operating Surplus (%)`, accuracy = 0.01),
+    `Operating Surplus w/o Gov Grants (%)` = scales::percent(`Operating Surplus w/o Gov Grants (%)`, accuracy = 0.01),
+    `Share of 990 Filers w/ Gov Grants at Risk` = scales::percent(`Share of 990 Filers w/ Gov Grants at Risk`, accuracy = 0.01)
+  ) |>
+  dplyr::bind_rows(dplyr::mutate(qa_national, State = "Total"))
+
+qc_district <- summarize_nonprofit_data(qa,
                                               group_var = "CONGRESS_DISTRICT_NAME",
                                               group_var_rename = "Congressional District",
                                               qc = TRUE)  |>
-  janitor::adorn_totals("row", c("No. of 990 Filers w/ Gov Grants",
-                                 "Total Gov Grants ($)")) |>
   dplyr::mutate(
     `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`),
     `Total Gov Grants ($)` = scales::dollar(`Total Gov Grants ($)`),
     `Operating Surplus (%)` = scales::percent(`Operating Surplus (%)`, accuracy = 0.01),
     `Operating Surplus w/o Gov Grants (%)` = scales::percent(`Operating Surplus w/o Gov Grants (%)`, accuracy = 0.01),
     `Share of 990 Filers w/ Gov Grants at Risk` = scales::percent(`Share of 990 Filers w/ Gov Grants at Risk`, accuracy = 0.01)
-  )
+  ) |>
+  dplyr::bind_rows(dplyr::mutate(qa_national, State = "Total"))
 
 # County
-absent_counties <- absent_counties |>
+missing_counties <- absent_counties |>
   dplyr::mutate(
     CENSUS_STATE_NAME = usdata::abbr2state(CENSUS_STATE_ABBR)
   ) |>
   dplyr::mutate(
     CENSUS_STATE_NAME = ifelse(is.na(CENSUS_STATE_NAME), 
-                                "Other U.S. Territories", 
+                                "Other US Jurisdictions/Unmapped", 
                                 CENSUS_STATE_NAME)
   ) |>
   dplyr::select(! CENSUS_STATE_ABBR) |>
   dplyr::rename(County = CENSUS_COUNTY_NAME)
   
 
-qc_county <- summarize_nonprofit_data(full_sample_proc,
+qc_county <- summarize_nonprofit_data(qa,
                                             group_var = "CENSUS_COUNTY_NAME",
                                             group_var_rename = "County",
                                             qc = TRUE)  |>
-  dplyr::bind_rows(absent_counties) |>
-  janitor::adorn_totals("row", c("No. of 990 Filers w/ Gov Grants",
-                                 "Total Gov Grants ($)")) |>
+  dplyr::bind_rows(missing_counties) |>
   dplyr::mutate(
     `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`),
     `Total Gov Grants ($)` = scales::dollar(`Total Gov Grants ($)`),
@@ -189,7 +227,7 @@ qc_county <- summarize_nonprofit_data(full_sample_proc,
 
 qc_county[is.na(qc_county)] <- "0"
 
-qc_size <- summarize_nonprofit_data(full_sample_proc,
+qc_size <- summarize_nonprofit_data(qa,
                                           group_var = "EXPENSE_CATEGORY",
                                           group_var_rename = "Size",
                                           qc = TRUE)  |>
@@ -230,3 +268,8 @@ writexl::write_xlsx(list(
   "Size" = qc_size,
   "Subsector" = qc_subsector
 ), path = "data/intermediate/qc_govtgrants.xlsx")
+
+
+### TODO
+
+# Update unclassified NTEE codes.
