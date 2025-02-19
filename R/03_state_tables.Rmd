@@ -1,0 +1,261 @@
+---
+title: ""
+author: 
+subtitle: ''
+output:
+  html_document:
+    css: web_report.css
+    self_contained: false
+  pdf_document: default
+params:
+  state: something
+---
+
+```{=html}
+<!-- this calls Lato font --> 
+<style>
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+</style>
+```
+
+```{=html}
+<!-- this calls crucial iframe resizing script --> 
+<script type="text/javascript" src="https://apps.urban.org/features/dataviz-libs/pym-js/v1.3.2/pym.nprapps.org_pym.v1.min.js">
+</script>
+
+<script>
+var pymChild = new pym.Child({ polling: 500 });
+</script>
+```
+
+```{r rmarkdown-setup, echo=FALSE}
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r r-setup, echo=FALSE}
+library(tidyverse)
+library(urbnthemes)
+library(gt)
+library(gtExtras)
+library(stringr)
+
+set_urbn_defaults(style = "print")
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+```
+
+# `r params$state` - Financial Risk of Nonprofits Receiving Government Grants
+
+<div class="over-table-spacing"></div>
+
+```{r echo=FALSE}
+state <- gsub(" ", "-", tolower(params$state))
+
+county <- data.table::fread(sprintf("data/processed/state_factsheets/%s_bycounty.csv", 
+                                    state))
+district <- data.table::fread(sprintf("data/processed/state_factsheets/%s_bydistrict.csv",
+                                      state))
+size <- data.table::fread(sprintf("data/processed/state_factsheets/%s_bysize.csv", 
+                                  state))
+subsector <- data.table::fread(sprintf("data/processed/state_factsheets/%s_bysubsector.csv",
+                                       state))
+```
+
+## {.tabset}
+
+### By Counties
+```{r}
+county |>
+  dplyr::mutate(color = "") |>
+  gt() |>
+  data_color(
+    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    target_columns = color,
+    method = "auto",
+    palette = c(
+      "#FFF2CF",
+      "#FCE39E",
+      "#FDD870",
+      "#FCCB41",
+      "#FDBF11",
+      "#E88E2D",
+      "#CA5800",
+      "#843215"
+    )
+  ) |>
+  cols_width(color ~ px(5)) |>
+  cols_label(color = "") |>
+  cols_align(align = "left", columns = c("County")) |>
+  tab_style(
+    style = cell_borders(
+      sides = "right",
+      color = "#d2d2d2",
+      weight = px(1)
+    ),
+    locations = cells_body(columns = 1)
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = list(cells_body(columns = 1), cells_column_labels())
+  ) |>
+  tab_options(table.border.top.style = "hidden",
+              data_row.padding = px(10))
+
+```
+
+### By Congressional Districts
+```{r}
+district |> 
+  dplyr::mutate(color = "") |>
+  gt() |>
+  data_color(
+    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    target_columns = color,
+    method = "auto",
+    palette = c(
+      "#FFF2CF",
+      "#FCE39E",
+      "#FDD870",
+      "#FCCB41",
+      "#FDBF11",
+      "#E88E2D",
+      "#CA5800",
+      "#843215"
+    )
+  ) |>
+  cols_width(color ~ px(5)) |>
+  cols_label(color = "") |>
+  cols_align(align = "left", columns = c("Congressional District")) |>
+  tab_style(
+    style = cell_borders(
+      sides = "right",
+      color = "#d2d2d2",
+      weight = px(1)
+    ),
+    locations = cells_body(columns = 1)
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = list(cells_body(columns = 1), cells_column_labels())
+  ) |>
+  tab_options(table.border.top.style = "hidden",
+              data_row.padding = px(10))
+```
+
+### By Size
+```{r}
+size |> mutate(Size = factor(
+  Size,
+  levels = c(
+    "Less than $100K",
+    "Between $100K and $499K",
+    "Between $500K and $999K",
+    "Between $1M and $4.99M",
+    "Between $5M and $9.99M",
+    "Greater than $10M",
+    "Total"
+  )
+)) |>
+  arrange(Size) |>
+   dplyr::mutate(color = "") |>
+  gt() |>
+  data_color(
+    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    target_columns = color,
+    method = "auto",
+    palette = c("#FFF2CF", "#FCE39E", "#FDD870", "#FCCB41", "#FDBF11", "#E88E2D", "#CA5800", "#843215")
+    ) |>
+    cols_width(color ~ px(5)) |>
+  cols_label(
+    color = ""  # This sets the column name to an empty string
+) |>
+  cols_align(
+    align = "left",
+    columns = c("Size")
+  ) |>
+  tab_style(
+    style = cell_borders(
+      sides = "right",
+      color = "#d2d2d2",
+      weight = px(1)
+    ),
+    locations = cells_body(
+      columns = 1
+    )
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = list(
+      cells_body(columns = 1),  # First column
+      cells_column_labels()      # All headers
+    )
+  ) |>
+  tab_options(
+    table.border.top.style = "hidden",
+    data_row.padding = px(10)
+  )
+```
+
+### By Subsector
+```{r}
+subsector |> mutate(Subsector = factor(
+  Subsector,
+  levels = c(
+    "Arts, Culture, and Humanities",
+    "Education (Excluding Universities)",
+    "Environment and Animals",
+    "Health (Excluding Hospitals)",
+    "Hospitals",
+    "Human Services",
+    "International, Foreign Affairs",
+    "Mutual/Membership Benefit",
+    "Public, Societal Benefit",
+    "Religion Related",
+    "Universities",
+    "Unclassified",
+    "Total"
+  )
+)) |>
+  arrange(Subsector) |>
+  dplyr::mutate(color = "") |>
+  gt() |>
+  data_color(
+    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    target_columns = color,
+    method = "auto",
+    palette = c(
+      "#FFF2CF",
+      "#FCE39E",
+      "#FDD870",
+      "#FCCB41",
+      "#FDBF11",
+      "#E88E2D",
+      "#CA5800",
+      "#843215"
+    )
+  ) |>
+  cols_width(color ~ px(5)) |>
+  cols_label(color = "") |>
+  cols_align(align = "left", columns = c("Subsector")) |>
+  tab_style(
+    style = cell_borders(
+      sides = "right",
+      color = "#d2d2d2",
+      weight = px(1)
+    ),
+    locations = cells_body(columns = 1)
+  ) |>
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = list(cells_body(columns = 1), cells_column_labels())
+  ) |>
+  tab_options(table.border.top.style = "hidden",
+              data_row.padding = px(10))
+```
+
+## {-}
+
+###### **Source**: *National Center for Charitable Statistics [2021 501(c)(3) Charities PZ Scope](https://urbaninstitute.github.io/nccs/catalogs/catalog-core.html), [2021 Efilers](https://nccs.urban.org/nccs/catalogs/catalog-efile.html) and [Unified  BMF](https://nccs.urban.org/nccs/datasets/bmf/)*
+
+###### **Notes**: *Disclaimers about the data.*
