@@ -1,7 +1,7 @@
 # Script Header
 # Title: Federal Funding Freeze Blog Post
 # Date created: 2025-01-31
-# Date last modified: 2025-02-17
+# Date last modified: 2025-02-18
 # Description: This script contains code to download, wrangle, and process data
 # for HTML fact sheets on nonprofits's fiscal sustainability and reliance on 
 # government grants for Tax Year 2021.
@@ -19,6 +19,7 @@ library(dtplyr)
 library(tidyverse)
 library(tidyr)
 library(purrr)
+library(lubridate)
 library(tidylog)
 library(usdata)
 library(sf)
@@ -30,10 +31,11 @@ source("R/data.R")
 source("R/download_data.R") # Function to download efile data
 source("R/format_ein.R") # Function to format ein to EIN 2
 source("R/profit_margin.R") # Function to calculate profit margin
+source("R/create_sorted_plot.R") # Function to create sorted plots
 
 # (1) - Download raw data
 
-# (1.1) - Part 01, 08, 09 and 10 Efile data for tax year 2021. These are new efile datasets created on 11 feb 2025. 
+# (1.1) - Header, Parts 01, 08, 09 and 10 Efile data for tax year 2021. These are new efile datasets created on 11 feb 2025. 
 
 download_files(efile_urls, "data/raw")
 
@@ -105,37 +107,67 @@ district_state <- data.frame(cd_transformed) |>
 # (2.3) Efile data
 
 efile_cols <- list(
-  character = c("EIN2", "TAX_YEAR", "RETURN_TYPE", "OBJECTID", "URL"),
+  character = c(
+    "EIN2", # EIN formatted to 9 digits like EIN-XX-XXXXXXX
+    "TAX_YEAR", # Tax year of the return
+    "RETURN_TYPE", # Type of return (990 or 990EZ)
+    "OBJECTID", # Unique identifier
+    "URL", # URL to the raw return
+    "F9_00_EXEMPT_STAT_501C3_X", # Indicates if the organization is a 501c3 public charity (since only public charities file form 990, private foundations file form 990PF)
+    "RETURN_TIME_STAMP" # Date and time return was filed
+  ),
   numeric = c(
-    "F9_08_REV_CONTR_GOVT_GRANT", # Total government grants - Part 8
-    "F9_08_REV_TOT_TOT", # Total revenue - Part 8
-    "F9_09_EXP_TOT_TOT", # Total expenses - Part 8
-    "F9_09_EXP_DEPREC_PROG", # Depreciation - Part 9
-    "F9_10_ASSET_CASH_EOY", # Total Cash - Part 10
-    "F9_10_ASSET_SAVING_EOY", # Savings and temporary cash investments, end of year - Part 10
-    "F9_10_ASSET_PLEDGE_NET_EOY", # Pledges and grants receivable, net, end of year - Part 10
-    "F9_10_ASSET_ACC_NET_EOY", # Net accounts receivable, end of year - Part 10
-    "F9_10_NAFB_UNRESTRICT_EOY", # Net assets without donor restrictions, end of year - Part 10
-    "F9_10_ASSET_LAND_BLDG_NET_EOY", # Net value including lands, buildings, and equipment, end of year - Part 10
-    "F9_10_LIAB_TAX_EXEMPT_BOND_EOY", # Tax exempt bond liabilities, end of year - Part 10
-    "F9_10_LIAB_MTG_NOTE_EOY", # Secured mortgages and notes payable to unrelated third parties, end of year - Part 10
-    "F9_10_LIAB_NOTE_UNSEC_EOY", # Unsecured notes and loans payable to unrelated third parties, end of year - Part 10
-    "F9_01_EXP_TOT_CY", # Total expenses, current year - Part 1
-    "F9_01_REV_TOT_CY", # Total revenue, current year - Part 1
-    "F9_09_EXP_DEPREC_TOT", # Depreciation, depletion, and amortization - Part 9
+    "F9_08_REV_CONTR_GOVT_GRANT",
+    # Total government grants - Part 8
+    "F9_08_REV_TOT_TOT",
+    # Total revenue - Part 8
+    "F9_09_EXP_TOT_TOT",
+    # Total expenses - Part 8
+    "F9_09_EXP_DEPREC_PROG",
+    # Depreciation - Part 9
+    "F9_10_ASSET_CASH_EOY",
+    # Total Cash - Part 10
+    "F9_10_ASSET_SAVING_EOY",
+    # Savings and temporary cash investments, end of year - Part 10
+    "F9_10_ASSET_PLEDGE_NET_EOY",
+    # Pledges and grants receivable, net, end of year - Part 10
+    "F9_10_ASSET_ACC_NET_EOY",
+    # Net accounts receivable, end of year - Part 10
+    "F9_10_NAFB_UNRESTRICT_EOY",
+    # Net assets without donor restrictions, end of year - Part 10
+    "F9_10_ASSET_LAND_BLDG_NET_EOY",
+    # Net value including lands, buildings, and equipment, end of year - Part 10
+    "F9_10_LIAB_TAX_EXEMPT_BOND_EOY",
+    # Tax exempt bond liabilities, end of year - Part 10
+    "F9_10_LIAB_MTG_NOTE_EOY",
+    # Secured mortgages and notes payable to unrelated third parties, end of year - Part 10
+    "F9_10_LIAB_NOTE_UNSEC_EOY",
+    # Unsecured notes and loans payable to unrelated third parties, end of year - Part 10
+    "F9_01_EXP_TOT_CY",
+    # Total expenses, current year - Part 1
+    "F9_01_REV_TOT_CY",
+    # Total revenue, current year - Part 1
+    "F9_09_EXP_DEPREC_TOT",
+    # Depreciation, depletion, and amortization - Part 9
     "F9_01_NAFB_TOT_EOY" # Net assets or fund balances, end of year - Part 1
+  ),
+  logical = c(
+    "RETURN_PARTIAL_X", # Indicates if return is a partial return
+    "RETURN_GROUP_X", # Indicates if return is a group return
+    "RETURN_AMENDED_X" # Indicates if return is an amended return
   )
 )
 
-efile_21_p08_raw <- data.table::fread("data/raw/efile_p08_2021_0225.csv", select = efile_cols)
+efile_21_hd_raw <- data.table::fread("data/raw/efile_hd_2021_0225.csv", select = efile_cols)
+efile_21_p08_raw <- data.table::fread("data/raw/efile_p08_2021_0225.csv",
+                                      select = efile_cols)
 efile_21_p09_raw <- data.table::fread("data/raw/efile_p09_2021_0225.csv", select = efile_cols)
 efile_21_p10_raw <- data.table::fread("data/raw/efile_p10_2021_0225.csv", select = efile_cols)
 efile_21_p01_raw <- data.table::fread("data/raw/efile_p01_2021_0225.csv", select = efile_cols)
 
-## Get counts and the relevant summary stats for testing.
+## Create the sample of EINs from the E-File datasets
 
-### Foreign nonprofits
-## Check for foreign nonprofits
+### Exclude foreign nonprofits
 eo_xx <- data.table::fread("data/raw/foreign_nonprofits.csv")
 eo_xx <- eo_xx |>
   dplyr::mutate(
@@ -145,45 +177,123 @@ eo_xx <- eo_xx |>
     EIN2 = format_ein(EIN2, to = "id")
   )
 length(intersect(efile_21_p08_raw$EIN2, eo_xx$EIN2)) 
-### 537 EINs are foreign
+### 537 EINs belong to foreign nonprofits
 foreign_ein <- unique(eo_xx$EIN2)
 
-### Number of 990 e-file records for 2021 from part 08
-numrec_w_part08 <- efile_21_p08_raw |>
+## Only include 501c3 public charities
+eins_501c3 <- efile_21_hd_raw |>
+  dplyr::filter(F9_00_EXEMPT_STAT_501C3_X == "X") |>
+  dplyr::select(EIN2) |>
+  dplyr::distinct() |>
+  dplyr::pull(EIN2)
+length(eins_501c3)
+# 392, 704 501c3 public charities
+
+## Filter form 990 records from 501c3 public charities, filed in tax year 2021, and not from the list from foreign EINs
+efile_21_p08 <- efile_21_p08_raw |>
   dplyr::filter(
     TAX_YEAR == "2021",
     RETURN_TYPE == "990",
-    ! EIN2 %in% foreign_ein
+    ! EIN2 %in% foreign_ein,
+    EIN2 %in% eins_501c3
   ) |>
-  nrow()
-### 322, 959
+  dplyr::mutate(
+    RETURN_TIME_STAMP = lubridate::ymd_hms(RETURN_TIME_STAMP)
+  )
+### 246,018 records
 
-### Number of 990 e-file records for 2021 reporting government grants
-numrec_w_gvgrnt <- efile_21_p08_raw |>
+## Count partial, group and amended returns
+num_partial_returns <- efile_21_p08 |>
+  dplyr::filter(RETURN_PARTIAL_X == TRUE) |>
+  nrow()
+### 2,085 partial returns. We leave these as-is. If a nonprofit reports government grants on the partial return it still falls within the tax year and would not be counted otherwise, so it's different than other duplicates that are double counting the same grant.
+
+num_group_returns <- efile_21_p08 |>
+  dplyr::filter(RETURN_GROUP_X == TRUE) |>
+  nrow()
+### 309 group returns
+
+num_amended_returns <- efile_21_p08 |>
+  dplyr::filter(RETURN_AMENDED_X == TRUE) |>
+  nrow()
+### 3977 amended returns
+
+## Retrieve the most recent returns for group returns
+
+group_eins <- efile_21_p08 |>
+  dplyr::filter(RETURN_GROUP_X == TRUE) |>
+  dplyr::pull(EIN2) |>
+  unique()
+### 306 unique EINs
+
+efile_grp <- efile_21_p08 |>
+  dplyr::filter(EIN2 %in% group_eins)
+### 310 records
+efile_nogrp <- efile_21_p08 |>
+  dplyr::filter(!EIN2 %in% group_eins)
+### 245,708 records
+
+### Only retrieve most recent group returns and attach them back to the dataset
+
+efile_grp <- efile_grp |>
+  group_by(EIN2) %>%
+  slice_max(order_by = RETURN_TIME_STAMP)
+### 306 records: 4 duplicates discarded
+
+nrow(efile_grp) == length(group_eins) # TRUE
+efile_21_p08 <- bind_rows(efile_nogrp, efile_grp)
+### 246,014 records. 4 duplicates discarded.
+
+## Retrieve the most recent returns for amended returns
+amended_eins <- efile_21_p08 |>
+  dplyr::filter(RETURN_AMENDED_X == TRUE) |>
+  dplyr::pull(EIN2) |>
+  unique()
+### 3,867 Unique EINs
+
+efile_amended <- efile_21_p08 |>
+  dplyr::filter(EIN2 %in% amended_eins)
+### 7,378 records
+efile_noamend <- efile_21_p08 |>
+  dplyr::filter(!EIN2 %in% amended_eins)
+### 238, 636 records (total still 246,014)
+
+### Only retrieve most recent amended returns and attach them back to the dataset
+
+efile_amended <- efile_amended |>
+  group_by(EIN2) %>%
+  slice_max(order_by = RETURN_TIME_STAMP)
+### 3,867 records: 3,511 duplicates discarded
+
+nrow(efile_amended) == length(amended_eins) # TRUE
+efile_21_p08 <- bind_rows(efile_noamend, efile_amended)
+### 242,503 records. 3,511 duplicates discarded.
+
+## Retrieve Number of 990 e-file records for 2021 from part 08 belonging to 501c3 public charities and US nonprofits
+numrec_w_part08 <- efile_21_p08 |>
+  nrow()
+### 242, 503
+
+## Retrieve Number of 990 e-file records for 2021 from part 08 belonging to 501c3 public charities in the US that report government grants
+numrec_w_gvgrnt <- efile_21_p08 |>
   dplyr::filter(
     !is.na(F9_08_REV_CONTR_GOVT_GRANT) &
-      F9_08_REV_CONTR_GOVT_GRANT != 0,
-    ! EIN2 %in% foreign_ein,
-    TAX_YEAR == "2021",
-    RETURN_TYPE == "990"
+      F9_08_REV_CONTR_GOVT_GRANT != 0
   ) |>
   nrow()
-### 117,034
+### 103, 475 records
 
-### Total government grants reported in 2021
-total_gvgrnt <- efile_21_p08_raw |>
+## Calculate the Total government grants reported in 2021  from part 08 belonging to 501c3 public charities in the US
+total_gvgrnt <- efile_21_p08 |>
   dplyr::filter(
     !is.na(F9_08_REV_CONTR_GOVT_GRANT) &
-      F9_08_REV_CONTR_GOVT_GRANT != 0,
-    ! EIN2 %in% foreign_ein,
-    TAX_YEAR == "2021",
-    RETURN_TYPE == "990"
+      F9_08_REV_CONTR_GOVT_GRANT != 0
   ) |>
   dplyr::summarise(
     total_gvgrnt = sum(F9_08_REV_CONTR_GOVT_GRANT)
   ) |>
   dplyr::pull(total_gvgrnt)
-### $280,622,907,982
+### $267,700,640,005
 
 # (3) - Wrangle Data
 
@@ -224,7 +334,7 @@ bmf_sample <- sf::st_join(bmf_sample, cd_transformed, join = sf::st_intersects)
 
 # Save intermediate dataset after spatial join. This is the BMF sample
 data.table::fwrite(bmf_sample, "data/intermediate/bmf_sample.csv")
-rm(unified_bmf, cd_tigris, cd_transformed)
+rm(unified_bmf, cd_tigris)
 gc()
 
 # (3.2) Wrangle efile data
@@ -232,29 +342,29 @@ gc()
 # Merge all 3 e-file datasets. Left join to Part VIII since that contains the
 # government grant information
 
-efile_sample <- efile_21_p08_raw |>
+efile_sample <- efile_21_p08 |>
   dplyr::filter(!is.na(F9_08_REV_CONTR_GOVT_GRANT),
-                F9_08_REV_CONTR_GOVT_GRANT != 0,
-                ! EIN2 %in% foreign_ein) |>
+                F9_08_REV_CONTR_GOVT_GRANT != 0) |>
   tidylog::left_join(efile_21_p09_raw) |>
   tidylog::left_join(efile_21_p10_raw) |>
   tidylog::left_join(efile_21_p01_raw)
 
 nrow(efile_sample) == numrec_w_gvgrnt 
-### 11 records have been added
+### No new records added
 sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt  
-### $280,626,591,687, $3.68 million added
+### Total remains the same
 
 ## Optional: To save memory
-rm(efile_21_p08_raw, efile_21_p09_raw, efile_21_p10_raw, efile_21_p01_raw)
+rm(efile_21_p08_raw, 
+   efile_21_p09_raw, 
+   efile_21_p10_raw, 
+   efile_21_p01_raw,
+   efile_21_hd_raw,
+   efile_21_p08)
 gc()
 
 ## Wrangle
 efile_sample <- efile_sample |>
-  dplyr::filter(
-    TAX_YEAR == 2021,
-    RETURN_TYPE == "990"
-  ) |>
   dplyr::select(
     "EIN2",
     "F9_08_REV_CONTR_GOVT_GRANT",
@@ -326,7 +436,7 @@ efile_sample <- efile_sample |>
 
 summary(efile_sample$at_risk)
 table(efile_sample$at_risk)
-# 39,475 not at risk, 77,559 at risk
+# 33,788 not at risk, 69,687 at risk
 
 # (5) - Merge with the geographic data from the Unified BMF
 
@@ -459,9 +569,9 @@ absent_districts <- data.frame(district_state) |>
   dplyr::filter(! NAMELSAD20 %in% sample_district$NAMELSAD20) |>
   dplyr::select(CENSUS_STATE_ABBR, NAMELSAD20)
 
-# All districts are in the sample but not all counties
+print(absent_districts)
 
-data.table::fwrite(absent_counties, "data/intermediate/absent_counties.csv")
+# All districts are in the sample but not all counties
 
 # (7) Post process and save intermediate datasets
 
@@ -501,7 +611,7 @@ full_sample_proc <- full_sample_int |>
   dplyr::mutate(
     CENSUS_STATE_NAME = dplyr::case_when(
       CENSUS_STATE_ABBR %in% states ~ usdata::abbr2state(CENSUS_STATE_ABBR),
-      CENSUS_STATE_ABBR %in% c("AS", "GU", "MP", "PR", "VI") ~ "Other US Jurisdictions",
+      CENSUS_STATE_ABBR %in% c("AS", "GU", "MP", "PR", "VI") ~ "Other U.S. Territories",
       .default = "Unmapped"
     ),
     CONGRESS_DISTRICT_NAME = ifelse(is.na(NAMELSAD20), "Unmapped", NAMELSAD20)
@@ -541,7 +651,7 @@ sum(table(full_sample_proc$CONGRESS_DISTRICT_NAME)) == numrec_w_gvgrnt
 sum(full_sample_proc$AT_RISK_NUM) == sum(efile_sample$at_risk)
 sum(full_sample_proc$GOVERNMENT_GRANT_DOLLAR_AMOUNT) == total_gvgrnt
 
-data.table::fwrite(full_sample_proc, "data/intermediate/full_sample_processed.csv")
+data.table::fwrite(full_sample_proc, "data/processed/full_sample_processed.csv")
 
 ## TODO
 
