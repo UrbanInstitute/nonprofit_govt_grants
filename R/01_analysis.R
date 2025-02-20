@@ -156,8 +156,7 @@ qa <- full_sample_proc |>
 # (3.2) - National Level Quality Assurance
 
 qa_national <- summarize_nonprofit_data(qa) |>
-  dplyr::mutate(CENSUS_STATE_NAME = "Total",
-                `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`))
+  dplyr::mutate(CENSUS_STATE_NAME = "Total")
   
 
 # (3.3) - QA by state
