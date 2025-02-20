@@ -734,3 +734,7 @@ sum(full_sample_proc$AT_RISK_NUM) == sum(efile_sample$at_risk)
 sum(full_sample_proc$GOVERNMENT_GRANT_DOLLAR_AMOUNT) == total_gvgrnt
 
 data.table::fwrite(full_sample_proc, "data/processed/full_sample_processed.csv")
+
+# TODO
+
+# 1. Explore unclassified NTEE Codes.
