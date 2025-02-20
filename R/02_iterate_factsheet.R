@@ -1,26 +1,32 @@
+# Script Header
+# Title: Federal Funding Freeze Blog Post
+# Date created: 2025-02-03
+# Date last modified: 2025-02-20
+# Description: This script contains code to iterate across the national_factsheet.Rmd and state_factsheet.Rmd files to create HTML fact sheets for the US and each state respectively.
+
+# Load Packages
 library(rmarkdown)
 library(stringr)
 library(tidyverse)
 library(janitor)
 library(usdata)
 
+# Names of states
 states <- as.character(usdata::state_stats$state)
 
-# create a data frame with parameters and output file names
-
-# Render national table
+# (1) - Render national table
 rmarkdown::render(
-  input = "R/02_factsheet.Rmd",
+  input = "R/national_factsheet.Rmd",
   output_dir = "docs/",
   output_file = "national.html",
   params = list(geography = "US")
 )
 
-# Render State Table
+# (2) - Iterate and Render State Tables
 for (state in states) {
   cat("Rendering", state, "\n")
   rmarkdown::render(
-    input = "R/03_state_tables.Rmd",
+    input = "R/state_factsheet.Rmd",
     output_dir = "docs/",
     output_file = paste0(gsub(" ", "-", tolower(state)), ".html"),
     params = list(state = state)
