@@ -6,8 +6,14 @@
 # for HTML fact sheets on nonprofits's fiscal sustainability and reliance on 
 # government grants for Tax Year 2021.
 ### Details:
-# (1) - Download Data
+# (1) - Download raw data
 # (2) - Load in and filter data
+# (3) - Create the sample dataset from the efile data
+# (4) - Wrangle Data
+# (5) - Compute fiscal sustainability metrics
+# (6) - Merge with the geographic data from the Unified BMF
+# (7) - Geographic post processing. Map null geographies with coordinates but without state, county, or district information. Ensure sample contains all possible state and county/district combinations.
+# (8) - Post process and save intermediate and processed sample datasets
 
 # Create necessary folders to store data
 dir.create("data")
@@ -30,7 +36,7 @@ library(tigris)
 states <- as.character(usdata::state_stats$abbr) # Names of 50 states + DC
 
 # Helper Scripts
-source("R/data.R")
+source("R/data.R") # Contains URLs to raw data
 source("R/download_data.R") # Function to download efile data
 source("R/format_ein.R") # Function to format ein to EIN 2
 source("R/profit_margin.R") # Function to calculate profit margin
@@ -168,9 +174,10 @@ efile_21_p09_raw <- data.table::fread("data/raw/efile_p09_2021_0225.csv", select
 efile_21_p10_raw <- data.table::fread("data/raw/efile_p10_2021_0225.csv", select = efile_cols)
 efile_21_p01_raw <- data.table::fread("data/raw/efile_p01_2021_0225.csv", select = efile_cols)
 
-## Create the sample of EINs from the E-File datasets
+# (3) - Create the sample dataset from the efile data
 
-### Exclude foreign nonprofits
+# (3.1) - Exclude foreign nonprofits
+
 eo_xx <- data.table::fread("data/raw/foreign_nonprofits.csv")
 eo_xx <- eo_xx |>
   dplyr::mutate(
@@ -180,19 +187,25 @@ eo_xx <- eo_xx |>
     EIN2 = format_ein(EIN2, to = "id")
   )
 length(intersect(efile_21_p08_raw$EIN2, eo_xx$EIN2)) 
+
 ### 537 EINs belong to foreign nonprofits
+
 foreign_ein <- unique(eo_xx$EIN2)
 
-## Only include 501c3 public charities
+# (3.2) - Only include 501c3 public charities
+
 eins_501c3 <- efile_21_hd_raw |>
   dplyr::filter(F9_00_EXEMPT_STAT_501C3_X == "X") |>
   dplyr::select(EIN2) |>
   dplyr::distinct() |>
   dplyr::pull(EIN2)
+
 length(eins_501c3)
+
 # 392, 704 501c3 public charities
 
-## Filter form 990 records from 501c3 public charities, filed in tax year 2021, and not from the list from foreign EINs
+# (3.3) - Filter form 990 records from 501c3 public charities, filed in tax year 2021, and not from the list from foreign EINs
+
 efile_21_p08 <- efile_21_p08_raw |>
   dplyr::filter(
     TAX_YEAR == "2021",
@@ -203,22 +216,29 @@ efile_21_p08 <- efile_21_p08_raw |>
   dplyr::mutate(
     RETURN_TIME_STAMP = lubridate::ymd_hms(RETURN_TIME_STAMP)
   )
+
 ### 246,018 records
 
+# (3.4) - Process partial, group and amended returns. Retain the most recent returns for group and amended returns. Keep all partial returns.
+
 ## Count partial, group and amended returns
+
 num_partial_returns <- efile_21_p08 |>
   dplyr::filter(RETURN_PARTIAL_X == TRUE) |>
   nrow()
+
 ### 2,085 partial returns. We leave these as-is. If a nonprofit reports government grants on the partial return it still falls within the tax year and would not be counted otherwise, so it's different than other duplicates that are double counting the same grant.
 
 num_group_returns <- efile_21_p08 |>
   dplyr::filter(RETURN_GROUP_X == TRUE) |>
   nrow()
+
 ### 309 group returns
 
 num_amended_returns <- efile_21_p08 |>
   dplyr::filter(RETURN_AMENDED_X == TRUE) |>
   nrow()
+
 ### 3977 amended returns
 
 ## Retrieve the most recent returns for group returns
@@ -227,66 +247,86 @@ group_eins <- efile_21_p08 |>
   dplyr::filter(RETURN_GROUP_X == TRUE) |>
   dplyr::pull(EIN2) |>
   unique()
+
 ### 306 unique EINs
 
 efile_grp <- efile_21_p08 |>
   dplyr::filter(EIN2 %in% group_eins)
+
 ### 310 records
+
 efile_nogrp <- efile_21_p08 |>
   dplyr::filter(!EIN2 %in% group_eins)
+
 ### 245,708 records
 
-### Only retrieve most recent group returns and attach them back to the dataset
+## Only retrieve most recent group returns and attach them back to the dataset
 
 efile_grp <- efile_grp |>
   group_by(EIN2) %>%
   slice_max(order_by = RETURN_TIME_STAMP)
+
 ### 306 records: 4 duplicates discarded
 
 nrow(efile_grp) == length(group_eins) # TRUE
 efile_21_p08 <- bind_rows(efile_nogrp, efile_grp)
+
 ### 246,014 records. 4 duplicates discarded.
 
 ## Retrieve the most recent returns for amended returns
+
 amended_eins <- efile_21_p08 |>
   dplyr::filter(RETURN_AMENDED_X == TRUE) |>
   dplyr::pull(EIN2) |>
   unique()
+
 ### 3,867 Unique EINs
 
 efile_amended <- efile_21_p08 |>
   dplyr::filter(EIN2 %in% amended_eins)
+
 ### 7,378 records
+
 efile_noamend <- efile_21_p08 |>
   dplyr::filter(!EIN2 %in% amended_eins)
+
 ### 238, 636 records (total still 246,014)
 
-### Only retrieve most recent amended returns and attach them back to the dataset
+## Only retrieve most recent amended returns and attach them back to the dataset
 
 efile_amended <- efile_amended |>
   group_by(EIN2) %>%
   slice_max(order_by = RETURN_TIME_STAMP)
+
 ### 3,867 records: 3,511 duplicates discarded
 
 nrow(efile_amended) == length(amended_eins) # TRUE
 efile_21_p08 <- bind_rows(efile_noamend, efile_amended)
+
 ### 242,503 records. 3,511 duplicates discarded.
 
+# (3.5) - Get the necessary counts for quality assurance
+
 ## Retrieve Number of 990 e-file records for 2021 from part 08 belonging to 501c3 public charities and US nonprofits
+
 numrec_w_part08 <- efile_21_p08 |>
   nrow()
+
 ### 242, 503
 
 ## Retrieve Number of 990 e-file records for 2021 from part 08 belonging to 501c3 public charities in the US that report government grants
+
 numrec_w_gvgrnt <- efile_21_p08 |>
   dplyr::filter(
     !is.na(F9_08_REV_CONTR_GOVT_GRANT) &
       F9_08_REV_CONTR_GOVT_GRANT != 0
   ) |>
   nrow()
+
 ### 103, 475 records
 
 ## Calculate the Total government grants reported in 2021  from part 08 belonging to 501c3 public charities in the US
+
 total_gvgrnt <- efile_21_p08 |>
   dplyr::filter(
     !is.na(F9_08_REV_CONTR_GOVT_GRANT) &
@@ -296,11 +336,12 @@ total_gvgrnt <- efile_21_p08 |>
     total_gvgrnt = sum(F9_08_REV_CONTR_GOVT_GRANT)
   ) |>
   dplyr::pull(total_gvgrnt)
+
 ### $267,700,640,005
 
-# (3) - Wrangle Data
+# (4) - Wrangle Data
 
-# (3.1) - Wrangle BMF Data
+# (4.1) - Wrangle BMF Data
 
 bmf_sample <- unified_bmf |>
   dplyr::filter(NCCS_LEVEL_1 == "501C3 CHARITY") |>
@@ -327,23 +368,28 @@ bmf_sample <- unified_bmf |>
   )
 
 ## QC Check - No extra rows were dropped outside of filter statement
+
 nrow(bmf_sample) == nrow(unified_bmf[unified_bmf$NCCS_LEVEL_1 == "501C3 CHARITY"])
 
-# Map BMF coordinates to Congressional districts
+## Map BMF coordinates to Congressional districts
+
 bmf_sample <- bmf_sample |>
   sf::st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 4326)
 
 bmf_sample <- sf::st_join(bmf_sample, cd_transformed, join = sf::st_intersects)
 
-# Save intermediate dataset after spatial join. This is the BMF sample
+## Save intermediate dataset after spatial join. This is the BMF sample
+
 data.table::fwrite(bmf_sample, "data/intermediate/bmf_sample.csv")
+
+## Optional: To save memory
+
 rm(unified_bmf, cd_tigris)
 gc()
 
-# (3.2) Wrangle efile data
+# (4.2) Wrangle efile data
 
-# Merge all 3 e-file datasets. Left join to Part VIII since that contains the
-# government grant information
+## Merge all 3 e-file datasets. Left join to Part VIII since that contains the government grant information
 
 efile_sample <- efile_21_p08 |>
   dplyr::filter(!is.na(F9_08_REV_CONTR_GOVT_GRANT),
@@ -353,11 +399,15 @@ efile_sample <- efile_21_p08 |>
   tidylog::left_join(efile_21_p01_raw)
 
 nrow(efile_sample) == numrec_w_gvgrnt 
+
 ### No new records added
+
 sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt  
+
 ### Total remains the same
 
 ## Optional: To save memory
+
 rm(efile_21_p08_raw, 
    efile_21_p09_raw, 
    efile_21_p10_raw, 
@@ -366,7 +416,8 @@ rm(efile_21_p08_raw,
    efile_21_p08)
 gc()
 
-## Wrangle
+## Wrangle efile data
+
 efile_sample <- efile_sample |>
   dplyr::select(
     "EIN2",
@@ -392,11 +443,12 @@ efile_sample <- efile_sample |>
 nrow(efile_sample) == numrec_w_gvgrnt #TRUE
 sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt  # TRUE
 
-# (4) Compute metrics 
+# (5) Compute fiscal sustainability metrics
 
-# (4.1) - Profit Margin - with and without government grants
+# (5.1) - Profit Margin - with and without government grants
 
-# Explore Data - The tails are fat so we will get extreme values
+## Note: sorted plots are used to explore Data - The tails are fat so we will get extreme values
+
 create_sorted_plot(efile_sample, "F9_01_REV_TOT_CY")
 create_sorted_plot(efile_sample, "F9_01_EXP_TOT_CY")
 
@@ -411,12 +463,13 @@ summary(efile_sample$profit_margin)
 
 create_sorted_plot(efile_sample, "profit_margin")
 
-# purrr::pmap_dbl does not work for some reason. I will use a rowwise mutate instead
+## Note:  purrr::pmap_dbl does not work for some reason. I will use a rowwise mutate instead
+
 efile_sample <- efile_sample |>
   dplyr::rowwise() |>
   dplyr::mutate(
     profit_margin_nogovtgrant = {
-      if (dplyr::cur_group_rows() %% 10000 == 0) cat(".")  # prints a dot every 10000 rows
+      if (dplyr::cur_group_rows() %% 10000 == 0) cat(".")  # prints a dot every 10000 rows as a hacky progress bar
       profit_margin(
         F9_01_REV_TOT_CY,
         F9_01_EXP_TOT_CY,
@@ -430,7 +483,7 @@ summary(efile_sample$profit_margin_nogovtgrant)
 
 create_sorted_plot(efile_sample, "profit_margin_nogovtgrant")
 
-# (4.4) At Risk Indicator Variable - if profit margin negative
+# (5.2) At Risk Indicator Variable - if profit margin negative
 
 efile_sample <- efile_sample |>
   dplyr::mutate(
@@ -439,9 +492,10 @@ efile_sample <- efile_sample |>
 
 summary(efile_sample$at_risk)
 table(efile_sample$at_risk)
-# 33,788 not at risk, 69,687 at risk
 
-# (5) - Merge with the geographic data from the Unified BMF
+### 33,788 not at risk, 69,687 at risk
+
+# (6) - Merge with the geographic data from the Unified BMF
 
 full_sample_int <- efile_sample |>
   tidylog::left_join(
@@ -455,39 +509,47 @@ sum(full_sample_int$at_risk) == sum(efile_sample$at_risk) # TRUE
 sum(full_sample_int$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt # TRUE
 nrow(full_sample_int) == numrec_w_gvgrnt # TRUE
 
-# (6) - Geographic post processing. Map null geographies with coordinates but without state, county, or district information. Ensure sample contains all possible state and county/district combinations.
+# (7) - Geographic post processing. Map null geographies with coordinates but without state, county, or district information. Ensure sample contains all possible state and county/district combinations.
 
-# (6.1) - Missing state information
+# (7.1) - Missing state information
 
 # Identify records with missing state but valid geometry
+
 null_geoms <- full_sample_int |>
   dplyr::filter(is.na(CENSUS_STATE_ABBR) | CENSUS_STATE_ABBR == "",
                 !sf::st_is_empty(geometry)) |>
   dplyr::select(EIN2, geometry) |>
   sf::st_as_sf()
+
 ### 12 records
 
 # Transform counties to WGS84
+
 county_transformed <- sf::st_transform(county_tigris, 4326)
 
 # Spatial join with counties
+
 null_county <- sf::st_join(null_geoms, 
                            county_transformed, 
                            join = sf::st_intersects)
 
 # Create state FIPS to abbreviation lookup
+
 state_lookup <- setNames(state_tigris$CENSUS_STATE_ABBR, 
                          state_tigris$CENSUS_STATE_FIPS)
 
 # Add state abbreviations to county-matched records
+
 null_county <- null_county |>
   dplyr::mutate(CENSUS_STATE_ABBR = state_lookup[CENSUS_STATE_FIPS])
 
 # Create EIN to state abbreviation lookup
+
 ein_lookup <- setNames(null_county$CENSUS_STATE_ABBR, 
                        null_county$EIN2)
 
 # Update original dataset with filled state abbreviations
+
 full_sample_int <- full_sample_int |>
   dplyr::mutate(
     CENSUS_STATE_ABBR = ifelse(EIN2 %in% null_county$EIN2,
@@ -495,26 +557,31 @@ full_sample_int <- full_sample_int |>
                                CENSUS_STATE_ABBR)
   )
 
-# (6.2) - Missing County Information
+# (7.2) - Missing County Information
 
 # Identify records with missing state but valid geometry
+
 null_geoms <- full_sample_int |>
   dplyr::filter(is.na(CENSUS_COUNTY_NAME) | CENSUS_COUNTY_NAME == "",
                 !sf::st_is_empty(geometry)) |>
   dplyr::select(EIN2, geometry) |>
   sf::st_as_sf()
+
 ### 12 records all with 0 coordinates
 
 # Spatial join with counties
+
 null_county <- sf::st_join(null_geoms, 
                            county_transformed, 
                            join = sf::st_intersects)
 
 # Create EIN to state abbreviation lookup
+
 ein_lookup <- setNames(null_county$CENSUS_COUNTY_NAME, 
                        null_county$EIN2)
 
 # Update original dataset with imputed counties
+
 full_sample_int <- full_sample_int |>
   dplyr::mutate(
     CENSUS_COUNTY_NAME = ifelse(EIN2 %in% null_county$EIN2,
@@ -522,7 +589,10 @@ full_sample_int <- full_sample_int |>
                                CENSUS_COUNTY_NAME)
   )
 
-# Check that all counties are in the sample
+## Note: None should be updated because all records have POINT(0 0) coordinates
+
+# Check if all counties are in the sample
+
 sample_county <- full_sample_int |>
   dplyr::select(CENSUS_STATE_ABBR, CENSUS_COUNTY_NAME) |>
   dplyr::distinct()
@@ -531,13 +601,16 @@ absent_counties <- data.frame(county_state) |>
   dplyr::filter(! CENSUS_COUNTY_NAME %in% sample_county$CENSUS_COUNTY_NAME) |>
   dplyr::select(CENSUS_STATE_ABBR, CENSUS_COUNTY_NAME)
 
+# Save dataset for use in table creation
+
 data.table::fwrite(absent_counties, "data/intermediate/absent_counties.csv")
 
-# 179 counties are not in the sample
+### 179 counties are not in the sample
 
-# (6.2) - Missing Congressional District Information. Unnecessary after mapping the missing state information
+# (7.2) - Missing Congressional District Information. Unnecessary after mapping the missing state information
 
 # Identify records with missing state but valid geometry
+
 null_geoms <- full_sample_int |>
   dplyr::filter(is.na(CENSUS_STATE_ABBR) | CENSUS_STATE_ABBR == "",
                 !sf::st_is_empty(geometry)) |>
@@ -545,19 +618,23 @@ null_geoms <- full_sample_int |>
   sf::st_as_sf()
 
 # Spatial join with congressional districts
+
 null_districts <- sf::st_join(null_geoms, 
                               cd_transformed, 
                               join = sf::st_intersects)
 
 # Add state abbreviations to county-matched records
+
 null_districts <- null_districts |>
   dplyr::mutate(CENSUS_STATE_ABBR = state_lookup[CENSUS_STATE_FIPS])
 
 # Create EIN to state abbreviation lookup
+
 ein_lookup <- setNames(null_districts$CENSUS_STATE_ABBR, 
                        null_districts$EIN2)
 
 # Update original dataset with filled state abbreviations
+
 full_sample_int <- full_sample_int |>
   dplyr::mutate(
     CENSUS_STATE_ABBR = ifelse(EIN2 %in% null_county$EIN2,
@@ -566,6 +643,7 @@ full_sample_int <- full_sample_int |>
   )
 
 # Check that all districts are in the sample
+
 sample_district <- full_sample_int |>
   dplyr::select(CENSUS_STATE_ABBR, NAMELSAD20) |>
   dplyr::distinct()
@@ -576,9 +654,9 @@ absent_districts <- data.frame(district_state) |>
 
 print(absent_districts)
 
-# All districts are in the sample but not all counties
+### All districts are in the sample but not all counties
 
-# (7) Post process and save intermediate datasets
+# (8) Post process and save intermediate datasets
 
 data.table::fwrite(full_sample_int, "data/intermediate/full_sample.csv")
 
@@ -656,27 +734,3 @@ sum(full_sample_proc$AT_RISK_NUM) == sum(efile_sample$at_risk)
 sum(full_sample_proc$GOVERNMENT_GRANT_DOLLAR_AMOUNT) == total_gvgrnt
 
 data.table::fwrite(full_sample_proc, "data/processed/full_sample_processed.csv")
-
-## TODO
-
-# change days_cash_on_hand to months_cash_on_hand_jesse
-# Update EIN2 for the Unified BMF
-# Add 2010 fips to BMF for working with crosswalks - both 2010 and 2020 FIPs
-    # If a tract is changed between 2 census periods, the tract id will change. I don;t know if the block will change. There is not the same versioning convention with the block. That might suggest the block is not identical. Figure out how tract and block ids change between 2010 and 2020. Important to check sizes of the dataset before/after merges. 
-
-# Questions for Jesse
-
-# How should I be thinking about duplicate EINs in the efile data or after merging?
-  # Just merge part 08 and part 09
-  # Ammended group and partial returns
-  # figure out which is the correct one - first check for amended returns and then use the amended return. If there are multiple, sort by timestamp or filing data. For group returns, if it is a federated organization, I would file one group return for the headquarter org and then file a second return for all of the organizations. The first one they would not check its a group return and the second one they would. The easy is to just drop the group returns. When doing state level analaysis, the group returns are not useful. The headquarters would just be the headquarter in whatever state. Partial returns - use the column for number of days within the tax filing. If you petition the IRS to change your fiscal year, from june to december then what happens is you have to file a partial return to fill the gap. So your fiscal year would end in june and you would file a new return for july to december so that you are falling within compliance fora partial year. If its like a very specific sample, you would have to adjust those numbers individually. Easy way to do it is just to drop those cases. Typically you would have a prior year return for the organization. It would be easier yto use 1 of those 2 years instead of using the partials because it's complicated due to grant cycles etc. Typically we've just thrown those out. If there are duplicates after all this then that's a problem. From the index there were 8 cases with distinct object IDs and identical filings - my best guess is the connection was unstable when submitting and they hit submit again. If I am finding duplicated EINs, it just means something went wrong.
-
-
-
-# Integrate nccstools with nccsdata - common functions for data pulls
-# efile - merge both packages. keep in R, see if they are doing anything better and integrate it
-# if we can speed it up with AWS functions - disaggregate into scripts or turn
-# into an internal package etc.
-
-# Notes: The number of filers won't be the total by state because some nonprofits
-# are outside the 51 states
