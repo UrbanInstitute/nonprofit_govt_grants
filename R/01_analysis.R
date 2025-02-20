@@ -1,10 +1,14 @@
 # Script Header
 # Title: Federal Funding Freeze Blog Post
 # Date created: 2025-02-03
-# Date last modified: 2025-02-18
+# Date last modified: 2025-02-19
 # Description: This script contains code to analyze data for HTML fact sheets 
 # on nonprofits's fiscal sustainability and reliance on government grants for 
 # Tax Year 2021. It creates data.frames for fact sheets for each disaggregation.
+# Detailed Description
+# (1) - Create national level tables
+# (2) - Create state level tables
+# (3) - Create quality assurance tables for internal team viewing (optional)
 
 # Packages
 library(tidyverse)
@@ -15,40 +19,46 @@ library(rlang)
 library(janitor)
 library(writexl)
 
-# Create directory
+# Create output directories
 dir.create("data/processed/state_factsheets", showWarnings = FALSE)
 dir.create("data/processed/state_overviews", showWarnings = FALSE)
 
-# Scripts
+# Helper scripts
 source("R/summarise_data.R")
+source("R/retrieve_missing_counties.R")
 
 # Load in data
 full_sample_proc <- data.table::fread("data/processed/full_sample_processed.csv")
 absent_counties <- data.table::fread("data/intermediate/absent_counties.csv")
 
-# (1) - National Summaries
+# (1) - National Summaries. 
+
+# (1.1) - Create three tables, disaggregated by  state, subsector and size. Add the totals at the very end.
+
 national <- summarize_nonprofit_data(full_sample_proc)
 
 national_bystate <- summarize_nonprofit_data(full_sample_proc,
                                              group_var = "CENSUS_STATE_NAME",
                                              group_var_rename = "State") |>
   dplyr::bind_rows(dplyr::mutate(national, State = "Total"))
+
 national_bysize <- summarize_nonprofit_data(full_sample_proc,
-                                           group_var = "EXPENSE_CATEGORY",
-                                           group_var_rename = "Size") |>
+                                            group_var = "EXPENSE_CATEGORY",
+                                            group_var_rename = "Size") |>
   dplyr::bind_rows(dplyr::mutate(national, Size = "Total"))
 
 national_bysubsector <- summarize_nonprofit_data(full_sample_proc,
                                                  group_var = "SUBSECTOR",
                                                  group_var_rename = "Subsector") |> dplyr::bind_rows(dplyr::mutate(national, Subsector = "Total"))
 
+# (1.2) - Save datasets to the processed/ folder
 
 datasets <- list(
   "national_bystate" = national_bystate,
   "national_bysize" = national_bysize,
   "national_bysubsector" = national_bysubsector
 )
-# Save datasets to the processed/ folder
+
 purrr::walk2(
   datasets,
   names(datasets),
@@ -56,7 +66,9 @@ purrr::walk2(
     data.table::fwrite(df, paste0("data/processed/", name, ".csv"))
   }
 )
-# Create an .xlsx spreadsheet for the team to view
+
+# (1.3) - Create an .xlsx spreadsheet for the team to view (optional)
+
 writexl::write_xlsx(list(
   "National" = national,
   "State" = national_bystate,
@@ -64,7 +76,8 @@ writexl::write_xlsx(list(
   "Subsector" = national_bysubsector
 ), path = "data/processed/national_overview.xlsx")
 
-# (2) - State level summary
+# (2) - Create state tables for each state.
+
 states <- as.character(usdata::state_stats$state)
 
 for (state in states) {
@@ -74,32 +87,17 @@ for (state in states) {
   state_sample <- full_sample_proc |>
     dplyr::filter(CENSUS_STATE_NAME == state)
   
-  missing_county <- absent_counties |>
-    dplyr::mutate(
-      CENSUS_STATE_NAME = usdata::abbr2state(CENSUS_STATE_ABBR)
-    ) |>
-    dplyr::mutate(
-      CENSUS_STATE_NAME = ifelse(is.na(CENSUS_STATE_NAME), 
-                                 "Other US Jurisdictions/Unmapped", 
-                                 CENSUS_STATE_NAME),
-      `No. of 990 Filers w/ Gov Grants` = 0,
-      `Total Gov Grants ($)` = "0",
-      `Operating Surplus (%)` = "0",
-      `Operating Surplus w/o Gov Grants (%)` = "0",
-      `Share of 990 Filers w/ Gov Grants at Risk` = "0"
-    ) |>
-    dplyr::select(! CENSUS_STATE_ABBR) |>
-    dplyr::rename(County = CENSUS_COUNTY_NAME) |>
-    dplyr::filter(CENSUS_STATE_NAME == state) |>
-    dplyr::select(! CENSUS_STATE_NAME)
+  # Retrieve counties with 0 nonprofits receiving government grants for each state.
+  missing_county <- retrieve_missing_counties(absent_counties, state = state)
   
-  
+  # Create aggregated state level data
   state_overall <- summarize_nonprofit_data(state_sample)
   
+  # Disaggregate by county, congressional district, size, and subsector. Append totals at the end.
   state_bycounty <- summarize_nonprofit_data(state_sample,
                                              group_var = "CENSUS_COUNTY_NAME",
                                              group_var_rename = "County") |>
-    dplyr::bind_rows(missing_county)
+    dplyr::bind_rows(missing_county) |>
     dplyr::bind_rows(dplyr::mutate(state_overall, County = "Total"))
     
   state_bydistrict <- summarize_nonprofit_data(state_sample,
@@ -117,6 +115,7 @@ for (state in states) {
                                                 group_var_rename = "Subsector") |>
     dplyr::bind_rows(dplyr::mutate(state_overall, Subsector = "Total"))
   
+  # Save datasets to the processed/ folder
   datasets <- list(
     "_bycounty" = state_bycounty,
     "_bydistrict" = state_bydistrict,
@@ -124,7 +123,6 @@ for (state in states) {
     "_bysubsector" = state_bysubsector
   )
   
-  # Save datasets to the processed/ folder
   purrr::walk2(datasets, names(datasets), function(df, name) {
     data.table::fwrite(df, paste0("data/processed/state_factsheets/", 
                                   gsub(" ", "-", tolower(state)), 
@@ -132,6 +130,7 @@ for (state in states) {
                                   ".csv"))
   })
   
+  # Save an .xlsx spreadsheet for the team to view (optional)
   writexl::write_xlsx(
     list(
       "Overall" = state_overall,
@@ -149,127 +148,77 @@ for (state in states) {
 
 # (3) - Quality Assurance QA Dataset. This dataset is used to provide teams with an overview of all the data. These are not used for external publication.
 
-# (3.1) - Create second state column to aggregate all observations by state.
+# (3.1) - Create Quality Assurance dataset with second state column to aggregate all observations by state.
+
 qa <- full_sample_proc |>
   dplyr::mutate(state_name = CENSUS_STATE_NAME)
-## National aggregates
+
+# (3.2) - National Level Quality Assurance
+
 qa_national <- summarize_nonprofit_data(qa) |>
   dplyr::mutate(CENSUS_STATE_NAME = "Total",
                 `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`))
   
 
-# (3.2) - QA by state
+# (3.3) - QA by state
+
 qa_state <- summarize_nonprofit_data(qa,
                                      group_var = "state_name",
                                      group_var_rename = "State",
-                                     qc = TRUE) |>
-  dplyr::mutate(
-    `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`),
-    `Total Gov Grants ($)` = scales::dollar(`Total Gov Grants ($)`),
-    `Operating Surplus (%)` = scales::percent(`Operating Surplus (%)`, accuracy = 0.01),
-    `Operating Surplus w/o Gov Grants (%)` = scales::percent(`Operating Surplus w/o Gov Grants (%)`, accuracy = 0.01),
-    `Share of 990 Filers w/ Gov Grants at Risk` = scales::percent(`Share of 990 Filers w/ Gov Grants at Risk`, accuracy = 0.01)
-  ) |>
+                                     qa = TRUE) |>
   dplyr::bind_rows(dplyr::mutate(qa_national, State = "Total"))
 
-qc_state <- summarize_nonprofit_data(qa,
-                                     group_var = "state_name",
-                                     group_var_rename = "State",
-                                     qc = TRUE) |>
-  dplyr::mutate(
-    `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`),
-    `Total Gov Grants ($)` = scales::dollar(`Total Gov Grants ($)`),
-    `Operating Surplus (%)` = scales::percent(`Operating Surplus (%)`, accuracy = 0.01),
-    `Operating Surplus w/o Gov Grants (%)` = scales::percent(`Operating Surplus w/o Gov Grants (%)`, accuracy = 0.01),
-    `Share of 990 Filers w/ Gov Grants at Risk` = scales::percent(`Share of 990 Filers w/ Gov Grants at Risk`, accuracy = 0.01)
-  ) |>
+# (3.4) - QA by Congressional District
+
+qa_district <- summarize_nonprofit_data(qa,
+                                        group_var = "CONGRESS_DISTRICT_NAME",
+                                        group_var_rename = "Congressional District",
+                                        qa = TRUE)  |>
   dplyr::bind_rows(dplyr::mutate(qa_national, State = "Total"))
 
-qc_district <- summarize_nonprofit_data(qa,
-                                              group_var = "CONGRESS_DISTRICT_NAME",
-                                              group_var_rename = "Congressional District",
-                                              qc = TRUE)  |>
-  dplyr::mutate(
-    `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`),
-    `Total Gov Grants ($)` = scales::dollar(`Total Gov Grants ($)`),
-    `Operating Surplus (%)` = scales::percent(`Operating Surplus (%)`, accuracy = 0.01),
-    `Operating Surplus w/o Gov Grants (%)` = scales::percent(`Operating Surplus w/o Gov Grants (%)`, accuracy = 0.01),
-    `Share of 990 Filers w/ Gov Grants at Risk` = scales::percent(`Share of 990 Filers w/ Gov Grants at Risk`, accuracy = 0.01)
-  ) |>
-  dplyr::bind_rows(dplyr::mutate(qa_national, State = "Total"))
+# (3.5) - QA By County
 
-# County
-missing_counties <- absent_counties |>
-  dplyr::mutate(
-    CENSUS_STATE_NAME = usdata::abbr2state(CENSUS_STATE_ABBR)
-  ) |>
-  dplyr::mutate(
-    CENSUS_STATE_NAME = ifelse(is.na(CENSUS_STATE_NAME), 
-                                "Other US Jurisdictions/Unmapped", 
-                                CENSUS_STATE_NAME)
-  ) |>
-  dplyr::select(! CENSUS_STATE_ABBR) |>
-  dplyr::rename(County = CENSUS_COUNTY_NAME)
+## Retrieve missing counties with zero nonprofits receiving government grants
+missing_counties <- retrieve_missing_counties(absent_counties)
   
 
-qc_county <- summarize_nonprofit_data(qa,
-                                            group_var = "CENSUS_COUNTY_NAME",
-                                            group_var_rename = "County",
-                                            qc = TRUE)  |>
+qa_county <- summarize_nonprofit_data(qa,
+                                      group_var = "CENSUS_COUNTY_NAME",
+                                      group_var_rename = "County",
+                                      qa = TRUE)  |>
   dplyr::bind_rows(missing_counties) |>
-  dplyr::mutate(
-    `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`),
-    `Total Gov Grants ($)` = scales::dollar(`Total Gov Grants ($)`),
-    `Operating Surplus (%)` = scales::percent(`Operating Surplus (%)`, accuracy = 0.01),
-    `Operating Surplus w/o Gov Grants (%)` = scales::percent(`Operating Surplus w/o Gov Grants (%)`, accuracy = 0.01),
-    `Share of 990 Filers w/ Gov Grants at Risk` = scales::percent(`Share of 990 Filers w/ Gov Grants at Risk`, accuracy = 0.01)
-  )
+  dplyr::bind_rows(dplyr::mutate(qa_national, County = "Total"))
 
-qc_county[is.na(qc_county)] <- "0"
+## Check all counties are unique
 
-qc_size <- summarize_nonprofit_data(qa,
-                                          group_var = "EXPENSE_CATEGORY",
-                                          group_var_rename = "Size",
-                                          qc = TRUE)  |>
-  janitor::adorn_totals("row", c("No. of 990 Filers w/ Gov Grants",
-                                 "Total Gov Grants ($)")) |>
-  dplyr::mutate(
-    `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`),
-    `Total Gov Grants ($)` = scales::dollar(`Total Gov Grants ($)`),
-    `Operating Surplus (%)` = scales::percent(`Operating Surplus (%)`, accuracy = 0.01),
-    `Operating Surplus w/o Gov Grants (%)` = scales::percent(`Operating Surplus w/o Gov Grants (%)`, accuracy = 0.01),
-    `Share of 990 Filers w/ Gov Grants at Risk` = scales::percent(`Share of 990 Filers w/ Gov Grants at Risk`, accuracy = 0.01)
-  )
-
-qc_subsector <- summarize_nonprofit_data(full_sample_proc,
-                                               group_var = "SUBSECTOR",
-                                               group_var_rename = "Subsector",
-                                               qc = TRUE)  |>
-  janitor::adorn_totals("row", c("No. of 990 Filers w/ Gov Grants",
-                                 "Total Gov Grants ($)")) |>
-  dplyr::mutate(
-    `No. of 990 Filers w/ Gov Grants` = scales::comma(`No. of 990 Filers w/ Gov Grants`),
-    `Total Gov Grants ($)` = scales::dollar(`Total Gov Grants ($)`),
-    `Operating Surplus (%)` = scales::percent(`Operating Surplus (%)`, accuracy = 0.01),
-    `Operating Surplus w/o Gov Grants (%)` = scales::percent(`Operating Surplus w/o Gov Grants (%)`, accuracy = 0.01),
-    `Share of 990 Filers w/ Gov Grants at Risk` = scales::percent(`Share of 990 Filers w/ Gov Grants at Risk`, accuracy = 0.01)
-  )
-
-# Make sure all counties are unique
-qc_county |>
+qa_county |>
   dplyr::select(CENSUS_STATE_NAME, County) |>
   unique() |>
-  nrow() == nrow(qc_county)
+  nrow() == nrow(qa_county)
+
+
+# (3.6) - QA by size (expense category)
+
+qa_size <- summarize_nonprofit_data(qa,
+                                    group_var = "EXPENSE_CATEGORY",
+                                    group_var_rename = "Size",
+                                    qa = TRUE)  |>
+  dplyr::bind_rows(dplyr::mutate(qa_national, Size = "Total"))
+
+# (3.7) - QA by subsector
+
+qa_subsector <- summarize_nonprofit_data(full_sample_proc,
+                                               group_var = "SUBSECTOR",
+                                               group_var_rename = "Subsector",
+                                               qa = TRUE)  |>
+  dplyr::bind_rows(dplyr::mutate(qa_national, Subsector = "Total"))
+
+# (3.8) - Save QA datasets to the intermediate/ folder as an .xlsx
 
 writexl::write_xlsx(list(
-  "State" = qc_state,
-  "County" = qc_county,
-  "Congressional District" = qc_district,
-  "Size" = qc_size,
-  "Subsector" = qc_subsector
-), path = "data/intermediate/qc_govtgrants.xlsx")
-
-
-### TODO
-
-# Update unclassified NTEE codes.
+  "State" = qa_state,
+  "County" = qa_county,
+  "Congressional District" = qa_district,
+  "Size" = qa_size,
+  "Subsector" = qa_subsector
+), path = "data/intermediate/qa.xlsx")
