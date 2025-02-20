@@ -49,9 +49,23 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 <div class="over-table-spacing"></div>
 
 ```{r r-data, echo=FALSE}
+source("R/format_percentages.R")
+
 national_bystate <- data.table::fread("data/processed/national_bystate.csv")
 national_bysize <- data.table::fread("data/processed/national_bysize.csv")
 national_bysubsector <- data.table::fread("data/processed/national_bysubsector.csv")
+```
+
+```{r formatting, echo=FALSE}
+national_bystate <- format_percentages(national_bystate, 
+                             "Share of 990 Filers w/ Gov Grants at Risk",
+                             "formatted_percentages")
+national_bysize <- format_percentages(national_bysize,
+                           "Share of 990 Filers w/ Gov Grants at Risk",
+                           "formatted_percentages")
+national_bysubsector <- format_percentages(national_bysubsector,
+                                "Share of 990 Filers w/ Gov Grants at Risk",
+                                "formatted_percentages")
 ```
 
 ## {.tabset}
@@ -121,7 +135,7 @@ national_bystate  |> mutate(State = factor(
   dplyr::mutate(color = "") |>
   gt() |>
   data_color(
-    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    columns = formatted_percentages,
     target_columns = color,
     method = "auto",
     palette = c(
@@ -135,6 +149,7 @@ national_bystate  |> mutate(State = factor(
       "#843215"
     )
   ) |>
+  cols_hide(formatted_percentages) |>
   cols_width(color ~ px(5)) |>
   cols_label(color = "") |>
   cols_align(align = "left", columns = c("State")) |>
@@ -172,11 +187,12 @@ national_bysize |> mutate(Size = factor(
    dplyr::mutate(color = "") |>
   gt() |>
   data_color(
-    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    columns = formatted_percentages,
     target_columns = color,
     method = "auto",
     palette = c("#FFF2CF", "#FCE39E", "#FDD870", "#FCCB41", "#FDBF11", "#E88E2D", "#CA5800", "#843215")
     ) |>
+  cols_hide(formatted_percentages) |>
     cols_width(color ~ px(5)) |>
   cols_label(
     color = ""  # This sets the column name to an empty string
@@ -232,7 +248,7 @@ national_bysubsector |> mutate(Subsector = factor(
   dplyr::mutate(color = "") |>
   gt() |>
   data_color(
-    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    columns = formatted_percentages,
     target_columns = color,
     method = "auto",
     palette = c(
@@ -246,6 +262,7 @@ national_bysubsector |> mutate(Subsector = factor(
       "#843215"
     )
   ) |>
+  cols_hide(formatted_percentages) |>
   cols_width(color ~ px(5)) |>
   cols_label(color = "") |>
   cols_align(align = "left", columns = c("Subsector")) |>

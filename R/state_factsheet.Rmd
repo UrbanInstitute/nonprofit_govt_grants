@@ -40,16 +40,21 @@ library(urbnthemes)
 library(gt)
 library(gtExtras)
 library(stringr)
+library(epoxy)
 
 set_urbn_defaults(style = "print")
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-# `r params$state` - Financial Risk of Nonprofits Receiving Government Grants
+## `r params$state` - Financial Risk of Nonprofits Receiving Government Grants
 
 <div class="over-table-spacing"></div>
 
-```{r echo=FALSE}
+
+```{r load-data, echo=FALSE}
+source("R/format_percentages.R")
+source("R/format_districts.R")
+
 state <- gsub(" ", "-", tolower(params$state))
 
 county <- data.table::fread(sprintf("data/processed/state_factsheets/%s_bycounty.csv", 
@@ -62,6 +67,112 @@ subsector <- data.table::fread(sprintf("data/processed/state_factsheets/%s_bysub
                                        state))
 ```
 
+```{r into-para, echo=FALSE}
+state_title <- params$state
+total_row <- county |> dplyr::filter(County == "Total")
+
+topcounties_grants <- county |>
+  dplyr::filter(County != "Total") |>
+  dplyr::mutate(
+    govfunding = as.numeric(gsub("[$,]", "", `Total Gov Grants ($)`))
+  ) |>
+  dplyr::arrange(desc(govfunding)) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(County)
+
+topdistricts_grants <- district |>
+  dplyr::filter(`Congressional District` != "Total") |>
+  dplyr::mutate(
+    govfunding = as.numeric(gsub("[$,]", "", `Total Gov Grants ($)`))
+  ) |>
+  dplyr::arrange(desc(govfunding)) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(`Congressional District`)
+
+topcounties_surplus <- county |>
+  dplyr::filter(County != "Total") |>
+  dplyr::mutate(
+    govfunding = as.numeric(gsub("[$,]", "", `Operating Surplus w/o Gov Grants (%)`))
+  ) |>
+  dplyr::arrange(govfunding) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(County)
+
+topdistricts_surplus <- district |>
+  dplyr::filter(`Congressional District` != "Total") |>
+  dplyr::mutate(
+    govfunding = as.numeric(gsub("[$,]", "", `Operating Surplus w/o Gov Grants (%)`))
+  ) |>
+  dplyr::arrange(govfunding) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(`Congressional District`)
+
+topcounties_atrisk <- county |>
+  dplyr::filter(County != "Total") |>
+  dplyr::mutate(
+    govfunding = as.numeric(gsub("[$,]", "", `Share of 990 Filers w/ Gov Grants at Risk`))
+  ) |>
+  dplyr::arrange(govfunding) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(County)
+
+topdistricts_atrisk <- district |>
+  dplyr::filter(`Congressional District` != "Total") |>
+  dplyr::mutate(
+    govfunding = as.numeric(gsub("[$,]", "", `Share of 990 Filers w/ Gov Grants at Risk`))
+  ) |>
+  dplyr::arrange(govfunding) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(`Congressional District`)
+
+total_govgrants <- total_row$`Total Gov Grants ($)`
+total_govgrants <- gsub("[$,]", "", total_govgrants)
+total_govgrants <- as.numeric(total_govgrants)
+total_govgrants <- scales::label_number(accuracy=0.1, scale_cut=scales::cut_short_scale())(total_govgrants)
+
+topcounties_grants <- paste(topcounties_grants, collapse = ", ")
+topcounties_surplus <- paste(topcounties_surplus, collapse = ", ")
+topcounties_atrisk <- paste(topcounties_atrisk, collapse = ", ")
+
+topcounties_grants <- gsub(",([^,]*)$", ", and\\1", topcounties_grants)
+topcounties_surplus <- gsub(",([^,]*)$", ", and\\1", topcounties_surplus)
+topcounties_atrisk <- gsub(",([^,]*)$", ", and\\1", topcounties_atrisk)
+
+topdistricts_grants <- format_districts(topdistricts_grants)
+topdistricts_surplus <- format_districts(topdistricts_surplus)
+topdistricts_atrisk <- format_districts(topdistricts_atrisk)
+```
+
+```{r, echo=FALSE}
+if (state_title != "District of Columbia"){
+  text <- glue::glue(
+    "In {state_title}, nonprofits received a total of ${total_govgrants} in government grants. Nonprofits in {topcounties_grants} {topdistricts_grants} received the most government funding. Nonprofits in {topcounties_surplus} {topdistricts_surplus} would have the biggest gap to fill if they lost their government grants. Nonprofits in {topcounties_atrisk} {topdistricts_atrisk} have the highest share of nonprofits at risk of not covering their expenses if they lost their government grants."
+  )
+} else {
+  text <- glue::glue("In District of Columbia, nonprofits received a total of ${total_govgrants} in government grants.")
+}
+```
+
+```{epoxy}
+{text}
+```
+
+```{r formatting, echo=FALSE}
+county <- format_percentages(county, 
+                             "Share of 990 Filers w/ Gov Grants at Risk",
+                             "formatted_percentages")
+district <- format_percentages(district, 
+                               "Share of 990 Filers w/ Gov Grants at Risk",
+                               "formatted_percentages")
+size <- format_percentages(size,
+                           "Share of 990 Filers w/ Gov Grants at Risk",
+                           "formatted_percentages")
+subsector <- format_percentages(subsector,
+                                "Share of 990 Filers w/ Gov Grants at Risk",
+                                "formatted_percentages")
+```
+
+
 ## {.tabset}
 
 ### By Counties
@@ -70,7 +181,7 @@ county |>
   dplyr::mutate(color = "") |>
   gt() |>
   data_color(
-    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    columns = formatted_percentages,
     target_columns = color,
     method = "auto",
     palette = c(
@@ -84,6 +195,7 @@ county |>
       "#843215"
     )
   ) |>
+  cols_hide(formatted_percentages) |>
   cols_width(color ~ px(5)) |>
   cols_label(color = "") |>
   cols_align(align = "left", columns = c("County")) |>
@@ -110,7 +222,7 @@ district |>
   dplyr::mutate(color = "") |>
   gt() |>
   data_color(
-    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    columns = formatted_percentages,
     target_columns = color,
     method = "auto",
     palette = c(
@@ -124,6 +236,7 @@ district |>
       "#843215"
     )
   ) |>
+  cols_hide(formatted_percentages) |>
   cols_width(color ~ px(5)) |>
   cols_label(color = "") |>
   cols_align(align = "left", columns = c("Congressional District")) |>
@@ -166,6 +279,7 @@ size |> mutate(Size = factor(
     method = "auto",
     palette = c("#FFF2CF", "#FCE39E", "#FDD870", "#FCCB41", "#FDBF11", "#E88E2D", "#CA5800", "#843215")
     ) |>
+  cols_hide(formatted_percentages) |>
     cols_width(color ~ px(5)) |>
   cols_label(
     color = ""  # This sets the column name to an empty string
@@ -221,7 +335,7 @@ subsector |> mutate(Subsector = factor(
   dplyr::mutate(color = "") |>
   gt() |>
   data_color(
-    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    columns = formatted_percentages,
     target_columns = color,
     method = "auto",
     palette = c(
@@ -235,6 +349,7 @@ subsector |> mutate(Subsector = factor(
       "#843215"
     )
   ) |>
+  cols_hide(formatted_percentages) |>
   cols_width(color ~ px(5)) |>
   cols_label(color = "") |>
   cols_align(align = "left", columns = c("Subsector")) |>
