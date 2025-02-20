@@ -23,6 +23,10 @@ rmarkdown::render(
 )
 
 # (2) - Iterate and Render State Tables
+
+## Only if you want to debug
+test_states <- c("District of Columbia", "Alaska", "California")
+
 for (state in states) {
   cat("Rendering", state, "\n")
   rmarkdown::render(
