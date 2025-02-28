@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Texas,"4,750","$17,830,022,161",9.58%,-10.73%,65.05%
 Anderson County,5,"$1,424,785",8.79%,-9.61%,60.00%
 Andrews County,1,"$352,924",-9.39%,-92.19%,100.00%
 Angelina County,29,"$63,251,395",4.01%,-24.53%,82.76%
@@ -201,38 +203,3 @@ Wood County,10,"$11,225,539",21.15%,-29.95%,60.00%
 Young County,8,"$1,155,670",7.36%,-37.07%,87.50%
 Zapata County,2,"$110,342",1.54%,-12.29%,100.00%
 Zavala County,1,"$4,711,763",16.23%,-53.14%,100.00%
-Refugio County,0.00%,$0,0.00%,0.00%,0.00%
-Jim Hogg County,0.00%,$0,0.00%,0.00%,0.00%
-Kinney County,0.00%,$0,0.00%,0.00%,0.00%
-Reagan County,0.00%,$0,0.00%,0.00%,0.00%
-Crane County,0.00%,$0,0.00%,0.00%,0.00%
-Lynn County,0.00%,$0,0.00%,0.00%,0.00%
-Sabine County,0.00%,$0,0.00%,0.00%,0.00%
-Upton County,0.00%,$0,0.00%,0.00%,0.00%
-Shackelford County,0.00%,$0,0.00%,0.00%,0.00%
-Parmer County,0.00%,$0,0.00%,0.00%,0.00%
-Terry County,0.00%,$0,0.00%,0.00%,0.00%
-Real County,0.00%,$0,0.00%,0.00%,0.00%
-Falls County,0.00%,$0,0.00%,0.00%,0.00%
-Willacy County,0.00%,$0,0.00%,0.00%,0.00%
-Sterling County,0.00%,$0,0.00%,0.00%,0.00%
-Lipscomb County,0.00%,$0,0.00%,0.00%,0.00%
-Collingsworth County,0.00%,$0,0.00%,0.00%,0.00%
-Glasscock County,0.00%,$0,0.00%,0.00%,0.00%
-Hudspeth County,0.00%,$0,0.00%,0.00%,0.00%
-Cochran County,0.00%,$0,0.00%,0.00%,0.00%
-Irion County,0.00%,$0,0.00%,0.00%,0.00%
-Coke County,0.00%,$0,0.00%,0.00%,0.00%
-Cottle County,0.00%,$0,0.00%,0.00%,0.00%
-Reeves County,0.00%,$0,0.00%,0.00%,0.00%
-Hansford County,0.00%,$0,0.00%,0.00%,0.00%
-Red River County,0.00%,$0,0.00%,0.00%,0.00%
-Live Oak County,0.00%,$0,0.00%,0.00%,0.00%
-Bailey County,0.00%,$0,0.00%,0.00%,0.00%
-Culberson County,0.00%,$0,0.00%,0.00%,0.00%
-Loving County,0.00%,$0,0.00%,0.00%,0.00%
-Dickens County,0.00%,$0,0.00%,0.00%,0.00%
-Yoakum County,0.00%,$0,0.00%,0.00%,0.00%
-Kenedy County,0.00%,$0,0.00%,0.00%,0.00%
-Borden County,0.00%,$0,0.00%,0.00%,0.00%
-Total,"4,750","$17,830,022,161",9.58%,-10.73%,65.05%

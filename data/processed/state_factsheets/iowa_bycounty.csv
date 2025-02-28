@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Iowa,"1,294","$1,252,625,535",10.37%,-5.73%,62.36%
 Adams County,3,"$839,932",-132.66%,-205.68%,66.67%
 Allamakee County,6,"$645,789",6.17%,-5.89%,50.00%
 Appanoose County,8,"$2,546,761",20.72%,4.94%,50.00%
@@ -95,4 +97,3 @@ Winneshiek County,18,"$20,752,913",6.53%,-6.03%,61.11%
 Woodbury County,58,"$74,051,367",6.92%,-12.72%,70.69%
 Worth County,2,"$466,419",34.46%,-5.10%,100.00%
 Wright County,4,"$678,310",2.81%,-10.91%,100.00%
-Total,"1,294","$1,252,625,535",10.37%,-5.73%,62.36%

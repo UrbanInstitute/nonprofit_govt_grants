@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Vermont,721,"$610,463,403",8.62%,-10.12%,66.71%
 Addison County,44,"$33,909,819",7.08%,-9.68%,68.18%
 Bennington County,49,"$28,821,941",11.35%,-5.23%,59.18%
 Caledonia County,35,"$26,396,431",12.69%,-8.10%,62.86%
@@ -12,4 +14,3 @@ Rutland County,39,"$38,389,109",8.78%,-23.31%,69.23%
 Washington County,113,"$138,477,649",8.48%,-17.53%,73.45%
 Windham County,73,"$45,520,154",8.35%,-7.08%,64.38%
 Windsor County,81,"$37,236,724",7.37%,-6.83%,61.73%
-Total,721,"$610,463,403",8.62%,-10.12%,66.71%

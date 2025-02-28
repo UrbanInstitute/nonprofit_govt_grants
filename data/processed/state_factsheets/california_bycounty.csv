@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+California,"10,513","$42,132,825,415",9.03%,-13.04%,65.68%
 Alameda County,873,"$3,207,378,460",9.79%,-12.36%,63.80%
 Amador County,13,"$6,396,102",12.16%,-46.58%,69.23%
 Butte County,71,"$271,361,918",4.44%,-51.08%,80.28%
@@ -56,5 +58,3 @@ Tuolumne County,20,"$21,307,812",10.63%,-16.64%,70.00%
 Ventura County,210,"$561,902,243",5.49%,-16.72%,66.67%
 Yolo County,67,"$89,430,200",6.14%,-23.87%,76.12%
 Yuba County,9,"$23,095,919",13.00%,-29.72%,100.00%
-Alpine County,0.00%,$0,0.00%,0.00%,0.00%
-Total,"10,513","$42,132,825,415",9.03%,-13.04%,65.68%

@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Indiana,"2,051","$3,305,071,391",10.03%,-11.39%,65.24%
 Adams County,2,"$432,352",12.24%,7.56%,50.00%
 Allen County,122,"$161,907,936",11.86%,-0.64%,52.46%
 Bartholomew County,40,"$36,059,615",4.45%,-25.28%,70.00%
@@ -89,4 +91,3 @@ Wayne County,23,"$43,225,679",16.52%,2.24%,43.48%
 Wells County,9,"$3,407,629",8.13%,-1.33%,55.56%
 White County,6,"$1,560,804",10.58%,-14.57%,83.33%
 Whitley County,8,"$3,128,734",17.16%,7.36%,25.00%
-Total,"2,051","$3,305,071,391",10.03%,-11.39%,65.24%

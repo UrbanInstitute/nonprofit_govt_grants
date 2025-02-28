@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Alabama,"1,118","$1,944,864,228",7.87%,-21.45%,72.00%
 Autauga County,16,"$7,250,108",11.36%,-19.70%,93.75%
 Baldwin County,49,"$7,433,770",13.94%,-17.01%,67.35%
 Barbour County,7,"$467,219",11.87%,-38.85%,85.71%
@@ -62,7 +64,3 @@ Walker County,13,"$9,553,941",1.02%,-73.07%,92.31%
 Washington County,2,"$1,375,793",22.26%,-14.88%,50.00%
 Wilcox County,2,"$51,320",41.90%,33.48%,0.00%
 Winston County,1,"$436,808",-10.23%,-12.30%,100.00%
-Geneva County,0.00%,$0,0.00%,0.00%,0.00%
-Crenshaw County,0.00%,$0,0.00%,0.00%,0.00%
-Conecuh County,0.00%,$0,0.00%,0.00%,0.00%
-Total,"1,118","$1,944,864,228",7.87%,-21.45%,72.00%

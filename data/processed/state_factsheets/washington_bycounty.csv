@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Washington,"2,741","$6,452,428,730",10.77%,-10.62%,66.00%
 Adams County,2,"$15,081,967",22.56%,5.87%,50.00%
 Asotin County,6,"$1,970,662",12.54%,-17.10%,50.00%
 Benton County,50,"$92,591,435",8.34%,-14.62%,68.00%
@@ -37,4 +39,3 @@ Walla Walla County,33,"$45,068,102",9.07%,-16.69%,66.67%
 Whatcom County,104,"$108,649,395",13.11%,-6.24%,66.35%
 Whitman County,13,"$19,151,155",5.11%,-63.19%,76.92%
 Yakima County,72,"$305,314,807",14.03%,-6.62%,62.50%
-Total,"2,741","$6,452,428,730",10.77%,-10.62%,66.00%

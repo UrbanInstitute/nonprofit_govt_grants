@@ -1,13 +1,13 @@
-Subsector,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
-"Arts, Culture, and Humanities",147,"$88,236,125",17.27%,-2.75%,54.42%
-Education (Excluding Universities),221,"$676,749,625",8.19%,-51.96%,75.57%
-Environment and Animals,58,"$26,329,614",15.35%,-9.26%,56.90%
-Health (Excluding Hospitals),165,"$339,342,695",8.60%,-12.24%,67.88%
+Subsector,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+"Arts, culture, and humanities",147,"$88,236,125",17.27%,-2.75%,54.42%
+Education,221,"$676,749,625",8.19%,-51.96%,75.57%
+Environment and animals,58,"$26,329,614",15.35%,-9.26%,56.90%
+Health,165,"$339,342,695",8.60%,-12.24%,67.88%
 Hospitals,37,"$165,047,206",12.49%,5.21%,43.24%
-Human Services,666,"$659,674,186",9.47%,-13.66%,66.82%
-"International, Foreign Affairs",18,"$117,569,621",6.37%,-3.86%,61.11%
-"Public, Societal Benefit",200,"$170,571,145",13.75%,-20.87%,66.00%
-Religion Related,55,"$22,918,593",11.71%,-3.06%,54.55%
-Unclassified,458,"$739,712,296",7.77%,-9.90%,64.63%
+Human services,666,"$659,674,186",9.47%,-13.66%,66.82%
+"International, foreign affairs",18,"$117,569,621",6.37%,-3.86%,61.11%
+"Public, societal benefit",200,"$170,571,145",13.75%,-20.87%,66.00%
+Religion-related,55,"$22,918,593",11.71%,-3.06%,54.55%
 Universities,26,"$298,920,285",6.35%,-1.27%,61.54%
+Unclassified,458,"$739,712,296",7.77%,-9.90%,64.63%
 Total,"2,051","$3,305,071,391",10.03%,-11.39%,65.24%

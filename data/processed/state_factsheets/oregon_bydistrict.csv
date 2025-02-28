@@ -1,8 +1,9 @@
-Congressional District,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
-Congressional District 1,510,"$1,421,267,315",10.03%,-12.93%,67.06%
-Congressional District 2,318,"$420,335,123",9.35%,-29.73%,70.75%
-Congressional District 3,328,"$567,378,521",12.54%,-19.99%,72.87%
-Congressional District 4,340,"$414,055,723",12.75%,-14.61%,69.41%
-Congressional District 5,256,"$298,545,261",13.60%,-6.93%,58.98%
-Congressional District 6,209,"$387,231,286",11.74%,-4.10%,60.77%
-Total,"1,961","$3,508,813,229",11.60%,-13.87%,67.31%
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Oregon,"1,961","$3,508,813,229",11.60%,-13.87%,67.31%
+1st Congressional district,510,"$1,421,267,315",10.03%,-12.93%,67.06%
+2nd Congressional district,318,"$420,335,123",9.35%,-29.73%,70.75%
+3rd Congressional district,328,"$567,378,521",12.54%,-19.99%,72.87%
+4th Congressional district,340,"$414,055,723",12.75%,-14.61%,69.41%
+5th Congressional district,256,"$298,545,261",13.60%,-6.93%,58.98%
+6th Congressional district,209,"$387,231,286",11.74%,-4.10%,60.77%

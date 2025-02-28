@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+North Dakota,444,"$455,735,134",9.73%,-6.94%,61.49%
 Adams County,2,"$2,411,226",8.95%,0.78%,50.00%
 Barnes County,8,"$3,949,890",7.94%,-6.66%,62.50%
 Benson County,2,"$15,238,133",33.24%,-30.72%,50.00%
@@ -46,8 +48,3 @@ Walsh County,11,"$8,603,511",9.41%,-1.69%,54.55%
 Ward County,32,"$53,010,662",11.28%,-7.51%,53.12%
 Wells County,1,"$181,000",12.07%,-18.51%,100.00%
 Williams County,12,"$6,014,141",13.94%,-1.15%,50.00%
-Kidder County,0.00%,$0,0.00%,0.00%,0.00%
-Slope County,0.00%,$0,0.00%,0.00%,0.00%
-Oliver County,0.00%,$0,0.00%,0.00%,0.00%
-Hettinger County,0.00%,$0,0.00%,0.00%,0.00%
-Total,444,"$455,735,134",9.73%,-6.94%,61.49%

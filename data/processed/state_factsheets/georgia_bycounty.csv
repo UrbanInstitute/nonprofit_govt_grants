@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Georgia,"2,130","$5,229,883,749",9.35%,-11.79%,66.43%
 Appling County,2,"$298,237",-1.37%,-34.19%,100.00%
 Bacon County,1,"$5,197,555",1.20%,-9.37%,100.00%
 Baldwin County,7,"$1,900,381",27.14%,-24.37%,57.14%
@@ -127,21 +129,3 @@ Wilcox County,1,"$8,883",18.54%,9.24%,0.00%
 Wilkes County,1,"$283,824",-15.89%,-114.02%,100.00%
 Wilkinson County,3,"$192,656",10.93%,-18.39%,66.67%
 Worth County,2,"$2,319,596",-4.42%,-14.40%,50.00%
-Charlton County,0.00%,$0,0.00%,0.00%,0.00%
-Taliaferro County,0.00%,$0,0.00%,0.00%,0.00%
-Long County,0.00%,$0,0.00%,0.00%,0.00%
-Chattahoochee County,0.00%,$0,0.00%,0.00%,0.00%
-Candler County,0.00%,$0,0.00%,0.00%,0.00%
-Bleckley County,0.00%,$0,0.00%,0.00%,0.00%
-Atkinson County,0.00%,$0,0.00%,0.00%,0.00%
-Twiggs County,0.00%,$0,0.00%,0.00%,0.00%
-Evans County,0.00%,$0,0.00%,0.00%,0.00%
-Echols County,0.00%,$0,0.00%,0.00%,0.00%
-Dooly County,0.00%,$0,0.00%,0.00%,0.00%
-Schley County,0.00%,$0,0.00%,0.00%,0.00%
-Clinch County,0.00%,$0,0.00%,0.00%,0.00%
-Oglethorpe County,0.00%,$0,0.00%,0.00%,0.00%
-Telfair County,0.00%,$0,0.00%,0.00%,0.00%
-Tattnall County,0.00%,$0,0.00%,0.00%,0.00%
-Glascock County,0.00%,$0,0.00%,0.00%,0.00%
-Total,"2,130","$5,229,883,749",9.35%,-11.79%,66.43%

@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+New Hampshire,663,"$1,133,383,584",10.55%,-7.39%,62.90%
 Belknap County,29,"$11,058,626",12.78%,0.76%,44.83%
 Carroll County,55,"$19,490,173",15.35%,-2.36%,56.36%
 Cheshire County,39,"$45,943,451",12.71%,-7.58%,69.23%
@@ -9,4 +11,3 @@ Merrimack County,118,"$165,086,443",6.37%,-13.16%,67.80%
 Rockingham County,101,"$62,471,837",13.93%,-4.80%,59.41%
 Strafford County,48,"$67,164,393",14.72%,-6.79%,64.58%
 Sullivan County,18,"$9,271,356",14.71%,-1.91%,61.11%
-Total,663,"$1,133,383,584",10.55%,-7.39%,62.90%

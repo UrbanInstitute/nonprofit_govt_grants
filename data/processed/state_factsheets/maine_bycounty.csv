@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Maine,875,"$1,125,149,145",11.09%,-7.21%,60.34%
 Androscoggin County,63,"$173,273,798",7.11%,-19.67%,80.95%
 Aroostook County,29,"$82,763,262",4.94%,-18.23%,89.66%
 Cumberland County,260,"$305,124,356",11.68%,-5.43%,59.62%
@@ -15,4 +17,3 @@ Somerset County,20,"$11,664,387",9.90%,-0.75%,50.00%
 Waldo County,23,"$12,395,735",17.51%,-9.17%,56.52%
 Washington County,33,"$24,262,685",14.90%,-8.52%,60.61%
 York County,70,"$66,777,113",15.70%,-1.81%,54.29%
-Total,875,"$1,125,149,145",11.09%,-7.21%,60.34%

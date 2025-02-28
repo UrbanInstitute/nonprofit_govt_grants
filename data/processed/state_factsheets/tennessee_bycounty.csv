@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Tennessee,"2,030","$3,759,003,111",8.54%,-16.99%,69.16%
 Anderson County,24,"$17,428,517",9.23%,-19.89%,75.00%
 Bedford County,8,"$4,849,600",3.92%,-17.57%,62.50%
 Benton County,2,"$2,579,242",-9.31%,-97.56%,100.00%
@@ -88,5 +90,3 @@ Weakley County,11,"$35,981,206",-0.20%,-77.28%,100.00%
 White County,3,"$11,182,196",17.13%,-11.35%,66.67%
 Williamson County,72,"$31,254,977",14.35%,-0.53%,51.39%
 Wilson County,29,"$31,684,005",7.51%,-10.69%,58.62%
-Fentress County,0.00%,$0,0.00%,0.00%,0.00%
-Total,"2,030","$3,759,003,111",8.54%,-16.99%,69.16%

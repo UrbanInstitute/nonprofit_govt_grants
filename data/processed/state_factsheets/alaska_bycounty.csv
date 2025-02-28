@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Alaska,548,"$848,313,307",7.18%,-28.55%,79.01%
 Aleutians East Borough,1,"$8,157",1.95%,0.48%,0.00%
 Aleutians West Census Area,3,"$3,103,569",6.59%,-47.02%,100.00%
 Anchorage Municipality,183,"$325,665,303",8.98%,-23.85%,79.23%
@@ -27,6 +29,3 @@ Sitka City and Borough,23,"$9,553,762",8.40%,-10.62%,73.91%
 Southeast Fairbanks Census Area,8,"$1,391,410",2.66%,-39.85%,87.50%
 Wrangell City and Borough,1,"$39,048",34.23%,-4.50%,100.00%
 Yukon-Koyukuk Census Area,5,"$1,819,880",-0.78%,-58.91%,100.00%
-Yakutat City and Borough,0.00%,$0,0.00%,0.00%,0.00%
-Skagway Municipality,0.00%,$0,0.00%,0.00%,0.00%
-Total,548,"$848,313,307",7.18%,-28.55%,79.01%

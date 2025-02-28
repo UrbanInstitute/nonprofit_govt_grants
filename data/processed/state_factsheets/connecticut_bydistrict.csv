@@ -1,7 +1,8 @@
-Congressional District,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
-Congressional District 1,359,"$772,229,043",5.89%,-22.45%,77.72%
-Congressional District 2,264,"$384,417,477",6.85%,-17.97%,70.45%
-Congressional District 3,304,"$1,360,867,135",7.16%,-21.24%,71.71%
-Congressional District 4,339,"$903,730,046",8.44%,-9.50%,66.08%
-Congressional District 5,295,"$426,667,256",8.14%,-15.61%,68.81%
-Total,"1,561","$3,847,910,957",7.14%,-16.67%,71.11%
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Connecticut,"1,561","$3,847,910,957",7.14%,-16.67%,71.11%
+1st Congressional district,359,"$772,229,043",5.89%,-22.45%,77.72%
+2nd Congressional district,264,"$384,417,477",6.85%,-17.97%,70.45%
+3rd Congressional district,304,"$1,360,867,135",7.16%,-21.24%,71.71%
+4th Congressional district,339,"$903,730,046",8.44%,-9.50%,66.08%
+5th Congressional district,295,"$426,667,256",8.14%,-15.61%,68.81%

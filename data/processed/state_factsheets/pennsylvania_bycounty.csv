@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Pennsylvania,"6,175","$13,203,162,114",9.69%,-11.29%,66.87%
 Adams County,55,"$56,371,119",16.73%,-6.15%,58.18%
 Allegheny County,815,"$1,981,940,328",9.80%,-11.29%,67.98%
 Armstrong County,28,"$19,395,396",6.59%,-5.57%,64.29%
@@ -66,4 +68,3 @@ Wayne County,31,"$25,315,615",14.94%,-10.60%,67.74%
 Westmoreland County,137,"$141,239,678",15.79%,-6.99%,60.58%
 Wyoming County,18,"$9,236,259",1.48%,-12.94%,77.78%
 York County,171,"$307,397,880",11.12%,-7.66%,63.74%
-Total,"6,175","$13,203,162,114",9.69%,-11.29%,66.87%

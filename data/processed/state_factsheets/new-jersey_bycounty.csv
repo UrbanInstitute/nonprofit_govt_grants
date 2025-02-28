@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+New Jersey,"2,532","$5,748,555,291",8.71%,-15.65%,69.47%
 Atlantic County,66,"$68,347,256",12.28%,-16.18%,69.70%
 Bergen County,231,"$421,652,415",8.45%,-9.28%,61.90%
 Burlington County,93,"$169,217,538",8.73%,-7.07%,60.22%
@@ -20,4 +22,3 @@ Somerset County,120,"$141,224,114",9.72%,-11.85%,70.00%
 Sussex County,36,"$16,935,365",12.05%,-8.81%,63.89%
 Union County,134,"$265,256,317",9.78%,-15.85%,69.40%
 Warren County,40,"$45,563,454",8.40%,-19.94%,72.50%
-Total,"2,532","$5,748,555,291",8.71%,-15.65%,69.47%

@@ -1,16 +1,17 @@
-Congressional District,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
-Congressional District 1,150,"$206,134,391",10.38%,-19.56%,74.67%
-Congressional District 10,99,"$304,927,186",8.89%,-11.20%,66.67%
-Congressional District 11,119,"$155,303,964",9.24%,-11.64%,68.91%
-Congressional District 12,126,"$246,010,685",7.43%,-20.88%,71.43%
-Congressional District 13,75,"$69,327,968",9.39%,-12.54%,70.67%
-Congressional District 14,100,"$53,794,505",8.65%,-21.03%,67.00%
-Congressional District 2,217,"$368,341,794",7.00%,-16.48%,72.81%
-Congressional District 3,110,"$97,006,776",9.18%,-8.75%,67.27%
-Congressional District 4,168,"$298,176,040",8.09%,-12.13%,68.45%
-Congressional District 5,516,"$2,833,567,326",9.04%,-9.55%,64.15%
-Congressional District 6,123,"$108,186,908",12.59%,0.84%,47.97%
-Congressional District 7,100,"$131,378,812",11.67%,-12.94%,69.00%
-Congressional District 8,108,"$200,460,166",12.37%,-15.68%,62.96%
-Congressional District 9,119,"$157,267,228",7.82%,-6.42%,59.66%
-Total,"2,130","$5,229,883,749",9.35%,-11.79%,66.43%
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Georgia,"2,130","$5,229,883,749",9.35%,-11.79%,66.43%
+1st Congressional district,150,"$206,134,391",10.38%,-19.56%,74.67%
+2nd Congressional district,217,"$368,341,794",7.00%,-16.48%,72.81%
+3rd Congressional district,110,"$97,006,776",9.18%,-8.75%,67.27%
+4th Congressional district,168,"$298,176,040",8.09%,-12.13%,68.45%
+5th Congressional district,516,"$2,833,567,326",9.04%,-9.55%,64.15%
+6th Congressional district,123,"$108,186,908",12.59%,0.84%,47.97%
+7th Congressional district,100,"$131,378,812",11.67%,-12.94%,69.00%
+8th Congressional district,108,"$200,460,166",12.37%,-15.68%,62.96%
+9th Congressional district,119,"$157,267,228",7.82%,-6.42%,59.66%
+10th Congressional district,99,"$304,927,186",8.89%,-11.20%,66.67%
+11th Congressional district,119,"$155,303,964",9.24%,-11.64%,68.91%
+12th Congressional district,126,"$246,010,685",7.43%,-20.88%,71.43%
+13th Congressional district,75,"$69,327,968",9.39%,-12.54%,70.67%
+14th Congressional district,100,"$53,794,505",8.65%,-21.03%,67.00%

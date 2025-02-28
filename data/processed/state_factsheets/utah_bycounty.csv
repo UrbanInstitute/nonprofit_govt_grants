@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Utah,718,"$1,665,786,876",9.73%,-23.91%,72.14%
 Box Elder County,6,"$6,366,119",-8.48%,-83.00%,100.00%
 Cache County,31,"$60,603,482",11.68%,-20.97%,74.19%
 Carbon County,8,"$20,921,831",8.09%,-67.28%,100.00%
@@ -22,8 +24,3 @@ Wasatch County,6,"$3,267,319",8.21%,-29.97%,100.00%
 Washington County,33,"$64,070,899",8.78%,-53.00%,75.76%
 Wayne County,3,"$3,520,279",46.69%,35.16%,33.33%
 Weber County,55,"$113,619,088",8.37%,-35.78%,81.82%
-Rich County,0.00%,$0,0.00%,0.00%,0.00%
-Millard County,0.00%,$0,0.00%,0.00%,0.00%
-Piute County,0.00%,$0,0.00%,0.00%,0.00%
-Daggett County,0.00%,$0,0.00%,0.00%,0.00%
-Total,718,"$1,665,786,876",9.73%,-23.91%,72.14%

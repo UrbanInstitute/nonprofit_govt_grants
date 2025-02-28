@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+New Mexico,772,"$943,744,428",10.15%,-16.09%,70.47%
 Bernalillo County,283,"$346,917,394",11.00%,-11.47%,71.02%
 Chaves County,10,"$5,323,393",6.77%,-49.67%,80.00%
 Cibola County,5,"$23,598,736",8.80%,-4.07%,60.00%
@@ -30,6 +32,3 @@ Taos County,16,"$17,893,635",6.47%,-20.04%,75.00%
 Torrance County,1,"$5,917",22.86%,21.66%,0.00%
 Union County,3,"$2,457,415",10.53%,-16.60%,66.67%
 Valencia County,7,"$12,829,057",23.30%,-65.39%,57.14%
-Catron County,0.00%,$0,0.00%,0.00%,0.00%
-Harding County,0.00%,$0,0.00%,0.00%,0.00%
-Total,772,"$943,744,428",10.15%,-16.09%,70.47%

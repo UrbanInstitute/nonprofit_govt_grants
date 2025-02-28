@@ -1,4 +1,5 @@
-Congressional District,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
-Congressional District 1,194,"$327,486,230",10.92%,-14.83%,63.40%
-Congressional District 2,283,"$315,656,497",14.07%,-8.33%,61.13%
-Total,477,"$643,142,727",12.56%,-11.31%,62.05%
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Idaho,477,"$643,142,727",12.56%,-11.31%,62.05%
+1st Congressional district,194,"$327,486,230",10.92%,-14.83%,63.40%
+2nd Congressional district,283,"$315,656,497",14.07%,-8.33%,61.13%

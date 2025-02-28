@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Arizona,"1,446","$3,710,995,891",8.70%,-12.71%,65.98%
 Apache County,12,"$18,172,896",11.26%,-21.44%,58.33%
 Cochise County,26,"$44,552,254",14.74%,-0.36%,50.00%
 Coconino County,64,"$113,828,497",11.76%,-12.58%,65.62%
@@ -13,5 +15,3 @@ Pinal County,35,"$75,131,903",2.38%,-52.16%,82.86%
 Santa Cruz County,15,"$10,893,709",16.79%,-16.16%,53.33%
 Yavapai County,83,"$59,944,854",9.87%,-13.07%,69.88%
 Yuma County,25,"$75,774,752",8.94%,-18.38%,80.00%
-Greenlee County,0.00%,$0,0.00%,0.00%,0.00%
-Total,"1,446","$3,710,995,891",8.70%,-12.71%,65.98%

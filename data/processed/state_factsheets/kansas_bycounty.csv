@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Kansas,971,"$1,044,083,084",8.02%,-11.92%,70.13%
 Allen County,7,"$9,129,125",5.28%,-30.40%,85.71%
 Anderson County,1,"$2,417,752",1.55%,-6.03%,100.00%
 Atchison County,9,"$6,802,708",22.75%,0.98%,44.44%
@@ -87,13 +89,3 @@ Washington County,5,"$1,316,748",1.17%,-4.97%,80.00%
 Wichita County,2,"$501,221",21.62%,-41.83%,100.00%
 Wilson County,3,"$731,055",12.06%,-7.26%,66.67%
 Wyandotte County,43,"$48,993,689",6.80%,-20.77%,74.42%
-Stanton County,0.00%,$0,0.00%,0.00%,0.00%
-Jewell County,0.00%,$0,0.00%,0.00%,0.00%
-Gove County,0.00%,$0,0.00%,0.00%,0.00%
-Woodson County,0.00%,$0,0.00%,0.00%,0.00%
-Ness County,0.00%,$0,0.00%,0.00%,0.00%
-Osborne County,0.00%,$0,0.00%,0.00%,0.00%
-Kearny County,0.00%,$0,0.00%,0.00%,0.00%
-Hodgeman County,0.00%,$0,0.00%,0.00%,0.00%
-Wabaunsee County,0.00%,$0,0.00%,0.00%,0.00%
-Total,971,"$1,044,083,084",8.02%,-11.92%,70.13%

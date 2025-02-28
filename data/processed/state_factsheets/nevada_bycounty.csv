@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Nevada,503,"$1,252,051,703",7.25%,-23.82%,73.76%
 Carson City,21,"$48,618,971",9.25%,-14.24%,71.43%
 Churchill County,8,"$10,294,157",10.13%,-21.23%,62.50%
 Clark County,265,"$740,588,241",6.58%,-22.99%,71.70%
@@ -14,6 +16,3 @@ Pershing County,3,"$590,901",29.73%,26.56%,33.33%
 Storey County,6,"$18,066,978",17.19%,-40.47%,83.33%
 Washoe County,148,"$368,223,337",6.29%,-23.97%,76.35%
 White Pine County,7,"$7,267,627",25.36%,-13.92%,85.71%
-Eureka County,0.00%,$0,0.00%,0.00%,0.00%
-Lander County,0.00%,$0,0.00%,0.00%,0.00%
-Total,503,"$1,252,051,703",7.25%,-23.82%,73.76%

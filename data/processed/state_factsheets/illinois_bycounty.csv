@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Illinois,"3,468","$9,986,549,815",8.22%,-13.23%,67.30%
 Adams County,34,"$35,635,199",8.95%,-27.71%,76.47%
 Alexander County,1,"$1,462,063",8.05%,-88.77%,100.00%
 Bond County,2,"$8,192,228",8.69%,-36.22%,100.00%
@@ -97,4 +99,3 @@ Will County,68,"$114,382,152",5.85%,-18.31%,72.06%
 Williamson County,12,"$20,641,390",4.39%,-49.16%,91.67%
 Winnebago County,85,"$173,678,073",8.54%,-24.49%,75.29%
 Woodford County,8,"$3,927,743",3.14%,-2.18%,62.50%
-Total,"3,468","$9,986,549,815",8.22%,-13.23%,67.30%

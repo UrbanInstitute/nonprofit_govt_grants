@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Nebraska,769,"$986,876,099",7.78%,-11.28%,65.28%
 Adams County,18,"$24,737,352",2.50%,-24.70%,72.22%
 Antelope County,1,"$725,194",9.37%,5.98%,0.00%
 Arthur County,1,"$18,387",125.51%,186.25%,0.00%
@@ -68,17 +70,3 @@ Washington County,5,"$3,436,247",2.70%,-15.72%,60.00%
 Wayne County,4,"$7,011,645",16.60%,1.75%,50.00%
 Webster County,1,"$103,000",78.63%,76.46%,0.00%
 York County,11,"$2,626,226",6.32%,-20.11%,54.55%
-Keya Paha County,0.00%,$0,0.00%,0.00%,0.00%
-Banner County,0.00%,$0,0.00%,0.00%,0.00%
-Dundy County,0.00%,$0,0.00%,0.00%,0.00%
-Kearney County,0.00%,$0,0.00%,0.00%,0.00%
-Kimball County,0.00%,$0,0.00%,0.00%,0.00%
-Gosper County,0.00%,$0,0.00%,0.00%,0.00%
-Hayes County,0.00%,$0,0.00%,0.00%,0.00%
-Stanton County,0.00%,$0,0.00%,0.00%,0.00%
-Garden County,0.00%,$0,0.00%,0.00%,0.00%
-Hooker County,0.00%,$0,0.00%,0.00%,0.00%
-Morrill County,0.00%,$0,0.00%,0.00%,0.00%
-Loup County,0.00%,$0,0.00%,0.00%,0.00%
-Frontier County,0.00%,$0,0.00%,0.00%,0.00%
-Total,769,"$986,876,099",7.78%,-11.28%,65.28%

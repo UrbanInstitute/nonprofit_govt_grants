@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Kentucky,"1,138","$2,425,907,719",9.25%,-10.73%,65.64%
 Adair County,1,"$7,156,516",5.62%,-4.19%,100.00%
 Allen County,4,"$494,834",26.34%,14.21%,25.00%
 Anderson County,1,"$193,279",18.52%,5.09%,0.00%
@@ -102,10 +104,3 @@ Webster County,2,"$4,164,696",-32.44%,-48.42%,100.00%
 Whitley County,7,"$14,560,603",12.83%,-48.39%,57.14%
 Wolfe County,1,"$243,224",16.79%,-58.60%,100.00%
 Woodford County,5,"$7,753,443",3.83%,-5.32%,80.00%
-Elliott County,0.00%,$0,0.00%,0.00%,0.00%
-Carlisle County,0.00%,$0,0.00%,0.00%,0.00%
-Leslie County,0.00%,$0,0.00%,0.00%,0.00%
-Trimble County,0.00%,$0,0.00%,0.00%,0.00%
-Menifee County,0.00%,$0,0.00%,0.00%,0.00%
-Casey County,0.00%,$0,0.00%,0.00%,0.00%
-Total,"1,138","$2,425,907,719",9.25%,-10.73%,65.64%

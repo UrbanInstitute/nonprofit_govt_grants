@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Missouri,"1,959","$3,985,106,420",7.82%,-12.22%,68.25%
 Adair County,17,"$26,999,998",1.74%,-20.64%,76.47%
 Andrew County,3,"$481,369",22.11%,-39.29%,100.00%
 Atchison County,4,"$765,171",3.08%,-7.35%,75.00%
@@ -107,7 +109,3 @@ Washington County,2,"$5,954,300",15.49%,-33.78%,100.00%
 Wayne County,4,"$338,035",7.58%,-0.65%,50.00%
 Webster County,4,"$2,594,886",3.45%,-26.97%,75.00%
 Wright County,4,"$463,763",11.20%,-0.57%,50.00%
-Maries County,0.00%,$0,0.00%,0.00%,0.00%
-McDonald County,0.00%,$0,0.00%,0.00%,0.00%
-Ozark County,0.00%,$0,0.00%,0.00%,0.00%
-Total,"1,959","$3,985,106,420",7.82%,-12.22%,68.25%

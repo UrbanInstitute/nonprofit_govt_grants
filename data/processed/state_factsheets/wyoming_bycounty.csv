@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Wyoming,362,"$261,596,078",6.11%,-25.29%,68.78%
 Albany County,34,"$22,859,903",8.31%,-22.35%,70.59%
 Big Horn County,3,"$618,245",0.89%,-94.38%,100.00%
 Campbell County,15,"$10,704,662",9.22%,-11.89%,60.00%
@@ -22,4 +24,3 @@ Teton County,45,"$18,827,224",19.70%,7.89%,33.33%
 Uinta County,6,"$10,992,548",2.23%,-70.59%,100.00%
 Washakie County,9,"$13,662,481",-0.07%,-74.82%,100.00%
 Weston County,2,"$413,654",7.71%,-23.31%,50.00%
-Total,362,"$261,596,078",6.11%,-25.29%,68.78%

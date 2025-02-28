@@ -1,28 +1,29 @@
-Congressional District,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
-Congressional District 1,245,"$204,463,777",6.50%,-7.52%,67.35%
-Congressional District 10,998,"$5,353,749,888",9.14%,-12.08%,68.34%
-Congressional District 11,134,"$379,262,147",8.11%,-29.57%,79.10%
-Congressional District 12,"1,263","$6,432,780,970",10.57%,-4.88%,58.43%
-Congressional District 13,376,"$2,283,294,652",6.81%,-22.03%,73.67%
-Congressional District 14,107,"$513,210,548",4.44%,-28.24%,85.98%
-Congressional District 15,232,"$1,644,389,042",4.57%,-28.72%,82.33%
-Congressional District 16,257,"$743,278,393",9.14%,-10.46%,67.32%
-Congressional District 17,352,"$458,920,276",10.76%,-6.85%,60.51%
-Congressional District 18,285,"$407,783,841",11.44%,-9.01%,65.26%
-Congressional District 19,494,"$426,123,173",8.74%,-12.44%,68.22%
-Congressional District 2,174,"$305,230,249",4.66%,-35.44%,78.74%
-Congressional District 20,447,"$2,657,022,188",7.02%,-15.90%,75.17%
-Congressional District 21,425,"$397,113,731",8.28%,-14.13%,69.41%
-Congressional District 22,376,"$595,312,831",8.99%,-11.51%,68.62%
-Congressional District 23,346,"$345,914,627",8.87%,-14.53%,72.25%
-Congressional District 24,359,"$459,054,158",9.74%,-19.11%,74.37%
-Congressional District 25,338,"$1,206,055,644",7.20%,-12.31%,71.30%
-Congressional District 26,369,"$648,779,022",6.33%,-15.26%,77.78%
-Congressional District 3,230,"$469,399,724",8.37%,-7.93%,64.35%
-Congressional District 4,149,"$502,049,301",8.38%,-7.75%,65.77%
-Congressional District 5,107,"$750,810,561",2.31%,-45.01%,85.98%
-Congressional District 6,120,"$457,404,362",8.82%,-13.80%,78.33%
-Congressional District 7,237,"$771,352,359",8.39%,-18.61%,73.42%
-Congressional District 8,133,"$795,011,373",3.99%,-39.84%,80.45%
-Congressional District 9,190,"$512,866,784",7.96%,-15.35%,71.05%
-Total,"8,743","$29,720,633,621",8.36%,-12.97%,69.53%
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+New York,"8,743","$29,720,633,621",8.36%,-12.97%,69.53%
+1st Congressional district,245,"$204,463,777",6.50%,-7.52%,67.35%
+2nd Congressional district,174,"$305,230,249",4.66%,-35.44%,78.74%
+3rd Congressional district,230,"$469,399,724",8.37%,-7.93%,64.35%
+4th Congressional district,149,"$502,049,301",8.38%,-7.75%,65.77%
+5th Congressional district,107,"$750,810,561",2.31%,-45.01%,85.98%
+6th Congressional district,120,"$457,404,362",8.82%,-13.80%,78.33%
+7th Congressional district,237,"$771,352,359",8.39%,-18.61%,73.42%
+8th Congressional district,133,"$795,011,373",3.99%,-39.84%,80.45%
+9th Congressional district,190,"$512,866,784",7.96%,-15.35%,71.05%
+10th Congressional district,998,"$5,353,749,888",9.14%,-12.08%,68.34%
+11th Congressional district,134,"$379,262,147",8.11%,-29.57%,79.10%
+12th Congressional district,"1,263","$6,432,780,970",10.57%,-4.88%,58.43%
+13th Congressional district,376,"$2,283,294,652",6.81%,-22.03%,73.67%
+14th Congressional district,107,"$513,210,548",4.44%,-28.24%,85.98%
+15th Congressional district,232,"$1,644,389,042",4.57%,-28.72%,82.33%
+16th Congressional district,257,"$743,278,393",9.14%,-10.46%,67.32%
+17th Congressional district,352,"$458,920,276",10.76%,-6.85%,60.51%
+18th Congressional district,285,"$407,783,841",11.44%,-9.01%,65.26%
+19th Congressional district,494,"$426,123,173",8.74%,-12.44%,68.22%
+20th Congressional district,447,"$2,657,022,188",7.02%,-15.90%,75.17%
+21st Congressional district,425,"$397,113,731",8.28%,-14.13%,69.41%
+22nd Congressional district,376,"$595,312,831",8.99%,-11.51%,68.62%
+23rd Congressional district,346,"$345,914,627",8.87%,-14.53%,72.25%
+24th Congressional district,359,"$459,054,158",9.74%,-19.11%,74.37%
+25th Congressional district,338,"$1,206,055,644",7.20%,-12.31%,71.30%
+26th Congressional district,369,"$648,779,022",6.33%,-15.26%,77.78%

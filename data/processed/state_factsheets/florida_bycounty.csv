@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Florida,"3,981","$12,417,989,542",7.10%,-16.26%,69.86%
 Alachua County,115,"$252,023,560",3.27%,-22.36%,76.52%
 Baker County,4,"$2,348,875",14.46%,-45.45%,75.00%
 Bay County,32,"$99,799,635",8.96%,-46.88%,75.00%
@@ -63,5 +65,3 @@ Volusia County,87,"$333,477,682",8.39%,-12.22%,63.22%
 Wakulla County,3,"$1,424,040",5.55%,-23.58%,66.67%
 Walton County,15,"$13,831,342",14.88%,-13.68%,66.67%
 Washington County,4,"$811,956",6.98%,-30.62%,75.00%
-Glades County,0.00%,$0,0.00%,0.00%,0.00%
-Total,"3,981","$12,417,989,542",7.10%,-16.26%,69.86%

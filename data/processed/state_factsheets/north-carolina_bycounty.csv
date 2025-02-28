@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+North Carolina,"3,264","$7,190,690,326",9.29%,-19.34%,69.55%
 Alamance County,45,"$50,697,607",14.47%,-25.10%,77.78%
 Alexander County,9,"$1,519,104",6.58%,-18.98%,66.67%
 Alleghany County,7,"$1,416,660",11.41%,-16.39%,57.14%
@@ -98,4 +100,3 @@ Wilkes County,23,"$17,725,633",11.38%,-32.97%,82.61%
 Wilson County,30,"$34,803,154",3.78%,-49.73%,73.33%
 Yadkin County,15,"$10,980,473",1.92%,-25.79%,93.33%
 Yancey County,15,"$1,461,802",17.97%,-8.86%,53.33%
-Total,"3,264","$7,190,690,326",9.29%,-19.34%,69.55%

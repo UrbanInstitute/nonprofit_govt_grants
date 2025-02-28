@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Louisiana,"1,214","$2,869,770,671",7.97%,-27.48%,72.08%
 Acadia Parish,7,"$6,139,262",4.41%,-46.78%,57.14%
 Allen Parish,4,"$3,670,985",12.47%,-67.47%,100.00%
 Ascension Parish,6,"$5,197,588",30.64%,0.24%,50.00%
@@ -62,5 +64,3 @@ West Baton Rouge Parish,2,"$90,100",18.70%,-5.67%,50.00%
 West Carroll Parish,2,"$812,042",3.36%,-79.27%,100.00%
 West Feliciana Parish,2,"$602,115",10.25%,-63.78%,100.00%
 Winn Parish,2,"$8,236,144",-5.64%,-70.19%,100.00%
-St. Helena Parish,0.00%,$0,0.00%,0.00%,0.00%
-Total,"1,214","$2,869,770,671",7.97%,-27.48%,72.08%

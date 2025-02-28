@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+West Virginia,769,"$1,067,242,685",9.05%,-27.48%,75.81%
 Barbour County,8,"$9,024,036",6.01%,-11.96%,75.00%
 Berkeley County,28,"$19,567,722",8.47%,-11.77%,75.00%
 Boone County,6,"$5,253,491",-1.85%,-62.04%,100.00%
@@ -52,5 +54,3 @@ Wetzel County,9,"$3,848,787",9.13%,-5.83%,55.56%
 Wirt County,2,"$5,384,850",1.31%,-31.28%,100.00%
 Wood County,41,"$27,533,082",11.19%,-28.95%,78.05%
 Wyoming County,6,"$13,820,409",7.01%,-44.51%,66.67%
-Pleasants County,0.00%,$0,0.00%,0.00%,0.00%
-Total,769,"$1,067,242,685",9.05%,-27.48%,75.81%

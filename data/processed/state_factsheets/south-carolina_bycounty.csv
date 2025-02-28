@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+South Carolina,"1,290","$2,159,545,458",9.53%,-19.89%,70.54%
 Abbeville County,5,"$3,434,487",14.24%,0.52%,40.00%
 Aiken County,38,"$43,903,074",14.78%,-9.39%,63.16%
 Allendale County,2,"$7,155,284",-9.82%,-28.33%,100.00%
@@ -44,5 +46,3 @@ Sumter County,23,"$24,190,179",13.17%,-11.22%,60.87%
 Union County,3,"$365,027",33.06%,-12.48%,66.67%
 Williamsburg County,8,"$2,845,593",5.30%,-79.59%,87.50%
 York County,51,"$113,900,770",11.71%,-17.29%,64.71%
-Saluda County,0.00%,$0,0.00%,0.00%,0.00%
-Total,"1,290","$2,159,545,458",9.53%,-19.89%,70.54%

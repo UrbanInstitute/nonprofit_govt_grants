@@ -1,4 +1,6 @@
-County,No. of 990 Filers w/ Gov Grants,Total Gov Grants ($),Operating Surplus (%),Operating Surplus w/o Gov Grants (%),Share of 990 Filers w/ Gov Grants at Risk
+Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
+United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
+Idaho,477,"$643,142,727",12.56%,-11.31%,62.05%
 Ada County,161,"$239,933,201",11.35%,-11.49%,61.49%
 Adams County,1,"$2,432,868",15.47%,-28.92%,100.00%
 Bannock County,21,"$26,436,084",13.43%,-14.13%,71.43%
@@ -39,6 +41,3 @@ Teton County,12,"$2,856,110",34.44%,12.94%,33.33%
 Twin Falls County,22,"$18,343,238",6.44%,-39.22%,95.45%
 Valley County,5,"$169,654",4.29%,1.96%,40.00%
 Washington County,3,"$1,092,023",-0.24%,-65.92%,100.00%
-Power County,0.00%,$0,0.00%,0.00%,0.00%
-Bear Lake County,0.00%,$0,0.00%,0.00%,0.00%
-Total,477,"$643,142,727",12.56%,-11.31%,62.05%
