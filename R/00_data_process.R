@@ -1,10 +1,10 @@
 # Script Header
 # Title: Federal Funding Freeze Blog Post
 # Date created: 2025-01-31
-# Date last modified: 2025-02-18
+# Date last modified: 2025-03-07
 # Description: This script contains code to download, wrangle, and process data
 # for HTML fact sheets on nonprofits's fiscal sustainability and reliance on 
-# government grants for Tax Year 2021.
+# government grants for Tax Year 2021. It also adds employment data requested by Candid on 28th 2025.
 ### Details:
 # (1) - Download raw data
 # (2) - Load in and filter data
@@ -123,9 +123,13 @@ efile_cols <- list(
     "OBJECTID", # Unique identifier
     "URL", # URL to the raw return
     "F9_00_EXEMPT_STAT_501C3_X", # Indicates if the organization is a 501c3 public charity (since only public charities file form 990, private foundations file form 990PF)
-    "RETURN_TIME_STAMP" # Date and time return was filed
+    "RETURN_TIME_STAMP", # Date and time return was filed
+    "F9_00_ORG_NAME_L1" # Name of the filing organization
   ),
   numeric = c(
+    "F9_01_ACT_GVRN_EMPL_TOT", # Total number of employees
+    "F9_01_ACT_GVRN_VOL_TOT", # Total number of volunteers
+    "F9_05_NUM_EMPL", # Number of employees
     "F9_08_REV_CONTR_GOVT_GRANT",
     # Total government grants - Part 8
     "F9_08_REV_TOT_TOT",
@@ -168,11 +172,11 @@ efile_cols <- list(
 )
 
 efile_21_hd_raw <- data.table::fread("data/raw/efile_hd_2021_0225.csv", select = efile_cols)
-efile_21_p08_raw <- data.table::fread("data/raw/efile_p08_2021_0225.csv",
-                                      select = efile_cols)
+efile_21_p01_raw <- data.table::fread("data/raw/efile_p01_2021_0225.csv", select = efile_cols)
+efile_21_p05_raw <- data.table::fread("data/raw/efile_p05_2021_0225.csv", select = efile_cols)
+efile_21_p08_raw <- data.table::fread("data/raw/efile_p08_2021_0225.csv", select = efile_cols)
 efile_21_p09_raw <- data.table::fread("data/raw/efile_p09_2021_0225.csv", select = efile_cols)
 efile_21_p10_raw <- data.table::fread("data/raw/efile_p10_2021_0225.csv", select = efile_cols)
-efile_21_p01_raw <- data.table::fread("data/raw/efile_p01_2021_0225.csv", select = efile_cols)
 
 # (3) - Create the sample dataset from the efile data
 
@@ -384,7 +388,7 @@ data.table::fwrite(bmf_sample, "data/intermediate/bmf_sample.csv")
 
 ## Optional: To save memory
 
-rm(unified_bmf, cd_tigris)
+rm(unified_bmf)
 gc()
 
 # (4.2) Wrangle efile data
@@ -392,11 +396,15 @@ gc()
 ## Merge all 3 e-file datasets. Left join to Part VIII since that contains the government grant information
 
 efile_sample <- efile_21_p08 |>
+  dplyr::select(! RETURN_TIME_STAMP) |>
   dplyr::filter(!is.na(F9_08_REV_CONTR_GOVT_GRANT),
                 F9_08_REV_CONTR_GOVT_GRANT != 0) |>
-  tidylog::left_join(efile_21_p09_raw) |>
-  tidylog::left_join(efile_21_p10_raw) |>
-  tidylog::left_join(efile_21_p01_raw)
+  tidylog::left_join(efile_21_p09_raw, by = join_by("EIN2" == "EIN2",
+                                              "OBJECTID" == "OBJECTID")) |>
+  tidylog::left_join(efile_21_p10_raw, by = join_by("EIN2" == "EIN2",
+                                              "OBJECTID" == "OBJECTID")) |>
+  tidylog::left_join(efile_21_p01_raw, by = join_by("EIN2" == "EIN2",
+                                              "OBJECTID" == "OBJECTID"))
 
 nrow(efile_sample) == numrec_w_gvgrnt 
 
@@ -412,6 +420,7 @@ rm(efile_21_p08_raw,
    efile_21_p09_raw, 
    efile_21_p10_raw, 
    efile_21_p01_raw,
+   efile_21_p05_raw,
    efile_21_hd_raw,
    efile_21_p08)
 gc()
@@ -421,6 +430,8 @@ gc()
 efile_sample <- efile_sample |>
   dplyr::select(
     "EIN2",
+    "F9_01_ACT_GVRN_EMPL_TOT",
+    "F9_01_ACT_GVRN_VOL_TOT",
     "F9_08_REV_CONTR_GOVT_GRANT",
     "F9_08_REV_TOT_TOT",
     "F9_09_EXP_TOT_TOT",
@@ -696,7 +707,9 @@ full_sample_proc <- full_sample_int |>
       CENSUS_STATE_ABBR %in% states ~ usdata::abbr2state(CENSUS_STATE_ABBR),
       .default = "Other US Jurisdictions/Unmapped"
     ),
-    CONGRESS_DISTRICT_NAME = ifelse(is.na(NAMELSAD20), "Unmapped", NAMELSAD20)
+    CONGRESS_DISTRICT_NAME = dplyr::case_when(
+      NAMELSAD20 == "Congressional District" ~ "Unmapped",
+    )
   ) |>
   dplyr::select(
     EIN2,
@@ -722,6 +735,171 @@ full_sample_proc <- full_sample_int |>
     PROFIT_MARGIN = profit_margin,
     PROFIT_MARGIN_NOGOVTGRANT = profit_margin_nogovtgrant,
     AT_RISK_NUM = at_risk
+  ) |>
+  dplyr::mutate(
+    CONGRESS_DISTRICT_NAME = dplyr::case_when(
+      CONGRESS_DISTRICT_NAME == "Congressional District 1" ~ "1st Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 2" ~ "2nd Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 3" ~ "3rd Congressional district", 
+      CONGRESS_DISTRICT_NAME == "Congressional District 4" ~ "4th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 5" ~ "5th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 6" ~ "6th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 7" ~ "7th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 8" ~ "8th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 9" ~ "9th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 10" ~ "10th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 11" ~ "11th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 12" ~ "12th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 13" ~ "13th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 14" ~ "14th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 15" ~ "15th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 16" ~ "16th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 17" ~ "17th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 18" ~ "18th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 19" ~ "19th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 20" ~ "20th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 21" ~ "21st Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 22" ~ "22nd Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 23" ~ "23rd Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 24" ~ "24th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 25" ~ "25th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 26" ~ "26th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 27" ~ "27th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 28" ~ "28th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 29" ~ "29th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 30" ~ "30th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 31" ~ "31st Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 32" ~ "32nd Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 33" ~ "33rd Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 34" ~ "34th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 35" ~ "35th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 36" ~ "36th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 37" ~ "37th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 38" ~ "38th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 39" ~ "39th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 40" ~ "40th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 41" ~ "41st Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 42" ~ "42nd Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 43" ~ "43rd Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 44" ~ "44th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 45" ~ "45th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 46" ~ "46th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 47" ~ "47th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 48" ~ "48th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 49" ~ "49th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 50" ~ "50th Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 51" ~ "51st Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District 52" ~ "52nd Congressional district",
+      CONGRESS_DISTRICT_NAME == "Congressional District (at Large)" ~ "Congressional district (at large)",
+      CONGRESS_DISTRICT_NAME == "Delegate District (at Large)" ~ "Delegate district (at large)",
+      CONGRESS_DISTRICT_NAME == "Resident Commissioner District (at Large)" ~ "Resident commissioner district (at large)",
+      CONGRESS_DISTRICT_NAME == "Unmapped" ~ "Unmapped",
+      TRUE ~ CONGRESS_DISTRICT_NAME
+    ),
+    EXPENSE_CATEGORY = dplyr::case_when(
+      EXPENSE_CATEGORY == "Less than $100K" ~ "Less than $100K",
+      EXPENSE_CATEGORY == "Between $100K and $499K" ~ "$100K to $499K",
+      EXPENSE_CATEGORY == "Between $500K and $999K" ~ "$500K to $999K",
+      EXPENSE_CATEGORY == "Between $1M and $4.99M" ~ "$1M to $4.9M",
+      EXPENSE_CATEGORY == "Between $5M and $9.99M" ~ "$5M to $9.9M",
+      EXPENSE_CATEGORY == "Greater than $10M" ~ "$10M or more",
+      TRUE ~ EXPENSE_CATEGORY
+    ),
+    SUBSECTOR = dplyr::case_when(
+      SUBSECTOR == "Arts, Culture, and Humanities" ~ "Arts, culture, and humanities",
+      SUBSECTOR == "Education (Excluding Universities)" ~ "Education",
+      SUBSECTOR == "Environment and Animals" ~ "Environment and animals",
+      SUBSECTOR == "Health (Excluding Hospitals)" ~ "Health",
+      SUBSECTOR == "Human Services" ~ "Human services",
+      SUBSECTOR == "Hospitals" ~ "Hospitals",
+      SUBSECTOR == "International, Foreign Affairs" ~ "International, foreign affairs",
+      SUBSECTOR == "Public, Societal Benefit" ~ "Public, societal benefit",
+      SUBSECTOR == "Religion Related" ~ "Religion-related",
+      SUBSECTOR == "Mutual/Membership Benefit" ~ "Mutual/membership benefit",
+      SUBSECTOR == "Universities" ~ "Universities",
+      SUBSECTOR == "Unclassified" ~ "Unclassified",
+      TRUE ~ SUBSECTOR
+    )
+  ) |>
+  dplyr::mutate(
+    CONGRESS_DISTRICT_NAME = factor(
+      CONGRESS_DISTRICT_NAME,
+      c(
+        "1st Congressional district",
+        "2nd Congressional district",
+        "3rd Congressional district",
+        "4th Congressional district",
+        "5th Congressional district",
+        "6th Congressional district",
+        "7th Congressional district",
+        "8th Congressional district",
+        "9th Congressional district",
+        "10th Congressional district",
+        "11th Congressional district",
+        "12th Congressional district",
+        "13th Congressional district",
+        "14th Congressional district",
+        "15th Congressional district",
+        "16th Congressional district",
+        "17th Congressional district",
+        "18th Congressional district",
+        "19th Congressional district",
+        "20th Congressional district",
+        "21st Congressional district",
+        "22nd Congressional district",
+        "23rd Congressional district",
+        "24th Congressional district",
+        "25th Congressional district",
+        "26th Congressional district",
+        "27th Congressional district",
+        "28th Congressional district",
+        "29th Congressional district",
+        "30th Congressional district",
+        "31st Congressional district",
+        "32nd Congressional district",
+        "33rd Congressional district",
+        "34th Congressional district",
+        "35th Congressional district",
+        "36th Congressional district",
+        "37th Congressional district",
+        "38th Congressional district",
+        "39th Congressional district",
+        "40th Congressional district",
+        "41st Congressional district",
+        "42nd Congressional district",
+        "43rd Congressional district",
+        "44th Congressional district",
+        "45th Congressional district",
+        "46th Congressional district",
+        "47th Congressional district",
+        "48th Congressional district",
+        "49th Congressional district",
+        "50th Congressional district",
+        "51st Congressional district",
+        "52nd Congressional district",
+        "Congressional district (at large)",
+        "Delegate district (at large)",
+        "Resident commissioner district (at large)",
+        "Unmapped"
+      )
+    ),
+    SUBSECTOR = factor(
+      SUBSECTOR,
+      c(
+        "Arts, culture, and humanities",
+        "Education",
+        "Environment and animals",
+        "Health",
+        "Hospitals",
+        "Human services",
+        "International, foreign affairs",
+        "Public, societal benefit",
+        "Religion-related",
+        "Mutual/membership benefit",
+        "Universities",
+        "Unclassified"
+      )
+    )
   )
 
 ##  Check Counts
@@ -734,7 +912,3 @@ sum(full_sample_proc$AT_RISK_NUM) == sum(efile_sample$at_risk)
 sum(full_sample_proc$GOVERNMENT_GRANT_DOLLAR_AMOUNT) == total_gvgrnt
 
 data.table::fwrite(full_sample_proc, "data/processed/full_sample_processed.csv")
-
-# TODO
-
-# 1. Explore unclassified NTEE Codes.

@@ -1,7 +1,7 @@
 # Script Header
 # Title: Federal Funding Freeze Blog Post
 # Date created: 2025-02-03
-# Date last modified: 2025-02-19
+# Date last modified: 2025-03-07
 # Description: This script contains code to analyze data for HTML fact sheets 
 # on nonprofits's fiscal sustainability and reliance on government grants for 
 # Tax Year 2021. It creates data.frames for fact sheets for each disaggregation.
@@ -37,10 +37,15 @@ absent_counties <- data.table::fread("data/intermediate/absent_counties.csv")
 
 national <- summarize_nonprofit_data(full_sample_proc)
 
-national_bystate <- summarize_nonprofit_data(full_sample_proc,
-                                             group_var = "CENSUS_STATE_NAME",
-                                             group_var_rename = "State") |>
-  dplyr::bind_rows(dplyr::mutate(national, State = "Total"))
+national_bystate <- dplyr::mutate(national, State = "United States") |>
+  dplyr::bind_rows(
+    summarize_nonprofit_data(
+      full_sample_proc,
+      group_var = "CENSUS_STATE_NAME",
+      group_var_rename = "State"
+    )
+  ) |>
+  dplyr::relocate(State)
 
 national_bysize <- summarize_nonprofit_data(full_sample_proc,
                                             group_var = "EXPENSE_CATEGORY",
@@ -94,16 +99,23 @@ for (state in states) {
   state_overall <- summarize_nonprofit_data(state_sample)
   
   # Disaggregate by county, congressional district, size, and subsector. Append totals at the end.
-  state_bycounty <- summarize_nonprofit_data(state_sample,
-                                             group_var = "CENSUS_COUNTY_NAME",
-                                             group_var_rename = "County") |>
-    dplyr::bind_rows(missing_county) |>
-    dplyr::bind_rows(dplyr::mutate(state_overall, County = "Total"))
+  state_bycounty <- dplyr::mutate(national, Geography = "United States") |>
+    dplyr::bind_rows(dplyr::mutate(state_overall, Geography = state)) |>
+    dplyr::bind_rows(
+      summarize_nonprofit_data(state_sample,
+                               group_var = "CENSUS_COUNTY_NAME",
+                               group_var_rename = "Geography")
+    ) |>
+    dplyr::relocate(Geography)
     
-  state_bydistrict <- summarize_nonprofit_data(state_sample,
-                                               group_var = "CONGRESS_DISTRICT_NAME",
-                                               group_var_rename = "Congressional District") |>
-    dplyr::bind_rows(dplyr::mutate(state_overall, `Congressional District` = "Total"))
+  state_bydistrict <- dplyr::mutate(national, Geography = "United States") |>
+    dplyr::bind_rows(dplyr::mutate(state_overall, Geography = state)) |>
+    dplyr::bind_rows(
+      summarize_nonprofit_data(state_sample,
+                               group_var = "CONGRESS_DISTRICT_NAME",
+                               group_var_rename = "Geography") 
+    ) |>
+    dplyr::relocate(Geography)
   
   state_bysize <- summarize_nonprofit_data(state_sample,
                                            group_var = "EXPENSE_CATEGORY",
