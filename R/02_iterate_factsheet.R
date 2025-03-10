@@ -19,13 +19,13 @@ rmarkdown::render(
   input = "R/national_factsheet.Rmd",
   output_dir = "docs/",
   output_file = "national.html",
-  params = list(geography = "US")
+  params = list(geography = "United States")
 )
 
 # (2) - Iterate and Render State Tables
 
 ## Only if you want to debug
-test_states <- c("District of Columbia", "Alaska", "California")
+test_states <- c("District of Columbia", "Alaska", "California" )
 
 for (state in states) {
   cat("Rendering", state, "\n")
