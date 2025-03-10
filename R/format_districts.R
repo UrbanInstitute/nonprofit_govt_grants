@@ -9,17 +9,26 @@ format_districts <- function(districts) {
     return("")
   } else {
     # Format the numbers with Oxford comma
-    if (length(numbers) == 1) {
-      return(paste("District", numbers))
-    } else {
-      formatted <- paste0(
-        "and Districts ",
-        paste(numbers[-length(numbers)], collapse = ", "),
-        ", and ",
-        numbers[length(numbers)]
-      )
-      return(formatted)
+    make_ordinal <- function(n) {
+      if (n %in% c(11,12,13)) return(paste0(n, "th"))
+      suffix <- switch(n %% 10,
+                       "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th")
+      paste0(n, suffix)
     }
+    
+    # Convert numbers to ordinals
+    ordinals <- sapply(numbers, make_ordinal)
+    
+    # Combine with Oxford comma and "and"
+    result <- paste(
+      paste(ordinals[-length(ordinals)], collapse = ", "),
+      ordinals[length(ordinals)],
+      sep = ", and "
+    )
+    
+    # Add the final text
+    result <- paste("and", result, "Congressional districts")
+    return(result)
   }
 }
 
