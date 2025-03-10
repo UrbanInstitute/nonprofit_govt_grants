@@ -44,11 +44,11 @@ retrieve_missing_counties <- function(all_missing_counties_df, state = NA) {
       CENSUS_STATE_NAME = ifelse(is.na(CENSUS_STATE_NAME), 
                                  "Other US Jurisdictions/Unmapped", 
                                  CENSUS_STATE_NAME),
-      `No. of 990 Filers w/ Gov Grants` = "0.00%",
-      `Total Gov Grants ($)` = "$0",
-      `Operating Surplus (%)` = "0.00%",
-      `Operating Surplus w/o Gov Grants (%)` = "0.00%",
-      `Share of 990 Filers w/ Gov Grants at Risk` = "0.00%"
+      `Number of 990 filers with government grants` = "0",
+      `Total government grants ($)` = "$0",
+      `Operating surplus with government grants (%)` = "0.00%",
+      `Operating surplus without government grants (%)` = "0.00%",
+      `Share of 990 filers with government grants at risk` = "0.00%"
     ) |>
     dplyr::select(! CENSUS_STATE_ABBR) |>
     dplyr::rename(County = CENSUS_COUNTY_NAME)
