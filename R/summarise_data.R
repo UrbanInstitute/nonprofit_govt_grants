@@ -83,11 +83,11 @@ summarize_nonprofit_data <- function(data,
   
   # Rename columns
   rename_list <- list(
-    "No. of 990 Filers w/ Gov Grants" = "num_990filers_govgrants",
-    "Total Gov Grants ($)" = "total_govt_grants",
-    "Operating Surplus (%)" = "median_profit_margin",
-    "Operating Surplus w/o Gov Grants (%)" = "median_profit_margin_no_govt_grants",
-    "Share of 990 Filers w/ Gov Grants at Risk" = "proportion_at_risk"
+    "Number of 990 filers with government grants" = "num_990filers_govgrants",
+    "Total government grants ($)" = "total_govt_grants",
+    "Operating surplus with government grants (%)" = "median_profit_margin",
+    "Operating surplus without government grants (%)" = "median_profit_margin_no_govt_grants",
+    "Share of 990 filers with government grants at risk" = "proportion_at_risk"
   )
   
   # Add group variable rename if provided
