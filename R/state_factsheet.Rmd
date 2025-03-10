@@ -8,7 +8,7 @@ output:
     self_contained: false
   pdf_document: default
 params:
-  state: something
+  state: California
 ---
 
 ```{=html}
@@ -46,12 +46,13 @@ set_urbn_defaults(style = "print")
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-## `r params$state` - Financial Risk of Nonprofits Receiving Government Grants
+## `r params$state` - Financial Risk of Nonprofits Losing Government Grants
 
 <div class="over-table-spacing"></div>
 
 
 ```{r load-data, echo=FALSE}
+setwd(rprojroot::find_rstudio_root_file())
 source("R/format_percentages.R")
 source("R/format_districts.R")
 
@@ -69,74 +70,75 @@ subsector <- data.table::fread(sprintf("data/processed/state_factsheets/%s_bysub
 
 ```{r into-para, echo=FALSE}
 state_title <- params$state
-total_row <- county |> dplyr::filter(County == "Total")
+total_govgrants <- size |>
+  dplyr::filter(Size == "Total") |>
+  dplyr::pull(`Total government grants ($)`)
 
-topcounties_grants <- county |>
-  dplyr::filter(County != "Total") |>
-  dplyr::mutate(
-    govfunding = as.numeric(gsub("[$,]", "", `Total Gov Grants ($)`))
-  ) |>
-  dplyr::arrange(desc(govfunding)) |>
-  dplyr::slice_head(n = 3) |>
-  dplyr::pull(County)
-
-topdistricts_grants <- district |>
-  dplyr::filter(`Congressional District` != "Total") |>
-  dplyr::mutate(
-    govfunding = as.numeric(gsub("[$,]", "", `Total Gov Grants ($)`))
-  ) |>
-  dplyr::arrange(desc(govfunding)) |>
-  dplyr::slice_head(n = 3) |>
-  dplyr::pull(`Congressional District`)
-
-topcounties_surplus <- county |>
-  dplyr::filter(County != "Total") |>
-  dplyr::mutate(
-    govfunding = as.numeric(gsub("[$,]", "", `Operating Surplus w/o Gov Grants (%)`))
-  ) |>
-  dplyr::arrange(govfunding) |>
-  dplyr::slice_head(n = 3) |>
-  dplyr::pull(County)
-
-topdistricts_surplus <- district |>
-  dplyr::filter(`Congressional District` != "Total") |>
-  dplyr::mutate(
-    govfunding = as.numeric(gsub("[$,]", "", `Operating Surplus w/o Gov Grants (%)`))
-  ) |>
-  dplyr::arrange(govfunding) |>
-  dplyr::slice_head(n = 3) |>
-  dplyr::pull(`Congressional District`)
-
-topcounties_atrisk <- county |>
-  dplyr::filter(County != "Total") |>
-  dplyr::mutate(
-    govfunding = as.numeric(gsub("[$,]", "", `Share of 990 Filers w/ Gov Grants at Risk`))
-  ) |>
-  dplyr::arrange(govfunding) |>
-  dplyr::slice_head(n = 3) |>
-  dplyr::pull(County)
-
-topdistricts_atrisk <- district |>
-  dplyr::filter(`Congressional District` != "Total") |>
-  dplyr::mutate(
-    govfunding = as.numeric(gsub("[$,]", "", `Share of 990 Filers w/ Gov Grants at Risk`))
-  ) |>
-  dplyr::arrange(govfunding) |>
-  dplyr::slice_head(n = 3) |>
-  dplyr::pull(`Congressional District`)
-
-total_govgrants <- total_row$`Total Gov Grants ($)`
-total_govgrants <- gsub("[$,]", "", total_govgrants)
+total_govgrants <- gsub(
+  "[$,]", "", total_govgrants)
 total_govgrants <- as.numeric(total_govgrants)
 total_govgrants <- scales::label_number(accuracy=0.1, scale_cut=scales::cut_short_scale())(total_govgrants)
+
+topcounties_grants <- county |>
+  dplyr::filter(Geography != params$state, Geography != "United States") |>
+  dplyr::mutate(govfunding = as.numeric(gsub("[$,]", "", `Total government grants ($)`))) |>
+  dplyr::arrange(desc(govfunding)) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(Geography)
+
+topdistricts_grants <- district |>
+  dplyr::filter(Geography != params$state, Geography != "United States") |>
+  dplyr::mutate(govfunding = as.numeric(gsub("[$,]", "", `Total government grants ($)`))) |>
+  dplyr::arrange(desc(govfunding)) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(Geography)
+
+topcounties_surplus <- county |>
+  dplyr::filter(Geography != params$state, Geography != "United States") |>
+  dplyr::mutate(govfunding = as.numeric(
+    gsub("[%]", "", `Operating surplus without government grants (%)`)
+  )) |>
+  dplyr::arrange(govfunding) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(Geography)
+
+topdistricts_surplus <- district |>
+  dplyr::filter(Geography != params$state, Geography != "United States") |>
+  dplyr::mutate(govfunding = as.numeric(
+    gsub("[%]", "", `Operating surplus without government grants (%)`)
+  )) |>
+  dplyr::arrange(govfunding) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(Geography)
+
+topcounties_atrisk <- county |>
+  dplyr::filter(Geography != params$state, Geography != "United States") |>
+  dplyr::mutate(govfunding = as.numeric(
+    gsub("[%]", "", `Share of 990 filers with government grants at risk`)
+  )) |>
+  dplyr::arrange(desc(govfunding)) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(Geography)
+
+topdistricts_atrisk <- district |>
+  dplyr::filter(Geography != params$state, Geography != "United States") |>
+  dplyr::mutate(govfunding = as.numeric(
+    gsub("[%]", "", `Share of 990 filers with government grants at risk`)
+  )) |>
+  dplyr::arrange(desc(govfunding)) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(Geography)
 
 topcounties_grants <- paste(topcounties_grants, collapse = ", ")
 topcounties_surplus <- paste(topcounties_surplus, collapse = ", ")
 topcounties_atrisk <- paste(topcounties_atrisk, collapse = ", ")
 
 topcounties_grants <- gsub(",([^,]*)$", ", and\\1", topcounties_grants)
+topcounties_grants <- gsub(" County", "", topcounties_grants)
 topcounties_surplus <- gsub(",([^,]*)$", ", and\\1", topcounties_surplus)
+topcounties_surplus <- gsub(" County", "", topcounties_surplus)
 topcounties_atrisk <- gsub(",([^,]*)$", ", and\\1", topcounties_atrisk)
+topcounties_atrisk <- gsub(" County", "", topcounties_atrisk)
 
 topdistricts_grants <- format_districts(topdistricts_grants)
 topdistricts_surplus <- format_districts(topdistricts_surplus)
@@ -146,10 +148,10 @@ topdistricts_atrisk <- format_districts(topdistricts_atrisk)
 ```{r, echo=FALSE}
 if (state_title != "District of Columbia"){
   text <- glue::glue(
-    "In {state_title}, nonprofits received a total of ${total_govgrants} in government grants. Nonprofits in {topcounties_grants} {topdistricts_grants} received the most government funding. Nonprofits in {topcounties_surplus} {topdistricts_surplus} would have the biggest gap to fill if they lost their government grants. Nonprofits in {topcounties_atrisk} {topdistricts_atrisk} have the highest share of nonprofits at risk of not covering their expenses if they lost their government grants."
+    "In {state_title}, nonprofits received a total of ${total_govgrants} in government grants. Nonprofits in {topcounties_grants} counties {topdistricts_grants} received the most government funding. Nonprofits in {topcounties_surplus} counties {topdistricts_surplus} would have the biggest gap to fill if they lost their government grants. Nonprofits in {topcounties_atrisk} counties {topdistricts_atrisk} have the highest share of nonprofits at risk of not covering their expenses if they lost their government grants."
   )
 } else {
-  text <- glue::glue("In District of Columbia, nonprofits received a total of ${total_govgrants} in government grants.")
+  text <- glue::glue("In the District of Columbia, nonprofits received a total of ${total_govgrants} in government grants.")
 }
 ```
 
@@ -159,25 +161,27 @@ if (state_title != "District of Columbia"){
 
 ```{r formatting, echo=FALSE}
 county <- format_percentages(county, 
-                             "Share of 990 Filers w/ Gov Grants at Risk",
+                             "Share of 990 filers with government grants at risk",
                              "formatted_percentages")
 district <- format_percentages(district, 
-                               "Share of 990 Filers w/ Gov Grants at Risk",
+                               "Share of 990 filers with government grants at risk",
                                "formatted_percentages")
 size <- format_percentages(size,
-                           "Share of 990 Filers w/ Gov Grants at Risk",
+                           "Share of 990 filers with government grants at risk",
                            "formatted_percentages")
 subsector <- format_percentages(subsector,
-                                "Share of 990 Filers w/ Gov Grants at Risk",
+                                "Share of 990 filers with government grants at risk",
                                 "formatted_percentages")
 ```
 
 
 ## {.tabset}
 
-### By Counties
+### Counties
 ```{r}
 county |>
+  dplyr::distinct() |>
+  dplyr::mutate(Geography = factor(Geography)) |>
   dplyr::mutate(color = "") |>
   gt() |>
   data_color(
@@ -198,7 +202,7 @@ county |>
   cols_hide(formatted_percentages) |>
   cols_width(color ~ px(5)) |>
   cols_label(color = "") |>
-  cols_align(align = "left", columns = c("County")) |>
+  cols_align(align = "left", columns = c("Geography")) |>
   tab_style(
     style = cell_borders(
       sides = "right",
@@ -216,7 +220,7 @@ county |>
 
 ```
 
-### By Congressional Districts
+### Congressional districts
 ```{r}
 district |> 
   dplyr::mutate(color = "") |>
@@ -239,7 +243,7 @@ district |>
   cols_hide(formatted_percentages) |>
   cols_width(color ~ px(5)) |>
   cols_label(color = "") |>
-  cols_align(align = "left", columns = c("Congressional District")) |>
+  cols_align(align = "left", columns = c("Geography")) |>
   tab_style(
     style = cell_borders(
       sides = "right",
@@ -256,17 +260,17 @@ district |>
               data_row.padding = px(10))
 ```
 
-### By Size
+### Size
 ```{r}
 size |> mutate(Size = factor(
   Size,
   levels = c(
     "Less than $100K",
-    "Between $100K and $499K",
-    "Between $500K and $999K",
-    "Between $1M and $4.99M",
-    "Between $5M and $9.99M",
-    "Greater than $10M",
+    "$100K to $499K",
+    "$500K to $999K",
+    "$1M to $4.9M",
+    "$5M to $9.9M",
+    "$10M or more",
     "Total"
   )
 )) |>
@@ -274,7 +278,7 @@ size |> mutate(Size = factor(
    dplyr::mutate(color = "") |>
   gt() |>
   data_color(
-    columns = `Share of 990 Filers w/ Gov Grants at Risk`,
+    columns = `Share of 990 filers with government grants at risk`,
     target_columns = color,
     method = "auto",
     palette = c("#FFF2CF", "#FCE39E", "#FDD870", "#FCCB41", "#FDBF11", "#E88E2D", "#CA5800", "#843215")
@@ -311,25 +315,25 @@ size |> mutate(Size = factor(
   )
 ```
 
-### By Subsector
+### Subsector
 ```{r}
 subsector |> mutate(Subsector = factor(
   Subsector,
   levels = c(
-    "Arts, Culture, and Humanities",
-    "Education (Excluding Universities)",
-    "Environment and Animals",
-    "Health (Excluding Hospitals)",
-    "Hospitals",
-    "Human Services",
-    "International, Foreign Affairs",
-    "Mutual/Membership Benefit",
-    "Public, Societal Benefit",
-    "Religion Related",
-    "Universities",
-    "Unclassified",
-    "Total"
-  )
+        "Arts, culture, and humanities",
+        "Education",
+        "Environment and animals",
+        "Health",
+        "Hospitals",
+        "Human services",
+        "International, foreign affairs",
+        "Public, societal benefit",
+        "Religion-related",
+        "Mutual/membership benefit",
+        "Universities",
+        "Unclassified",
+        "Total"
+      )
 )) |>
   arrange(Subsector) |>
   dplyr::mutate(color = "") |>
@@ -371,6 +375,6 @@ subsector |> mutate(Subsector = factor(
 
 ## {-}
 
-###### **Source**: *National Center for Charitable Statistics [2021 501(c)(3) Charities PZ Scope](https://urbaninstitute.github.io/nccs/catalogs/catalog-core.html), [2021 Efilers](https://nccs.urban.org/nccs/catalogs/catalog-efile.html) and [Unified  BMF](https://nccs.urban.org/nccs/datasets/bmf/)*
+###### **Notes**: Operating surplus reported as the median.
 
-###### **Notes**: *Disclaimers about the data.*
+###### **Source**: National Center for Charitable Statistics 2021 501(c)(3) Charities [E-file Data](https://nccs.urban.org/nccs/datasets/efile/).
