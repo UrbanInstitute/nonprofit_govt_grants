@@ -8,7 +8,7 @@ output:
     self_contained: false
   pdf_document: default
 params:
-  geography: US
+  geography: United States
 ---
 
 ```{=html}
@@ -44,7 +44,7 @@ set_urbn_defaults(style = "print")
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-# Analysis of `r params$geography`
+## `r params$geography` - Financial Risk of Nonprofits Losing Government Grants
 
 <div class="over-table-spacing"></div>
 
@@ -58,15 +58,17 @@ national_bysubsector <- data.table::fread("data/processed/national_bysubsector.c
 
 ```{r formatting, echo=FALSE}
 national_bystate <- format_percentages(national_bystate, 
-                             "Share of 990 Filers w/ Gov Grants at Risk",
+                             "Share of 990 filers with government grants at risk",
                              "formatted_percentages")
 national_bysize <- format_percentages(national_bysize,
-                           "Share of 990 Filers w/ Gov Grants at Risk",
+                           "Share of 990 filers with government grants at risk",
                            "formatted_percentages")
 national_bysubsector <- format_percentages(national_bysubsector,
-                                "Share of 990 Filers w/ Gov Grants at Risk",
+                                "Share of 990 filers with government grants at risk",
                                 "formatted_percentages")
 ```
+
+In the United States, nonprofits received a total of $267B in government grants. Nonprofits in California, New York, and the District of Columbia received the most government funding. Nonprofits in Alaska, West Virginia, and Louisiana would have the biggest gap to fill if they lost their government grants. Nonprofits in Alaska, West Virginia, and Arkansas have the highest share of nonprofits at risk of not covering their expenses if they lost their government grants.
 
 ## {.tabset}
 
@@ -75,6 +77,7 @@ national_bysubsector <- format_percentages(national_bysubsector,
 national_bystate  |> mutate(State = factor(
   State,
   levels = c(
+    "United States",
     "Alabama",
     "Alaska",
     "Arizona",
@@ -127,8 +130,7 @@ national_bystate  |> mutate(State = factor(
     "West Virginia",
     "Wisconsin",
     "Wyoming",
-    "Other US Jurisdictions/Unmapped",
-    "Total"
+    "Other US Jurisdictions/Unmapped"
   )
 )) |>
   arrange(State) |>
@@ -175,11 +177,11 @@ national_bysize |> mutate(Size = factor(
   Size,
   levels = c(
     "Less than $100K",
-    "Between $100K and $499K",
-    "Between $500K and $999K",
-    "Between $1M and $4.99M",
-    "Between $5M and $9.99M",
-    "Greater than $10M",
+    "$100K to $499K",
+    "$500K to $999K",
+    "$1M to $4.9M",
+    "$5M to $9.9M",
+    "$10M or more",
     "Total"
   )
 )) |>
@@ -229,20 +231,20 @@ national_bysize |> mutate(Size = factor(
 national_bysubsector |> mutate(Subsector = factor(
   Subsector,
   levels = c(
-    "Arts, Culture, and Humanities",
-    "Education (Excluding Universities)",
-    "Environment and Animals",
-    "Health (Excluding Hospitals)",
-    "Hospitals",
-    "Human Services",
-    "International, Foreign Affairs",
-    "Mutual/Membership Benefit",
-    "Public, Societal Benefit",
-    "Religion Related",
-    "Universities",
-    "Unclassified",
-    "Total"
-  )
+        "Arts, culture, and humanities",
+        "Education",
+        "Environment and animals",
+        "Health",
+        "Hospitals",
+        "Human services",
+        "International, foreign affairs",
+        "Public, societal benefit",
+        "Religion-related",
+        "Mutual/membership benefit",
+        "Universities",
+        "Unclassified",
+        "Total"
+      )
 )) |>
   arrange(Subsector) |>
   dplyr::mutate(color = "") |>
@@ -285,6 +287,6 @@ national_bysubsector |> mutate(Subsector = factor(
 
 ## {-}
 
-###### **Source**: *National Center for Charitable Statistics [2021 501(c)(3) Charities PZ Scope](https://urbaninstitute.github.io/nccs/catalogs/catalog-core.html), [2021 Efilers](https://nccs.urban.org/nccs/catalogs/catalog-efile.html) and [Unified  BMF](https://nccs.urban.org/nccs/datasets/bmf/)*
+###### **Notes**: Operating surplus reported as the median.
 
-###### **Notes**: *Disclaimers about the data.*
+###### **Source**: National Center for Charitable Statistics 2021 501(c)(3) Charities [E-file Data](https://nccs.urban.org/nccs/datasets/efile/).
