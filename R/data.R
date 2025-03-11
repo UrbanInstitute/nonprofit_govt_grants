@@ -1,4 +1,9 @@
-# List of efile urls
+# Script Header
+# This script contains the URLs for the data files used in the analysis.
+# Date created: 2021-02-25
+# Date last edited: 2021-03-11
+# Author: Thiyaghessan Poongundranar tpoongundranar@urban.org
+
 efile_urls <- list(
   "efile_hd_2021_0225.csv" = "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P00-T00-HEADER-2021.csv",
   "efile_p01_2021_0225.csv" = "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P01-T00-SUMMARY-2021.csv",
