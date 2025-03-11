@@ -16,7 +16,7 @@ This repository contains the replication code, datasets and workflow for a serie
 
 ### /R
 - Contains all R code for data analysis, processing, and visualization. Scripts are numbered sequentially (e.g., 01_clean_data.R, 02_process_data.R) to indicate the order of execution. Helper functions are stored in separate scripts named after their primary function (e.g., calculate_metrics.R, plot_utilities.R).
-- Also includes the .Rmd template for the factsheets. 02_national_factsheet.Rmd is the template for the national factsheet, while 03_state_factsheet.Rmd is the template for the state factsheets.
+- Also includes the .Rmd template for the factsheets. national_factsheet.Rmd is the template for the national factsheet, while state_factsheet.Rmd is the template for the state factsheets.
 
 ### /docs
 - Contains the HTML factsheets generated from the data analysis. Each factsheet is named according to the geography it covers (e.g. national, alabama etc.)
