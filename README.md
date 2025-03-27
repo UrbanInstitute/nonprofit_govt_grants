@@ -1,6 +1,6 @@
-# nonprofit_govt_grants
+# Financial Risk of Nonprofits Losing Government Grants
 
-This repository contains the replication code, datasets and workflow for a series of HTML factsheets describing the reliance of nonprofit organizations on government grants in the United States.
+This repository contains the replication code, datasets and workflow used in Urban’s [interactive data tool](https://www.urban.org/features/financial-risk-nonprofits-losing-government-grants) on the financial risk of nonprofits losing government grants. The tool is available at.
 
 ## Directory Descriptions
 
