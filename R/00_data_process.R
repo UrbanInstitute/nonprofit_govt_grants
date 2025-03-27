@@ -1,10 +1,8 @@
 # Script Header
-# Title: Federal Funding Freeze Blog Post
-# Date created: 2025-01-31
-# Date last modified: 2025-03-07
-# Description: This script contains code to download, wrangle, and process data
-# for HTML fact sheets on nonprofits's fiscal sustainability and reliance on 
-# government grants for Tax Year 2021. It also adds employment data requested by Candid on 28th 2025.
+# Title: Data Request for Partnership for Strong Communities
+# Date created: 2025-03-27
+# Date last modified: 2025-03-28
+# Description: This script contains code to download, wrangle, and process data for HTML fact sheets on nonprofits's fiscal sustainability and reliance on government grants for Tax Year 2021 for the state of Connecticut's housing nonprofit sector. 
 ### Details:
 # (1) - Download raw data
 # (2) - Load in and filter data
@@ -33,6 +31,7 @@ library(tidylog)
 library(usdata)
 library(sf)
 library(tigris)
+
 states <- as.character(usdata::state_stats$abbr) # Names of 50 states + DC
 
 # Helper Scripts
@@ -41,6 +40,32 @@ source("R/download_data.R") # Function to download efile data
 source("R/format_ein.R") # Function to format ein to EIN 2
 source("R/profit_margin.R") # Function to calculate profit margin
 source("R/create_sorted_plot.R") # Function to create sorted plots
+
+# Global variables
+housing_nteev2_codes <- c(
+  "HMS-L00-AA",
+  "HMS-L00-MT",
+  "HMS-L00-PA",
+  "HMS-L00-RP",
+  "HMS-L00-MS",
+  "HMS-L00-MM",
+  "HMS-L00-NS",
+  "HMS-L20-RG",
+  "HMS-L21-RG",
+  "HMS-L22-RG",
+  "HMS-L24-RG",
+  "HMS-L25-RG",
+  "HMS-L30-RG",
+  "HMS-L40-RG",
+  "HMS-L41-RG",
+  "HMS-L4A-RG",
+  "HMS-L4B-RG",
+  "HMS-L50-RG",
+  "HMS-L80-RG",
+  "HMS-L81-RG",
+  "HMS-L82-RG",
+  "HMS-L99-RG"
+)
 
 # (1) - Download raw data
 
@@ -127,42 +152,12 @@ efile_cols <- list(
     "F9_00_ORG_NAME_L1" # Name of the filing organization
   ),
   numeric = c(
-    "F9_01_ACT_GVRN_EMPL_TOT", # Total number of employees
-    "F9_01_ACT_GVRN_VOL_TOT", # Total number of volunteers
-    "F9_05_NUM_EMPL", # Number of employees
     "F9_08_REV_CONTR_GOVT_GRANT",
     # Total government grants - Part 8
-    "F9_08_REV_TOT_TOT",
-    # Total revenue - Part 8
-    "F9_09_EXP_TOT_TOT",
-    # Total expenses - Part 8
-    "F9_09_EXP_DEPREC_PROG",
-    # Depreciation - Part 9
-    "F9_10_ASSET_CASH_EOY",
-    # Total Cash - Part 10
-    "F9_10_ASSET_SAVING_EOY",
-    # Savings and temporary cash investments, end of year - Part 10
-    "F9_10_ASSET_PLEDGE_NET_EOY",
-    # Pledges and grants receivable, net, end of year - Part 10
-    "F9_10_ASSET_ACC_NET_EOY",
-    # Net accounts receivable, end of year - Part 10
-    "F9_10_NAFB_UNRESTRICT_EOY",
-    # Net assets without donor restrictions, end of year - Part 10
-    "F9_10_ASSET_LAND_BLDG_NET_EOY",
-    # Net value including lands, buildings, and equipment, end of year - Part 10
-    "F9_10_LIAB_TAX_EXEMPT_BOND_EOY",
-    # Tax exempt bond liabilities, end of year - Part 10
-    "F9_10_LIAB_MTG_NOTE_EOY",
-    # Secured mortgages and notes payable to unrelated third parties, end of year - Part 10
-    "F9_10_LIAB_NOTE_UNSEC_EOY",
-    # Unsecured notes and loans payable to unrelated third parties, end of year - Part 10
     "F9_01_EXP_TOT_CY",
-    # Total expenses, current year - Part 1
-    "F9_01_REV_TOT_CY",
-    # Total revenue, current year - Part 1
-    "F9_09_EXP_DEPREC_TOT",
-    # Depreciation, depletion, and amortization - Part 9
-    "F9_01_NAFB_TOT_EOY" # Net assets or fund balances, end of year - Part 1
+    # Total revenue - Part 1
+    "F9_01_REV_TOT_CY"
+    # Total expenses - Part 1
   ),
   logical = c(
     "RETURN_PARTIAL_X", # Indicates if return is a partial return
@@ -173,10 +168,7 @@ efile_cols <- list(
 
 efile_21_hd_raw <- data.table::fread("data/raw/efile_hd_2021_0225.csv", select = efile_cols)
 efile_21_p01_raw <- data.table::fread("data/raw/efile_p01_2021_0225.csv", select = efile_cols)
-efile_21_p05_raw <- data.table::fread("data/raw/efile_p05_2021_0225.csv", select = efile_cols)
 efile_21_p08_raw <- data.table::fread("data/raw/efile_p08_2021_0225.csv", select = efile_cols)
-efile_21_p09_raw <- data.table::fread("data/raw/efile_p09_2021_0225.csv", select = efile_cols)
-efile_21_p10_raw <- data.table::fread("data/raw/efile_p10_2021_0225.csv", select = efile_cols)
 
 # (3) - Create the sample dataset from the efile data
 
@@ -267,13 +259,13 @@ efile_nogrp <- efile_21_p08 |>
 ## Only retrieve most recent group returns and attach them back to the dataset
 
 efile_grp <- efile_grp |>
-  group_by(EIN2) %>%
-  slice_max(order_by = RETURN_TIME_STAMP)
+  dplyr::group_by(EIN2) |>
+  dplyr::slice_max(order_by = RETURN_TIME_STAMP)
 
 ### 306 records: 4 duplicates discarded
 
 nrow(efile_grp) == length(group_eins) # TRUE
-efile_21_p08 <- bind_rows(efile_nogrp, efile_grp)
+efile_21_p08 <- dplyr::bind_rows(efile_nogrp, efile_grp)
 
 ### 246,014 records. 4 duplicates discarded.
 
@@ -299,13 +291,13 @@ efile_noamend <- efile_21_p08 |>
 ## Only retrieve most recent amended returns and attach them back to the dataset
 
 efile_amended <- efile_amended |>
-  group_by(EIN2) %>%
-  slice_max(order_by = RETURN_TIME_STAMP)
+  dplyr::group_by(EIN2) |>
+  dplyr::slice_max(order_by = RETURN_TIME_STAMP)
 
 ### 3,867 records: 3,511 duplicates discarded
 
 nrow(efile_amended) == length(amended_eins) # TRUE
-efile_21_p08 <- bind_rows(efile_noamend, efile_amended)
+efile_21_p08 <- dplyr::bind_rows(efile_noamend, efile_amended)
 
 ### 242,503 records. 3,511 duplicates discarded.
 
@@ -345,42 +337,38 @@ total_gvgrnt <- efile_21_p08 |>
 
 # (4) - Wrangle Data
 
-# (4.1) - Wrangle BMF Data
+# (4.1) - Wrangle BMF Data for Connecticut Housing Nonprofits
 
 bmf_sample <- unified_bmf |>
-  dplyr::filter(NCCS_LEVEL_1 == "501C3 CHARITY") |>
+  dplyr::filter(NTEEV2 %in% housing_nteev2_codes,
+                CENSUS_STATE_ABBR == "CT") |>
   dplyr::mutate(
-    SUBSECTOR = substr(NTEEV2, 1, 3),
-    GEOID_TRACT_10 = substr(CENSUS_BLOCK_FIPS, 1, 11),
-    CENSUS_REGION = dplyr::case_when(
-      CENSUS_STATE_ABBR %in% c("CT", "ME", "MA", "NH", "RI", "VT") ~ "New England",
-      CENSUS_STATE_ABBR %in% c("NJ", "NY", "PA") ~ "Mid-Atlantic",
-      CENSUS_STATE_ABBR %in% c("IL", "IN", "MI", "OH", "WI") ~ "East North Central",
-      CENSUS_STATE_ABBR %in% c("IA", "KS", "MN", "MO", "NE", "ND", "SD") ~ "West North Central",
-      CENSUS_STATE_ABBR %in% c("DE", "FL", "GA", "MD", "NC", "SC", "VA", "WV", "DC") ~ "South Atlantic",
-      CENSUS_STATE_ABBR %in% c("AL", "KY", "MS", "TN") ~ "East South Central",
-      CENSUS_STATE_ABBR %in% c("AR", "LA", "OK", "TX") ~ "West South Central",
-      CENSUS_STATE_ABBR %in% c("AZ", "CO", "ID", "MT", "NV", "NM", "UT", "WY") ~ "Mountain",
-      CENSUS_STATE_ABBR %in% c("AK", "CA", "HI", "OR", "WA") ~ "Pacific",
-      .default = "Unmapped"
-    ),
     EIN2 = format_ein(EIN2, to = "n")
   ) |>
   dplyr::mutate(
-    SUBSECTOR = ifelse(SUBSECTOR == "", "UNU", SUBSECTOR),
     EIN2 = format_ein(EIN2, to = "id")
   )
 
 ## QC Check - No extra rows were dropped outside of filter statement
 
-nrow(bmf_sample) == nrow(unified_bmf[unified_bmf$NCCS_LEVEL_1 == "501C3 CHARITY"])
+nrow(bmf_sample) == nrow(unified_bmf[unified_bmf$NTEEV2 %in% housing_nteev2_codes & unified_bmf$CENSUS_STATE_ABBR == "CT" ]) # TRUE
+
+length(unique(bmf_sample$NTEEV2)) # 20 unique NTEE codes
+setdiff(housing_nteev2_codes, unique(bmf_sample$NTEEV2)) 
+# 4 missing codes: 
+# HMS-L4A-RG (hotels and casinos, not found in CT),
+# HMS-L4B-RG (bed and breakfast inns, not found in CT and not 501c3),
+# HMS-L00-RP (Organizations whose primary purpose is to conduct research and/or public policy analysis within the Housing, Shelter major group area. not 501c3)
+# HMS-L30-RG (Housing search assistance organizations that assist people to find available purchasable or rental housing which meets their individual needs., not 501c3)
 
 ## Map BMF coordinates to Congressional districts
 
 bmf_sample <- bmf_sample |>
   sf::st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 4326)
 
-bmf_sample <- sf::st_join(bmf_sample, cd_transformed, join = sf::st_intersects)
+bmf_sample <- sf::st_join(bmf_sample, 
+                          cd_transformed, 
+                          join = sf::st_intersects)
 
 ## Save intermediate dataset after spatial join. This is the BMF sample
 
@@ -399,10 +387,6 @@ efile_sample <- efile_21_p08 |>
   dplyr::select(! RETURN_TIME_STAMP) |>
   dplyr::filter(!is.na(F9_08_REV_CONTR_GOVT_GRANT),
                 F9_08_REV_CONTR_GOVT_GRANT != 0) |>
-  tidylog::left_join(efile_21_p09_raw, by = join_by("EIN2" == "EIN2",
-                                              "OBJECTID" == "OBJECTID")) |>
-  tidylog::left_join(efile_21_p10_raw, by = join_by("EIN2" == "EIN2",
-                                              "OBJECTID" == "OBJECTID")) |>
   tidylog::left_join(efile_21_p01_raw, by = join_by("EIN2" == "EIN2",
                                               "OBJECTID" == "OBJECTID"))
 
@@ -417,10 +401,7 @@ sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt
 ## Optional: To save memory
 
 rm(efile_21_p08_raw, 
-   efile_21_p09_raw, 
-   efile_21_p10_raw, 
    efile_21_p01_raw,
-   efile_21_p05_raw,
    efile_21_hd_raw,
    efile_21_p08)
 gc()
@@ -430,25 +411,9 @@ gc()
 efile_sample <- efile_sample |>
   dplyr::select(
     "EIN2",
-    "F9_01_ACT_GVRN_EMPL_TOT",
-    "F9_01_ACT_GVRN_VOL_TOT",
     "F9_08_REV_CONTR_GOVT_GRANT",
-    "F9_08_REV_TOT_TOT",
-    "F9_09_EXP_TOT_TOT",
-    "F9_09_EXP_DEPREC_PROG",
-    "F9_09_EXP_DEPREC_TOT",
-    "F9_10_ASSET_CASH_EOY",
-    "F9_10_ASSET_SAVING_EOY",
-    "F9_10_ASSET_PLEDGE_NET_EOY",
-    "F9_10_ASSET_ACC_NET_EOY",
-    "F9_10_NAFB_UNRESTRICT_EOY",
-    "F9_10_ASSET_LAND_BLDG_NET_EOY",
-    "F9_10_LIAB_TAX_EXEMPT_BOND_EOY",
-    "F9_10_LIAB_MTG_NOTE_EOY",
-    "F9_10_LIAB_NOTE_UNSEC_EOY",
     "F9_01_EXP_TOT_CY",
-    "F9_01_REV_TOT_CY",
-    "F9_01_NAFB_TOT_EOY"
+    "F9_01_REV_TOT_CY"
   )
 
 nrow(efile_sample) == numrec_w_gvgrnt #TRUE
@@ -520,6 +485,10 @@ sum(full_sample_int$at_risk) == sum(efile_sample$at_risk) # TRUE
 sum(full_sample_int$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt # TRUE
 nrow(full_sample_int) == numrec_w_gvgrnt # TRUE
 
+# Only include Connecticut data
+full_sample_int <- full_sample_int |>
+  dplyr::filter(CENSUS_STATE_ABBR == "CT") # 84 nonprofits out of 811 file government grants
+
 # (7) - Geographic post processing. Map null geographies with coordinates but without state, county, or district information. Ensure sample contains all possible state and county/district combinations.
 
 # (7.1) - Missing state information
@@ -578,94 +547,7 @@ null_geoms <- full_sample_int |>
   dplyr::select(EIN2, geometry) |>
   sf::st_as_sf()
 
-### 12 records all with 0 coordinates
-
-# Spatial join with counties
-
-null_county <- sf::st_join(null_geoms, 
-                           county_transformed, 
-                           join = sf::st_intersects)
-
-# Create EIN to state abbreviation lookup
-
-ein_lookup <- setNames(null_county$CENSUS_COUNTY_NAME, 
-                       null_county$EIN2)
-
-# Update original dataset with imputed counties
-
-full_sample_int <- full_sample_int |>
-  dplyr::mutate(
-    CENSUS_COUNTY_NAME = ifelse(EIN2 %in% null_county$EIN2,
-                               ein_lookup[EIN2], 
-                               CENSUS_COUNTY_NAME)
-  )
-
-## Note: None should be updated because all records have POINT(0 0) coordinates
-
-# Check if all counties are in the sample
-
-sample_county <- full_sample_int |>
-  dplyr::select(CENSUS_STATE_ABBR, CENSUS_COUNTY_NAME) |>
-  dplyr::distinct()
-
-absent_counties <- data.frame(county_state) |>
-  dplyr::filter(! CENSUS_COUNTY_NAME %in% sample_county$CENSUS_COUNTY_NAME) |>
-  dplyr::select(CENSUS_STATE_ABBR, CENSUS_COUNTY_NAME)
-
-# Save dataset for use in table creation
-
-data.table::fwrite(absent_counties, "data/intermediate/absent_counties.csv")
-
-### 179 counties are not in the sample
-
-# (7.2) - Missing Congressional District Information. Unnecessary after mapping the missing state information
-
-# Identify records with missing state but valid geometry
-
-null_geoms <- full_sample_int |>
-  dplyr::filter(is.na(CENSUS_STATE_ABBR) | CENSUS_STATE_ABBR == "",
-                !sf::st_is_empty(geometry)) |>
-  dplyr::select(EIN2, geometry) |>
-  sf::st_as_sf()
-
-# Spatial join with congressional districts
-
-null_districts <- sf::st_join(null_geoms, 
-                              cd_transformed, 
-                              join = sf::st_intersects)
-
-# Add state abbreviations to county-matched records
-
-null_districts <- null_districts |>
-  dplyr::mutate(CENSUS_STATE_ABBR = state_lookup[CENSUS_STATE_FIPS])
-
-# Create EIN to state abbreviation lookup
-
-ein_lookup <- setNames(null_districts$CENSUS_STATE_ABBR, 
-                       null_districts$EIN2)
-
-# Update original dataset with filled state abbreviations
-
-full_sample_int <- full_sample_int |>
-  dplyr::mutate(
-    CENSUS_STATE_ABBR = ifelse(EIN2 %in% null_county$EIN2,
-                               ein_lookup[EIN2], 
-                               CENSUS_STATE_ABBR)
-  )
-
-# Check that all districts are in the sample
-
-sample_district <- full_sample_int |>
-  dplyr::select(CENSUS_STATE_ABBR, NAMELSAD20) |>
-  dplyr::distinct()
-
-absent_districts <- data.frame(district_state) |>
-  dplyr::filter(! NAMELSAD20 %in% sample_district$NAMELSAD20) |>
-  dplyr::select(CENSUS_STATE_ABBR, NAMELSAD20)
-
-print(absent_districts)
-
-### All districts are in the sample but not all counties
+### no records with missing coordinates
 
 # (8) Post process and save intermediate datasets
 
@@ -674,59 +556,29 @@ data.table::fwrite(full_sample_int, "data/intermediate/full_sample.csv")
 full_sample_proc <- full_sample_int |>
   dplyr::mutate(
     expense_category = dplyr::case_when(
-      F9_09_EXP_TOT_TOT < 100000 ~ "Less than $100K",
-      F9_09_EXP_TOT_TOT >= 100000 &
-        F9_09_EXP_TOT_TOT < 500000 ~ "Between $100K and $499K",
-      F9_09_EXP_TOT_TOT >= 500000 &
-        F9_09_EXP_TOT_TOT < 1000000 ~ "Between $500K and $999K",
-      F9_09_EXP_TOT_TOT >= 1000000 &
-        F9_09_EXP_TOT_TOT < 5000000 ~ "Between $1M and $4.99M",
-      F9_09_EXP_TOT_TOT >= 5000000 &
-        F9_09_EXP_TOT_TOT < 10000000 ~ "Between $5M and $9.99M",
-      F9_09_EXP_TOT_TOT >= 10000000 ~ "Greater than $10M",
+      F9_01_EXP_TOT_CY < 100000 ~ "Less than $100K",
+      F9_01_EXP_TOT_CY >= 100000 &
+        F9_01_EXP_TOT_CY < 500000 ~ "Between $100K and $499K",
+      F9_01_EXP_TOT_CY >= 500000 &
+        F9_01_EXP_TOT_CY < 1000000 ~ "Between $500K and $999K",
+      F9_01_EXP_TOT_CY >= 1000000 &
+        F9_01_EXP_TOT_CY < 5000000 ~ "Between $1M and $4.99M",
+      F9_01_EXP_TOT_CY >= 5000000 &
+        F9_01_EXP_TOT_CY < 10000000 ~ "Between $5M and $9.99M",
+      F9_01_EXP_TOT_CY >= 10000000 ~ "Greater than $10M",
       .default = "No Expenses Provided"
-    ),
-    SUBSECTOR = dplyr::case_when(
-      SUBSECTOR == "ART" ~ "Arts, Culture, and Humanities",
-      SUBSECTOR == "EDU" ~ "Education (Excluding Universities)",
-      SUBSECTOR == "ENV" ~ "Environment and Animals",
-      SUBSECTOR == "HEL" ~ "Health (Excluding Hospitals)",
-      SUBSECTOR == "HMS" ~ "Human Services",
-      SUBSECTOR == "IFA" ~ "International, Foreign Affairs",
-      SUBSECTOR == "PSB" ~ "Public, Societal Benefit",
-      SUBSECTOR == "REL" ~ "Religion Related",
-      SUBSECTOR == "MMB" ~ "Mutual/Membership Benefit",
-      SUBSECTOR == "UNU" ~ "Unclassified",
-      SUBSECTOR == "UNI" ~ "Universities",
-      SUBSECTOR == "HOS" ~ "Hospitals",
-      .default = "Unclassified"  # Default case for unmatched codes
-    )
-  ) |>
-  dplyr::mutate(
-    CENSUS_STATE_NAME = dplyr::case_when(
-      CENSUS_STATE_ABBR %in% states ~ usdata::abbr2state(CENSUS_STATE_ABBR),
-      .default = "Other US Jurisdictions/Unmapped"
-    ),
-    CONGRESS_DISTRICT_NAME = dplyr::case_when(
-      NAMELSAD20 == "Congressional District" ~ "Unmapped",
     )
   ) |>
   dplyr::select(
     EIN2,
-    CENSUS_REGION,
     CENSUS_COUNTY_NAME,
-    CENSUS_STATE_NAME,
     NAMELSAD20,
-    SUBSECTOR,
+    NTEEV2,
     expense_category,
     F9_08_REV_CONTR_GOVT_GRANT,
     profit_margin,
     profit_margin_nogovtgrant,
     at_risk
-  ) |>
-  dplyr::mutate(
-    CENSUS_REGION = ifelse(is.na(CENSUS_REGION), "Unmapped", CENSUS_REGION),
-    NAMELSAD20 = ifelse(is.na(NAMELSAD20), "Unmapped", NAMELSAD20)
   ) |>
   dplyr::rename(
     CONGRESS_DISTRICT_NAME = NAMELSAD20,
@@ -804,21 +656,6 @@ full_sample_proc <- full_sample_int |>
       EXPENSE_CATEGORY == "Between $5M and $9.99M" ~ "$5M to $9.9M",
       EXPENSE_CATEGORY == "Greater than $10M" ~ "$10M or more",
       TRUE ~ EXPENSE_CATEGORY
-    ),
-    SUBSECTOR = dplyr::case_when(
-      SUBSECTOR == "Arts, Culture, and Humanities" ~ "Arts, culture, and humanities",
-      SUBSECTOR == "Education (Excluding Universities)" ~ "Education",
-      SUBSECTOR == "Environment and Animals" ~ "Environment and animals",
-      SUBSECTOR == "Health (Excluding Hospitals)" ~ "Health",
-      SUBSECTOR == "Human Services" ~ "Human services",
-      SUBSECTOR == "Hospitals" ~ "Hospitals",
-      SUBSECTOR == "International, Foreign Affairs" ~ "International, foreign affairs",
-      SUBSECTOR == "Public, Societal Benefit" ~ "Public, societal benefit",
-      SUBSECTOR == "Religion Related" ~ "Religion-related",
-      SUBSECTOR == "Mutual/Membership Benefit" ~ "Mutual/membership benefit",
-      SUBSECTOR == "Universities" ~ "Universities",
-      SUBSECTOR == "Unclassified" ~ "Unclassified",
-      TRUE ~ SUBSECTOR
     )
   ) |>
   dplyr::mutate(
@@ -881,23 +718,6 @@ full_sample_proc <- full_sample_int |>
         "Delegate district (at large)",
         "Resident commissioner district (at large)",
         "Unmapped"
-      )
-    ),
-    SUBSECTOR = factor(
-      SUBSECTOR,
-      c(
-        "Arts, culture, and humanities",
-        "Education",
-        "Environment and animals",
-        "Health",
-        "Hospitals",
-        "Human services",
-        "International, foreign affairs",
-        "Public, societal benefit",
-        "Religion-related",
-        "Mutual/membership benefit",
-        "Universities",
-        "Unclassified"
       )
     )
   )
