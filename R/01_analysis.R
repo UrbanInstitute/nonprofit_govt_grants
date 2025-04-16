@@ -233,3 +233,61 @@ writexl::write_xlsx(list(
   "Size" = qa_size,
   "Subsector" = qa_subsector
 ), path = "data/intermediate/qa.xlsx")
+
+# (4) - Analyze a subset of the data
+
+# (4.1) - Lancaster, County PA
+
+mart <- full_sample_proc |>
+  dplyr::filter(
+    CENSUS_STATE_NAME == "Pennsylvania" &
+      CENSUS_COUNTY_NAME == "Lancaster County"
+  )
+
+state <- full_sample_proc |>
+  dplyr::filter(
+    CENSUS_STATE_NAME == "Pennsylvania"
+  )
+
+# Create aggregated state level data
+state_overall <- summarize_nonprofit_data(state)
+
+# Disaggregate by county, congressional district, size, and subsector. Append totals at the end.
+mart_bycounty <- dplyr::mutate(national, Geography = "United States") |>
+  dplyr::bind_rows(dplyr::mutate(state_overall, Geography = "Pennsylvania")) |>
+  dplyr::bind_rows(
+    summarize_nonprofit_data(mart,
+                             group_var = "CENSUS_COUNTY_NAME",
+                             group_var_rename = "Geography")
+  ) |>
+  dplyr::relocate(Geography)
+
+mart_bydistrict <- dplyr::mutate(national, Geography = "United States") |>
+  dplyr::bind_rows(dplyr::mutate(state_overall, Geography = "Pennsylvania")) |>
+  dplyr::bind_rows(
+    summarize_nonprofit_data(mart,
+                             group_var = "CONGRESS_DISTRICT_NAME",
+                             group_var_rename = "Geography") 
+  ) |>
+  dplyr::relocate(Geography)
+
+mart_bysize <- summarize_nonprofit_data(mart,
+                                         group_var = "EXPENSE_CATEGORY",
+                                         group_var_rename = "Size") |>
+  dplyr::bind_rows(dplyr::mutate(mart_overall, Size = "Total"))
+
+mart_bysubsector <- summarize_nonprofit_data(mart,
+                                              group_var = "SUBSECTOR",
+                                              group_var_rename = "Subsector") |>
+  dplyr::bind_rows(dplyr::mutate(mart_overall, Subsector = "Total"))
+
+# Save datasets to the marts/folder
+
+writexl::write_xlsx(list(
+  "County" = mart_bycounty,
+  "Congressional District" = mart_bydistrict,
+  "Size" = mart_bysize,
+  "Subsector" = mart_bysubsector
+), path = "data/marts/lancasterPA_041525.xlsx")
+
+
