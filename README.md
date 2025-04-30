@@ -1,6 +1,6 @@
 # Financial Risk of Nonprofits Losing Government Grants
 
-This repository contains the replication code, datasets and workflow used in Urban’s [interactive data tool](https://www.urban.org/features/financial-risk-nonprofits-losing-government-grants) on the financial risk of nonprofits losing government grants. The tool is available at.
+This repository contains the replication code, datasets and workflow used in Urban’s [interactive data tool](https://www.urban.org/research/publication/what-financial-risk-nonprofits-losing-government-grants) on the financial risk of nonprofits losing government grants. The tool is available at.
 
 ## Directory Descriptions
 
