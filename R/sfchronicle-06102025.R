@@ -3,9 +3,12 @@
 # Details: Government grants dependency for arts organizations in Bay Area
 # counties
 # Date created: 2025-06-10
-# Date last edited: 2025-06-10
+# Date last edited: 2025-06-12
 # Programmer: Thiyaghessan [tpoongundranar@urban.org]
-# Raw Data
+# Raw Data:
+# Efile Part I: https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_0/F9-P01-T00-SUMMARY-2021.CSV
+# Efile Part VIII: https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_0/F9-P08-T00-REVENUE-2021.CSV
+# Unified BMF: https://nccsdata.s3.amazonaws.com/harmonized/bmf/unified/BMF_UNIFIED_V1.1.csv
 # Details:
 # - Percent receiving some government grant
 # - Percent of budget from government grants
@@ -17,9 +20,9 @@ library(data.table)
 
 # Load in data
 full_sample <- data.table::fread("data/processed/full_sample_processed.csv")
-efile_p01_2021 <- data.table::fread("https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P01-T00-SUMMARY-2021.csv")
+efile_p01_2021 <- data.table::fread("D:/Urban/NCCS/remote_data/efile/F9-P01-T00-SUMMARY-2021.csv")
 unified_bmf <- data.table::fread("D:/Urban/NCCS/remote_data/BMF_UNIFIED_V1.1.csv")
-efile_p08_2021 <- data.table::fread("https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P08-T00-REVENUE-2021.csv")
+efile_p08_2021 <- data.table::fread("D:/Urban/NCCS/remote_data/efile/F9-P08-T00-REVENUE-2021.csv")
 
 # (1) - Extract Data
 
@@ -96,8 +99,7 @@ bay_area_arts_orgs_county_summary <- bay_area_arts_orgs |>
     "Number of arts, culture, and humanities 990 filers" = dplyr::n(),
     "Number of arts, culture, and humanities 990 filers with government grants" = sum(GOVERNMENT_GRANT_RECEIVED, na.rm = TRUE),
     "Total government grants ($)" = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT, na.rm = TRUE),
-    "Median percentage of revenue from government grants" = scales::percent(median(GOV_GRANT_PERCENT_REVENUE, na.rm = TRUE)),
-    "Median percentage of expenses from government grants" = scales::percent(median(GOV_GRANT_PERCENT_EXPENSES, na.rm = TRUE))
+    "Mean percentage of revenue from government grants" = scales::percent(mean(GOV_GRANT_PERCENT_REVENUE, na.rm = TRUE))
   ) |>
   dplyr::rename("California County" = CENSUS_COUNTY_NAME)
 
@@ -111,8 +113,7 @@ bay_area_arts_orgs_summary <- bay_area_arts_orgs |>
     "Number of arts, culture, and humanities 990 filers" = dplyr::n(),
     "Number of arts, culture, and humanities 990 filers with government grants" = sum(GOVERNMENT_GRANT_RECEIVED, na.rm = TRUE),
     "Total government grants ($)" = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT, na.rm = TRUE),
-    "Median percentage of revenue from government grants" = scales::percent(median(GOV_GRANT_PERCENT_REVENUE, na.rm = TRUE)),
-    "Median percentage of expenses from government grants" = scales::percent(median(GOV_GRANT_PERCENT_EXPENSES, na.rm = TRUE))
+    "Mean percentage of revenue from government grants" = scales::percent(mean(GOV_GRANT_PERCENT_REVENUE, na.rm = TRUE))
   ) |>
   dplyr::mutate("California County" = "All Bay Area Counties")
 
@@ -124,5 +125,5 @@ bay_area_arts_orgs_processed <- bay_area_arts_orgs_county_summary |>
 
 writexl::write_xlsx(
   list("Data" = bay_area_arts_orgs_processed),
-  "data/processed/data_requests/sf_chronicle-bay_area_arts_orgs_processed-06102025.xlsx"
+  "data/processed/data_requests/sf_chronicle-bay_area_arts_orgs_processed-06122025.xlsx"
 )
