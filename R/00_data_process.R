@@ -1,7 +1,7 @@
 # Script Header
 # Title: Federal Funding Freeze Blog Post
 # Date created: 2025-01-31
-# Date last modified: 2025-03-07
+# Date last modified: 2025-07-16
 # Description: This script contains code to download, wrangle, and process data
 # for HTML fact sheets on nonprofits's fiscal sustainability and reliance on 
 # government grants for Tax Year 2021. It also adds employment data requested by Candid on 28th 2025.
@@ -103,7 +103,7 @@ county_tigris <- county_tigris |>
 cd_tigris <- tigris::congressional_districts()
 cd_transformed <- sf::st_transform(cd_tigris, 4326)
 cd_transformed <- cd_transformed |>
-  dplyr::rename("CENSUS_STATE_FIPS" = STATEFP20)
+  dplyr::rename("CENSUS_STATE_FIPS" = STATEFP)
 
 ## Map states to counties
 county_state <- data.frame(county_tigris) |>
@@ -221,7 +221,7 @@ efile_21_p08 <- efile_21_p08_raw |>
     RETURN_TIME_STAMP = lubridate::ymd_hms(RETURN_TIME_STAMP)
   )
 
-### 246,018 records
+### 246,020 records
 
 # (3.4) - Process partial, group and amended returns. Retain the most recent returns for group and amended returns. Keep all partial returns.
 
@@ -262,7 +262,7 @@ efile_grp <- efile_21_p08 |>
 efile_nogrp <- efile_21_p08 |>
   dplyr::filter(!EIN2 %in% group_eins)
 
-### 245,708 records
+### 245,710 records
 
 ## Only retrieve most recent group returns and attach them back to the dataset
 
@@ -294,7 +294,7 @@ efile_amended <- efile_21_p08 |>
 efile_noamend <- efile_21_p08 |>
   dplyr::filter(!EIN2 %in% amended_eins)
 
-### 238, 636 records (total still 246,014)
+### 238, 638 records (total still 246,014)
 
 ## Only retrieve most recent amended returns and attach them back to the dataset
 
@@ -307,7 +307,7 @@ efile_amended <- efile_amended |>
 nrow(efile_amended) == length(amended_eins) # TRUE
 efile_21_p08 <- bind_rows(efile_noamend, efile_amended)
 
-### 242,503 records. 3,511 duplicates discarded.
+### 242,505 records. 3,511 duplicates discarded.
 
 # (3.5) - Get the necessary counts for quality assurance
 
@@ -327,7 +327,7 @@ numrec_w_gvgrnt <- efile_21_p08 |>
   ) |>
   nrow()
 
-### 103, 475 records
+### 103, 478 records
 
 ## Calculate the Total government grants reported in 2021  from part 08 belonging to 501c3 public charities in the US
 
@@ -341,7 +341,7 @@ total_gvgrnt <- efile_21_p08 |>
   ) |>
   dplyr::pull(total_gvgrnt)
 
-### $267,700,640,005
+### $267,741,882,036
 
 # (4) - Wrangle Data
 
@@ -399,12 +399,9 @@ efile_sample <- efile_21_p08 |>
   dplyr::select(! RETURN_TIME_STAMP) |>
   dplyr::filter(!is.na(F9_08_REV_CONTR_GOVT_GRANT),
                 F9_08_REV_CONTR_GOVT_GRANT != 0) |>
-  tidylog::left_join(efile_21_p09_raw, by = join_by("EIN2" == "EIN2",
-                                              "OBJECTID" == "OBJECTID")) |>
-  tidylog::left_join(efile_21_p10_raw, by = join_by("EIN2" == "EIN2",
-                                              "OBJECTID" == "OBJECTID")) |>
-  tidylog::left_join(efile_21_p01_raw, by = join_by("EIN2" == "EIN2",
-                                              "OBJECTID" == "OBJECTID"))
+  tidylog::left_join(efile_21_p09_raw, by = c("EIN2", "OBJECTID")) |>
+  tidylog::left_join(efile_21_p10_raw, by = c("EIN2", "OBJECTID")) |>
+  tidylog::left_join(efile_21_p01_raw, by = c("EIN2", "OBJECTID"))
 
 nrow(efile_sample) == numrec_w_gvgrnt 
 
@@ -532,7 +529,7 @@ null_geoms <- full_sample_int |>
   dplyr::select(EIN2, geometry) |>
   sf::st_as_sf()
 
-### 12 records
+### 46 records
 
 # Transform counties to WGS84
 
@@ -578,7 +575,7 @@ null_geoms <- full_sample_int |>
   dplyr::select(EIN2, geometry) |>
   sf::st_as_sf()
 
-### 12 records all with 0 coordinates
+### 46 records all with 0 coordinates
 
 # Spatial join with counties
 
@@ -616,7 +613,7 @@ absent_counties <- data.frame(county_state) |>
 
 data.table::fwrite(absent_counties, "data/intermediate/absent_counties.csv")
 
-### 179 counties are not in the sample
+### 180 counties are not in the sample
 
 # (7.2) - Missing Congressional District Information. Unnecessary after mapping the missing state information
 
@@ -656,12 +653,12 @@ full_sample_int <- full_sample_int |>
 # Check that all districts are in the sample
 
 sample_district <- full_sample_int |>
-  dplyr::select(CENSUS_STATE_ABBR, NAMELSAD20) |>
+  dplyr::select(CENSUS_STATE_ABBR, NAMELSAD) |>
   dplyr::distinct()
 
 absent_districts <- data.frame(district_state) |>
-  dplyr::filter(! NAMELSAD20 %in% sample_district$NAMELSAD20) |>
-  dplyr::select(CENSUS_STATE_ABBR, NAMELSAD20)
+  dplyr::filter(! NAMELSAD %in% sample_district$NAMELSAD) |>
+  dplyr::select(CENSUS_STATE_ABBR, NAMELSAD)
 
 print(absent_districts)
 
@@ -708,7 +705,7 @@ full_sample_proc <- full_sample_int |>
       .default = "Other US Jurisdictions/Unmapped"
     ),
     CONGRESS_DISTRICT_NAME = dplyr::case_when(
-      NAMELSAD20 == "Congressional District" ~ "Unmapped",
+      NAMELSAD == "Congressional District" ~ "Unmapped",
     )
   ) |>
   dplyr::select(
@@ -716,7 +713,7 @@ full_sample_proc <- full_sample_int |>
     CENSUS_REGION,
     CENSUS_COUNTY_NAME,
     CENSUS_STATE_NAME,
-    NAMELSAD20,
+    NAMELSAD,
     SUBSECTOR,
     expense_category,
     F9_08_REV_CONTR_GOVT_GRANT,
@@ -726,10 +723,10 @@ full_sample_proc <- full_sample_int |>
   ) |>
   dplyr::mutate(
     CENSUS_REGION = ifelse(is.na(CENSUS_REGION), "Unmapped", CENSUS_REGION),
-    NAMELSAD20 = ifelse(is.na(NAMELSAD20), "Unmapped", NAMELSAD20)
+    NAMELSAD = ifelse(is.na(NAMELSAD), "Unmapped", NAMELSAD)
   ) |>
   dplyr::rename(
-    CONGRESS_DISTRICT_NAME = NAMELSAD20,
+    CONGRESS_DISTRICT_NAME = NAMELSAD,
     GOVERNMENT_GRANT_DOLLAR_AMOUNT = F9_08_REV_CONTR_GOVT_GRANT,
     EXPENSE_CATEGORY = expense_category,
     PROFIT_MARGIN = profit_margin,
