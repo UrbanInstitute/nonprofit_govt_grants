@@ -1,98 +1,68 @@
-# Create 3 separate tables for each state
+#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
-# Get official geographies
 
-# All
+# Helper scripts
+source(here::here("R", "data_requests", "congressional_briefing_utils-20250715.R"))
+
+# (1) - Extract
+
+# (1.1) - Nonprofit Financial Metrics
+
+nonprofit_financial_metrics <- data.table::fread("data/processed/full_sample_processed_v1.0.csv") |>
+  dplyr::select(
+    EIN2,
+    CENSUS_STATE_NAME,
+    CENSUS_COUNTY_NAME,
+    CONGRESS_DISTRICT_NAME,
+    GOVERNMENT_GRANT_DOLLAR_AMOUNT,
+    PROFIT_MARGIN,
+    PROFIT_MARGIN_NOGOVTGRANT,
+    AT_RISK_NUM
+  )
+
+# (1.2) - BMF
+bmf_sample <- data.table::fread("data/raw/unified_bmf.csv") |>
+  dplyr::filter(EIN2 %in% nonprofit_financial_metrics$EIN2) |>
+  dplyr::group_by(EIN2) |>
+  dplyr::arrange(ORG_YEAR_LAST) |>
+  dplyr::slice_max(ORG_YEAR_LAST)
+
+bmf_sf <- bmf_sample |>
+  sf::st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 4269) |>
+  sf::st_make_valid()
+  
+# (1.3) - Tigris Census Units
 tigris_cbsa <- tigris::core_based_statistical_areas(cb = TRUE)
-states <- tigris::states(cb = TRUE)
+tigris_states <- tigris::states(cb = TRUE)
 
-# New York
-ny_state <- states |> 
-  dplyr::filter(STUSPS == "NY") |>
-  dplyr::select(NAME) |>
-  dplyr::mutate(STATE = "NY",
-                UNIT = "State")
-## Tigris
-### Congressional Districts
-ny_tigris_cd <- get_tigris_cd("NY")
-### Counties
-ny_tigris_counties <- get_tigris_counties("NY")
-### CBSA
-ny_tigris_cbsa <- filter_tigris_cbsa("NY", ny_state, tigris_cbsa)
-## Combine
-ny_geos <- dplyr::bind_rows(ny_state,
-                            ny_tigris_cd, 
-                            ny_tigris_counties, 
-                            ny_tigris_cbsa)
+# State-level tigris census geographies
+ny_geos <- state_geos("NY", tigris_states, tigris_cbsa)
+fl_geos <- state_geos("FL", tigris_states, tigris_cbsa)
+pr_geos <- state_geos("PR", tigris_states, tigris_cbsa)
 
-# Florida
-fl_state <- states |> 
-  dplyr::filter(STUSPS == "FL") |>
-  dplyr::select(NAME) |>
-  dplyr::mutate(STATE = "FL",
-                UNIT = "State")
-## Tigris
-### Congressional Districts
-fl_tigris_cd <- get_tigris_cd("FL")
-### Counties
-fl_tigris_counties <- get_tigris_counties("FL")
-### CBSA
-fl_tigris_cbsa <- filter_tigris_cbsa("FL", fl_state, tigris_cbsa)
-## Combine
-fl_geos <- dplyr::bind_rows(fl_state,
-                            fl_tigris_cd, 
-                            fl_tigris_counties, 
-                            fl_tigris_cbsa)
+# (1.4) - ACS Demographic Data
 
-# Puerto Rico
-pr_state <- states |> 
-  dplyr::filter(STUSPS == "PR") |>
-  dplyr::select(NAME) |>
-  dplyr::mutate(STATE = "PR",
-                UNIT = "State")
-## Tigris
-### Congressional Districts
-pr_tigris_cd <- get_tigris_cd("PR")
-### Counties
-pr_tigris_counties <- get_tigris_counties("PR")
-### CBSA
-pr_tigris_cbsa <- filter_tigris_cbsa("PR", pr_state, tigris_cbsa)
-## Combine
-pr_geos <- dplyr::bind_rows(pr_state,
-                            pr_tigris_cd, 
-                            pr_tigris_counties, 
-                            pr_tigris_cbsa)
+acs_states <- c("NY", "FL", "PR")
+acs_geounits <- c("congressional district", "county", "state")
 
-# ACS Demographic Data
-
-# All
-states_acs<- c("NY", "FL", "PR")
-geo_units <- c("congressional district", "county", "state")
-
-# All populations except for metro areas
-acs_pop_df <- purrr::map(states_acs, function(state) {
-  purrr::map(geo_units, 
-             get_pop_counts, 
-             state = state) |>
+# State-level Population Counts
+acs_pop_df <- purrr::map(acs_states, function(state) {
+  purrr::map(acs_geounits, get_pop_counts, state = state) |>
     purrr::list_rbind() |>
     dplyr::mutate(STATE = state)
-},
-.progress = TRUE) |>
+}, .progress = TRUE) |>
   purrr::list_rbind() |>
-  dplyr::select(! moe) |>
-  tidyr::pivot_wider(
-    names_from = variable,
-    values_from = estimate
-  ) |>
-  dplyr::rename(
-    TOTAL_POPULATION = B03001_001,
-    TOTAL_HISPANIC_LATINO_POPULATION = B03001_003
-  ) |>
+  dplyr::select(!moe) |>
+  tidyr::pivot_wider(names_from = variable, values_from = estimate) |>
+  dplyr::rename(TOTAL_POPULATION = B03001_001,
+                TOTAL_HISPANIC_LATINO_POPULATION = B03001_003) |>
   dplyr::mutate(
     NAME = gsub(" \\(118th Congress\\)", "", NAME),
     NAME = gsub(", New York|, Florida|, Puerto Rico", "", NAME)
   )
-# Populations from metro areas
+
+# Metro-Area Populaion Counts
 acs_metro_areas <- tidycensus::get_acs(
   geography = "metropolitan statistical area/micropolitan statistical area",
   variables = c("B03001_001", "B03001_003"),
@@ -120,105 +90,89 @@ acs_metro_areas <- tidycensus::get_acs(
     )
   )
 
-# New York
-acs_NY <- dplyr::bind_rows(
-  acs_pop_df |> dplyr::filter(STATE == "NY"),
-  acs_metro_areas |> dplyr::filter(STATE == "NY")
-)
+# State-level combined ACS and tigris data
+ny_demo <- get_state_demographics(acs_pop_df, acs_metro_areas, ny_geos, state_abbr = "NY")
+fl_demo <- get_state_demographics(acs_pop_df, acs_metro_areas, fl_geos, state_abbr = "FL")
+pr_demo <- get_state_demographics(acs_pop_df, acs_metro_areas, pr_geos, state_abbr = "PR")
 
-ny_full <- ny_geos |>
-  tidylog::left_join(acs_NY, by = c("NAME", "STATE")) |>
-  dplyr::mutate(
-    PERCENT_HISPANIC_LATINO = scales::percent(
-      TOTAL_HISPANIC_LATINO_POPULATION / TOTAL_POPULATION,
-      accuracy = 0.01
-    )
-  ) |>
-  dplyr::select(!GEOID)
-
-# Florida
-acs_FL <- dplyr::bind_rows(
-  acs_pop_df |> dplyr::filter(STATE == "FL"),
-  acs_metro_areas |> dplyr::filter(STATE == "FL")
-)
-fl_full <- fl_geos |>
-  tidylog::left_join(acs_FL, by = c("NAME", "STATE")) |>
-  dplyr::mutate(
-    PERCENT_HISPANIC_LATINO = scales::percent(
-      TOTAL_HISPANIC_LATINO_POPULATION / TOTAL_POPULATION,
-      accuracy = 0.01
-    )
-  ) |>
-  dplyr::select(!GEOID)
-
-# Puerto Rico
-acs_PR <- dplyr::bind_rows(
-  acs_pop_df |> dplyr::filter(STATE == "PR"),
-  acs_metro_areas |> dplyr::filter(STATE == "PR")
-)
-pr_full <- pr_geos |>
-  tidylog::left_join(acs_PR, by = c("NAME", "STATE")) |>
-  dplyr::mutate(
-    PERCENT_HISPANIC_LATINO = scales::percent(
-      TOTAL_HISPANIC_LATINO_POPULATION / TOTAL_POPULATION,
-      accuracy = 0.01
-    )
-  ) |>
-  dplyr::select(!GEOID)
-
+# (1.5) - Save Intermediate datasets
 
 # Save as separate sheets in an xlsx workbook
 writexl::write_xlsx(
   list(
-    "New York" = ny_full,
-    "Florida" = fl_full,
-    "Puerto Rico" = pr_full
+    "New York" = ny_demo,
+    "Florida" = fl_demo,
+    "Puerto Rico" = pr_demo
   ),
-  path = "data/congressional_briefing-20250715.xlsx"
+  path = "data/congressional_briefing_demographics-20250717.xlsx"
 )
 
-# Helper functions
-get_tigris_cd <- function(state) {
-  tigris::congressional_districts(state = state) |>
-    dplyr::select(NAMELSAD, geometry) |>
-    dplyr::mutate(STATE = state,
-                  UNIT = "Congressional District") |>
-    dplyr::rename(NAME = NAMELSAD)
-}
+# (2) - Transform
 
-get_tigris_counties <- function(state) {
-  tigris::counties(
-    state = state,
-    cb = TRUE    # Use cartographic boundaries
+# (2.1) - Merge CBSA with Unified BMF
+
+bmf_cbsa <- bmf_sf |>
+  dplyr::select(EIN2, geometry) |>
+  dplyr::group_by(EIN2) |>
+  dplyr::slice(1) |>
+  sf::st_join(tigris_cbsa, join = sf::st_intersects) |>
+  dplyr::mutate(
+    CBSA_NAME = dplyr::case_when(
+      is.na(NAMELSAD) ~ "Not located in CBSA",
+      .default = NAMELSAD
+    )
   ) |>
-    dplyr::select(NAMELSAD, geometry) |>
-    dplyr::mutate(STATE = state,
-                  UNIT = "County") |>
-    dplyr::rename(NAME = NAMELSAD)
-}
+  dplyr::select(EIN2, CBSA_NAME) |>
+  sf::st_drop_geometry()
 
-filter_tigris_cbsa <- function(state, tigris_state, tigris_cbsa) {
-  tigris_cbsa |>
-    sf::st_filter(tigris_state) |>
-    dplyr::filter(grepl("Metro Area", NAMELSAD)) |>
-    dplyr::filter(grepl(state, NAMELSAD)) |>
-    dplyr::select(NAMELSAD, geometry) |>
-    dplyr::rename(NAME = NAMELSAD) |>
-    dplyr::mutate(STATE = state, UNIT = "Metro Area")
-}
+# Merge with financial metrics
+financial_metrics_cbsa <- nonprofit_financial_metrics |>
+  tidylog::left_join(bmf_cbsa, by = "EIN2")
 
-get_pop_counts <- function(geo_unit, state) {
-  print(paste("Fetching population counts for", geo_unit, "in", state))
-  pop_counts <- tidycensus::get_acs(
-    geography = geo_unit,
-    variables = c("B03001_001", "B03001_003"),
-    state = state,
-    survey = "acs5",
-    cache_table = TRUE
+# (2.2) - Isolate PR Nonprofits in BMF and add to financial metrics
+
+bmf_pr_eins <- bmf_sf |>
+  dplyr::select(EIN2, geometry) |>
+  sf::st_join(tigris_states, join = sf::st_intersects) |>
+  dplyr::filter(STUSPS == "PR") |>
+  dplyr::pull(EIN2)
+
+financial_metrics_cbsa <- financial_metrics_cbsa |>
+  dplyr::mutate(
+    CENSUS_STATE_NAME = dplyr::case_when(
+      EIN2 %in% bmf_pr_eins ~ "Puerto Rico",
+      .default = CENSUS_STATE_NAME
+    )
   )
-  return(pop_counts)
-}
 
+# (2.3) - Create NP Trends Sample in BMF
+
+# Merge with financial metrics
+
+# (3) - Load: Create output data
+
+NY_metrics <- summarise_state_data(financial_metrics_cbsa, "New York")
+FL_metrics <- summarise_state_data(financial_metrics_cbsa, "Florida")
+PR_metrics <- summarise_state_data(financial_metrics_cbsa, "Puerto Rico")
+
+writexl::write_xlsx(
+  list(
+    "New York" = NY_metrics,
+    "Florida" = FL_metrics,
+    "Puerto Rico" = PR_metrics
+  ),
+  path = "data/congressional_briefing_metrics-20250717.xlsx"
+)
+
+NY_full <- ny_demo |> tidylog::left_join(NY_metrics)
+FL_full <- fl_demo |> tidylog::left_join(FL_metrics)
+PR_full <- pr_demo |> tidylog::left_join(PR_metrics)
+
+# TODO: 
+# NP Trends Sample
+# Fill NA with 0
+# Rearrange by units and alphabetically
+# Add United States row
 
 ###############################################################################
 
