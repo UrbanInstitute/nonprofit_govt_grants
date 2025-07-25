@@ -16,7 +16,8 @@
 #   - readr
 #   - here
 #   - writexl
-#   - R/data_requests/municipal_innovations-20250724.R
+#   - R/data_requests/municipal_innovations-20250724.R # Helper functions
+#   - 
 #
 # Notes
 # (1) - Prepare spatial data for 20 cities
@@ -108,45 +109,46 @@ readr::write_csv(bmf_city_boundaries, "data/data_requests/municipal_innovations/
 
 # (2.3) - NTEE Code Data
 policy_ntee_map <- readr::read_csv("data/data_requests/municipal_innovations/ntee_codes.csv")
-# Convert NTEEV2 format for merging with BMF.
+# Convert NTEEV2 format for merging with BMF and select relevant policy areas
 policy_areas <- policy_ntee_map |>
   dplyr::select(NTEEV2, `Policy Area`) |>
   dplyr::mutate(NTEEV2 = sapply(NTEEV2, convert_format))
+setequal(unique(policy_areas$`Policy Area`), c("Education", "Medicaid", "SNAP", "Housing", "Immigration", "Unmapped"))
 
 # (2.3) - Transform and merge data
 
 # Only keep BMF records belonging to a City
 bmf_muni_sample <- bmf_city_boundaries |>
   dplyr::filter(CITY != "")
-
+length(unique(bmf_muni_sample$CITY)) == 19
 # Merge data together for combined cities metrics
 cities_metrics <- bmf_muni_sample |>
-  dplyr::select(EIN2, NAME, NTEEV2) |>
-  dplyr::rename(CITY = NAME) |>
+  dplyr::select(EIN2, CITY, NTEEV2) |>
   tidylog::left_join(nonprofit_financial_metrics) |>
   tidylog::left_join(policy_areas) |>
-  dplyr::mutate(
-    `Policy Area` = ifelse(is.na(`Policy Area`), "Unmapped", `Policy Area`)
-  )
+  dplyr::mutate(`Policy Area` = ifelse(is.na(`Policy Area`), "Unmapped", `Policy Area`))
+# Don't filter out NA since we need them for the overall city counts
+setequal(unique(cities_metrics$`Policy Area`), c("Education", "Medicaid", "SNAP", "Housing", "Immigration", "Unmapped"))
 
-# (3) - Summarize and save data
+# (3) - Summarize Data
 
 # Get state level summaries
 state_summaries <- summarize_city_metrics(nonprofit_financial_metrics, grouping_cols = "CENSUS_STATE_NAME") |>
   dplyr::filter(CENSUS_STATE_NAME %in% cities_metrics$CENSUS_STATE_NAME)
 
 # City level summaries
-city_summaries <- summarize_city_metrics(cities_metrics, grouping_cols = c("CENSUS_STATE_NAME", "CITY"))
+city_summaries <- summarize_city_metrics(cities_metrics, grouping_cols = c("CENSUS_STATE_NAME", "CITY")) |>
+  sf::st_drop_geometry()
 
 # City Policy Summaries
 city_policy_summaries <- summarize_city_metrics(cities_metrics, grouping_cols = c("CENSUS_STATE_NAME", "CITY", "Policy Area")) |>
-  dplyr::filter(`Policy Area` != "Unmapped")
+  sf::st_drop_geometry()
 
 # Policy - Summaries
 policy_summaries <- summarize_city_metrics(cities_metrics, grouping_cols = c("Policy Area")) |>
-  dplyr::filter(`Policy Area` != "Unmapped")
+  sf::st_drop_geometry()
   
-# Save Summarized data
+# (4) Load into individual tables
 
 writexl::write_xlsx(
   list(
@@ -155,5 +157,5 @@ writexl::write_xlsx(
     "city-policy-area-summaries" = city_policy_summaries,
     "policy-area-summaries" = policy_summaries
   ),
-  path = "data/data_requests/municipal_innovations_factsheet_metrics-20250724.xlsx"
+  path = "data/data_requests/municipal_innovations/factsheet_metrics-20250725.xlsx"
 )
