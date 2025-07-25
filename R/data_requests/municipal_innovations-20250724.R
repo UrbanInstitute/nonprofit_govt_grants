@@ -129,8 +129,8 @@ setequal(unique(policy_areas$`Policy Area`), c("Education", "Medicaid", "SNAP", 
 
 # Only keep BMF records belonging to a City
 bmf_muni_sample <- bmf_city_boundaries |>
-  dplyr::filter(CITY != "")
-length(unique(bmf_muni_sample$CITY)) == 19
+  dplyr::mutate(CITY = ifelse(is.na(CITY), "Other Cities", CITY))
+length(unique(bmf_muni_sample$CITY)) == 20
 # Merge data together for combined cities metrics
 cities_metrics <- bmf_muni_sample |>
   dplyr::select(EIN2, CITY, NTEEV2) |>
@@ -141,6 +141,10 @@ cities_metrics <- bmf_muni_sample |>
 setequal(unique(cities_metrics$`Policy Area`), c("Education", "Medicaid", "SNAP", "Housing", "Immigration", "Unmapped"))
 
 # (3) - Summarize Data
+
+# usa level data
+usa_summaries <- summarize_city_metrics(nonprofit_financial_metrics, grouping_cols = NULL) |>
+  sf::st_drop_geometry()
 
 # Get state level summaries
 state_summaries <- summarize_city_metrics(nonprofit_financial_metrics, grouping_cols = "CENSUS_STATE_NAME") |>
@@ -162,6 +166,7 @@ policy_summaries <- summarize_city_metrics(cities_metrics, grouping_cols = c("Po
 
 writexl::write_xlsx(
   list(
+    "usa-summaries" = usa_summaries,
     "state-level-summaries" = state_summaries,
     "city-summaries" = city_summaries,
     "city-policy-area-summaries" = city_policy_summaries,
