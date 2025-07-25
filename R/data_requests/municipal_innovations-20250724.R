@@ -17,7 +17,11 @@
 #   - here
 #   - writexl
 #   - R/data_requests/municipal_innovations-20250724.R # Helper functions
-#   - 
+#
+# Datasets
+#  - BMF Data: https://nccsdata.s3.amazonaws.com/harmonized/bmf/unified/BMF_UNIFIED_V1.1.csv
+#  - NTEE Code Data: data/data_requests/municipal_innovations/ntee_codes.csv
+#  - Financial Metric Data: data/processed/full_sample_processed_v1.0.csv
 #
 # Notes
 # (1) - Prepare spatial data for 20 cities
