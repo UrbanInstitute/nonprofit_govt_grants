@@ -93,6 +93,12 @@ nonprofit_financial_metrics <- data.table::fread("data/processed/full_sample_pro
   )
 
 # (2.2) - BMF Data for spatial join
+if (!file.exists("data/raw/unified_bmf.csv")) {
+  download.file(
+    "https://nccsdata.s3.amazonaws.com/harmonized/bmf/unified/BMF_UNIFIED_V1.1.csv",
+    destfile = "data/raw/unified_bmf.csv"
+  )
+}
 bmf_sample <- data.table::fread("data/raw/unified_bmf.csv") |>
   dplyr::filter(EIN2 %in% nonprofit_financial_metrics$EIN2) |>
   dplyr::group_by(EIN2) |>
