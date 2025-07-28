@@ -36,6 +36,8 @@ get_city_geos <- function(params){
     geo <- get_county(params$fips, params$state)
   } else if (params$geo == "place"){
     geo <- get_place(params$name, params$state)
+  } else if (params$geo == "metro"){
+    geo <- get_metro(params$name)
   }
   return(geo)
 }
@@ -86,6 +88,12 @@ get_place <- function(place_name, state){
   place <- places |>
     dplyr::filter(NAME == place_name)
   return(place)
+}
+
+get_metro <- function(metro_name){
+  cbsa <- tigris::core_based_statistical_areas(cb = TRUE)
+  metro <- cbsa |>
+    dplyr::filter(NAME == metro_name)
 }
 
 #' @title Reformat a Hyphen-Separated String
