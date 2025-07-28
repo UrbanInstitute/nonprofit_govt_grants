@@ -47,7 +47,7 @@ source(here::here("R", "data_requests/municipal_innovations_utils-20250724.R"))
 city_boundary_params <- list(
   "Philadelphia, PA" = list(geo = "county", state = "PA", fips = "42101"), # Philadelphia, PA (City and County are coterminous: Philadelphia County)
   "Memphis, TN" = list(geo = "place", state = "TN", name = "Memphis"), # Memphis is an incorporated place within Shelby County
-  "New Orleans, LA" = list(geo = "county", state = "LA", fips = "22071"), # New Orleans, LA (City and Parish (County) are coterminous: Orleans Parish)
+  "New Orleans, LA" = list(geo = "metro", name = "New Orleans-Metairie, LA"), # New Orleans, LA (City and Parish (County) are coterminous: Orleans Parish)
   "Tulsa, OK" = list(geo = "place", state = "OK", name = "Tulsa"),
   "Los Angeles, CA" = list(geo = "place", state = "CA", name = "Los Angeles"), # Los Angeles, CA (Los Angeles County)
   "Detroit, MI" = list(geo = "place", state = "MI", name = "Detroit"),
@@ -146,7 +146,8 @@ cities_metrics <- bmf_city_boundaries |>
   dplyr::select(EIN2, CITY, NTEEV2) |>
   tidylog::left_join(nonprofit_financial_metrics, by = "EIN2") |>
   tidylog::left_join(policy_ntee_map, by = "NTEEV2") |>
-  dplyr::mutate(`Policy Area` = ifelse(is.na(`Policy Area`), "Unmapped", `Policy Area`))
+  dplyr::mutate(`Policy Area` = ifelse(is.na(`Policy Area`), "Unmapped", `Policy Area`)) |>
+  unique()
 
 # (3) - Summarize Data
 
