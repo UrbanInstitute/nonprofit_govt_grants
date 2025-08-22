@@ -12,7 +12,7 @@ This repository contains the replication code, datasets and workflow used in Urb
 - **processed/**: Contains final, cleaned datasets that are used in the factsheets.
     - **state_factsheets/**: Contains state-level data for each state in the United States, disaggregated by county, district, size and subsector.
     - **state_overviews/**: Contains state-level data for the United States without disaggregations.
-    - **full_sample_processed.csv** Contains the records for each return used in the final sample.
+    - **full_sample_processed_v1.0.csv** Contains the records for each return used in the final sample.
 
 ### /R
 - Contains all R code for data analysis, processing, and visualization. Scripts are numbered sequentially (e.g., 01_clean_data.R, 02_process_data.R) to indicate the order of execution. Helper functions are stored in separate scripts named after their primary function (e.g., calculate_metrics.R, plot_utilities.R).
