@@ -1,12 +1,12 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Massachusetts,"3,018","$10,165,747,853",11.74%,-5.38%,60.30%
-1st Congressional district,309,"$810,434,787",11.52%,-9.00%,60.52%
-2nd Congressional district,286,"$698,888,291",10.07%,-7.08%,63.64%
-3rd Congressional district,230,"$608,155,140",13.27%,-5.24%,57.83%
-4th Congressional district,267,"$691,593,479",12.61%,-2.14%,55.43%
-5th Congressional district,357,"$1,734,751,035",11.79%,-3.56%,58.82%
-6th Congressional district,237,"$920,998,514",10.95%,-5.97%,62.03%
-7th Congressional district,539,"$3,069,340,319",11.39%,-6.90%,62.71%
-8th Congressional district,434,"$1,016,216,002",10.50%,-6.30%,61.29%
-9th Congressional district,359,"$615,370,286",14.81%,-3.67%,58.22%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Massachusetts,60.30%,"3,018","$10,165,747,853",11.74%,-5.38%
+Congressional District 1,60.52%,309,"$810,434,787",11.52%,-9.00%
+Congressional District 2,63.64%,286,"$698,888,291",10.07%,-7.08%
+Congressional District 3,57.83%,230,"$608,155,140",13.27%,-5.24%
+Congressional District 4,55.43%,267,"$691,593,479",12.61%,-2.14%
+Congressional District 5,58.82%,357,"$1,734,751,035",11.79%,-3.56%
+Congressional District 6,62.03%,237,"$920,998,514",10.95%,-5.97%
+Congressional District 7,62.71%,539,"$3,069,340,319",11.39%,-6.90%
+Congressional District 8,61.29%,434,"$1,016,216,002",10.50%,-6.30%
+Congressional District 9,58.22%,359,"$615,370,286",14.81%,-3.67%

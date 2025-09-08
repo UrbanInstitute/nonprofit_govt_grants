@@ -1,31 +1,31 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Alaska,548,"$848,313,307",7.18%,-28.55%,79.01%
-Aleutians East Borough,1,"$8,157",1.95%,0.48%,0.00%
-Aleutians West Census Area,3,"$3,103,569",6.59%,-47.02%,100.00%
-Anchorage Municipality,183,"$325,665,303",8.98%,-23.85%,79.23%
-Bethel Census Area,6,"$10,516,417",-3.30%,-71.02%,83.33%
-Bristol Bay Borough,2,"$2,614,210",9.60%,-36.06%,100.00%
-Chugach Census Area,14,"$9,456,517",5.68%,-57.46%,78.57%
-Copper River Census Area,2,"$3,461,801",7.91%,-54.58%,100.00%
-Denali Borough,4,"$567,912",-5.23%,-54.43%,100.00%
-Dillingham Census Area,7,"$28,124,162",19.65%,-52.36%,71.43%
-Fairbanks North Star Borough,68,"$73,253,026",8.39%,-19.50%,72.06%
-Haines Borough,9,"$942,909",-4.63%,-37.56%,77.78%
-Hoonah-Angoon Census Area,1,"$55,866",56.65%,52.25%,0.00%
-Juneau City and Borough,49,"$84,724,100",5.67%,-25.70%,73.47%
-Kenai Peninsula Borough,69,"$40,917,457",6.08%,-28.20%,79.71%
-Ketchikan Gateway Borough,14,"$11,105,523",1.73%,-41.98%,85.71%
-Kodiak Island Borough,13,"$15,515,508",15.07%,-23.25%,76.92%
-Kusilvak Census Area,2,"$1,487,132",-3.53%,-100.02%,100.00%
-Lake and Peninsula Borough,2,"$312,016",46.89%,-20.68%,100.00%
-Matanuska-Susitna Borough,49,"$144,070,688",4.66%,-37.93%,81.63%
-Nome Census Area,2,"$53,907,395",19.43%,-49.55%,100.00%
-North Slope Borough,4,"$21,463,109",11.05%,-46.77%,100.00%
-Northwest Arctic Borough,1,"$92,214",4.05%,-10.33%,100.00%
-Petersburg Borough,5,"$3,341,058",-11.93%,-30.35%,100.00%
-Prince of Wales-Hyder Census Area,1,"$803,158",32.10%,-45.60%,100.00%
-Sitka City and Borough,23,"$9,553,762",8.40%,-10.62%,73.91%
-Southeast Fairbanks Census Area,8,"$1,391,410",2.66%,-39.85%,87.50%
-Wrangell City and Borough,1,"$39,048",34.23%,-4.50%,100.00%
-Yukon-Koyukuk Census Area,5,"$1,819,880",-0.78%,-58.91%,100.00%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Alaska,79.01%,548,"$848,313,307",7.18%,-28.55%
+Aleutians East Borough,0.00%,1,"$8,157",1.95%,0.48%
+Aleutians West Census Area,100.00%,3,"$3,103,569",6.59%,-47.02%
+Anchorage Municipality,79.23%,183,"$325,665,303",8.98%,-23.85%
+Bethel Census Area,83.33%,6,"$10,516,417",-3.30%,-71.02%
+Bristol Bay Borough,100.00%,2,"$2,614,210",9.60%,-36.06%
+Chugach Census Area,78.57%,14,"$9,456,517",5.68%,-57.46%
+Copper River Census Area,100.00%,2,"$3,461,801",7.91%,-54.58%
+Denali Borough,100.00%,4,"$567,912",-5.23%,-54.43%
+Dillingham Census Area,71.43%,7,"$28,124,162",19.65%,-52.36%
+Fairbanks North Star Borough,72.06%,68,"$73,253,026",8.39%,-19.50%
+Haines Borough,77.78%,9,"$942,909",-4.63%,-37.56%
+Hoonah-Angoon Census Area,0.00%,1,"$55,866",56.65%,52.25%
+Juneau City and Borough,73.47%,49,"$84,724,100",5.67%,-25.70%
+Kenai Peninsula Borough,79.71%,69,"$40,917,457",6.08%,-28.20%
+Ketchikan Gateway Borough,85.71%,14,"$11,105,523",1.73%,-41.98%
+Kodiak Island Borough,76.92%,13,"$15,515,508",15.07%,-23.25%
+Kusilvak Census Area,100.00%,2,"$1,487,132",-3.53%,-100.02%
+Lake and Peninsula Borough,100.00%,2,"$312,016",46.89%,-20.68%
+Matanuska-Susitna Borough,81.63%,49,"$144,070,688",4.66%,-37.93%
+Nome Census Area,100.00%,2,"$53,907,395",19.43%,-49.55%
+North Slope Borough,100.00%,4,"$21,463,109",11.05%,-46.77%
+Northwest Arctic Borough,100.00%,1,"$92,214",4.05%,-10.33%
+Petersburg Borough,100.00%,5,"$3,341,058",-11.93%,-30.35%
+Prince of Wales-Hyder Census Area,100.00%,1,"$803,158",32.10%,-45.60%
+Sitka City and Borough,73.91%,23,"$9,553,762",8.40%,-10.62%
+Southeast Fairbanks Census Area,87.50%,8,"$1,391,410",2.66%,-39.85%
+Wrangell City and Borough,100.00%,1,"$39,048",34.23%,-4.50%
+Yukon-Koyukuk Census Area,100.00%,5,"$1,819,880",-0.78%,-58.91%

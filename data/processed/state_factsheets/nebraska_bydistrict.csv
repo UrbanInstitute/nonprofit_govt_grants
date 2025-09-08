@@ -1,6 +1,6 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Nebraska,769,"$986,876,099",7.78%,-11.28%,65.28%
-1st Congressional district,206,"$318,516,414",9.32%,-11.24%,68.93%
-2nd Congressional district,280,"$440,259,358",5.55%,-6.88%,60.71%
-3rd Congressional district,283,"$228,100,327",7.33%,-16.42%,67.14%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Nebraska,65.28%,769,"$986,876,099",7.78%,-11.28%
+Congressional District 1,68.93%,206,"$318,516,414",9.32%,-11.24%
+Congressional District 2,60.71%,280,"$440,259,358",5.55%,-6.88%
+Congressional District 3,67.14%,283,"$228,100,327",7.33%,-16.42%

@@ -1,10 +1,10 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-South Carolina,"1,290","$2,159,545,458",9.53%,-19.89%,70.54%
-1st Congressional district,128,"$146,652,755",11.99%,-12.54%,63.28%
-2nd Congressional district,129,"$146,596,002",6.98%,-45.73%,78.29%
-3rd Congressional district,153,"$151,319,583",11.20%,-13.32%,68.63%
-4th Congressional district,205,"$401,916,182",6.01%,-11.82%,67.80%
-5th Congressional district,130,"$180,702,155",9.69%,-29.81%,71.54%
-6th Congressional district,372,"$908,885,576",9.68%,-22.55%,72.58%
-7th Congressional district,173,"$223,473,205",11.75%,-18.56%,69.94%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+South Carolina,70.54%,"1,290","$2,159,545,458",9.53%,-19.89%
+Congressional District 1,63.28%,128,"$146,652,755",11.99%,-12.54%
+Congressional District 2,78.29%,129,"$146,596,002",6.98%,-45.73%
+Congressional District 3,68.63%,153,"$151,319,583",11.20%,-13.32%
+Congressional District 4,67.80%,205,"$401,916,182",6.01%,-11.82%
+Congressional District 5,71.54%,130,"$180,702,155",9.69%,-29.81%
+Congressional District 6,72.58%,372,"$908,885,576",9.68%,-22.55%
+Congressional District 7,69.94%,173,"$223,473,205",11.75%,-18.56%

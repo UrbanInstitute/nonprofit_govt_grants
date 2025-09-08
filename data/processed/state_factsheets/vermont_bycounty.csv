@@ -1,16 +1,16 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Vermont,721,"$610,463,403",8.62%,-10.12%,66.71%
-Addison County,44,"$33,909,819",7.08%,-9.68%,68.18%
-Bennington County,49,"$28,821,941",11.35%,-5.23%,59.18%
-Caledonia County,35,"$26,396,431",12.69%,-8.10%,62.86%
-Chittenden County,161,"$196,388,428",9.36%,-8.22%,68.94%
-Franklin County,23,"$21,829,441",6.99%,-18.70%,69.57%
-Grand Isle County,9,"$989,142",22.15%,-16.76%,55.56%
-Lamoille County,28,"$13,949,375",6.30%,-5.75%,67.86%
-Orange County,37,"$7,300,276",12.46%,-8.27%,62.16%
-Orleans County,29,"$21,254,914",7.58%,-18.59%,65.52%
-Rutland County,39,"$38,389,109",8.78%,-23.31%,69.23%
-Washington County,113,"$138,477,649",8.48%,-17.53%,73.45%
-Windham County,73,"$45,520,154",8.35%,-7.08%,64.38%
-Windsor County,81,"$37,236,724",7.37%,-6.83%,61.73%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Vermont,66.71%,721,"$610,463,403",8.62%,-10.12%
+Addison County,68.18%,44,"$33,909,819",7.08%,-9.68%
+Bennington County,59.18%,49,"$28,821,941",11.35%,-5.23%
+Caledonia County,62.86%,35,"$26,396,431",12.69%,-8.10%
+Chittenden County,68.94%,161,"$196,388,428",9.36%,-8.22%
+Franklin County,69.57%,23,"$21,829,441",6.99%,-18.70%
+Grand Isle County,55.56%,9,"$989,142",22.15%,-16.76%
+Lamoille County,67.86%,28,"$13,949,375",6.30%,-5.75%
+Orange County,62.16%,37,"$7,300,276",12.46%,-8.27%
+Orleans County,65.52%,29,"$21,254,914",7.58%,-18.59%
+Rutland County,69.23%,39,"$38,389,109",8.78%,-23.31%
+Washington County,73.45%,113,"$138,477,649",8.48%,-17.53%
+Windham County,64.38%,73,"$45,520,154",8.35%,-7.08%
+Windsor County,61.73%,81,"$37,236,724",7.37%,-6.83%

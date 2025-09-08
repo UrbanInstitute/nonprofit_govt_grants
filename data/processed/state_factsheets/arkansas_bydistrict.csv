@@ -1,7 +1,7 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Arkansas,843,"$1,497,047,399",7.13%,-20.99%,75.21%
-1st Congressional district,188,"$376,052,048",4.33%,-39.00%,84.57%
-2nd Congressional district,284,"$662,226,198",6.96%,-22.42%,75.35%
-3rd Congressional district,209,"$212,895,289",9.64%,-10.68%,65.55%
-4th Congressional district,162,"$245,873,864",6.86%,-21.10%,76.54%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Arkansas,75.21%,843,"$1,497,047,399",7.13%,-20.99%
+Congressional District 1,84.57%,188,"$376,052,048",4.33%,-39.00%
+Congressional District 2,75.35%,284,"$662,226,198",6.96%,-22.42%
+Congressional District 3,65.55%,209,"$212,895,289",9.64%,-10.68%
+Congressional District 4,76.54%,162,"$245,873,864",6.86%,-21.10%

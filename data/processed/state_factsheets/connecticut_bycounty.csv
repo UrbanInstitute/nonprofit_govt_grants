@@ -1,12 +1,12 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Connecticut,"1,561","$3,847,910,957",7.14%,-16.67%,71.11%
-Capitol Planning Region,420,"$817,859,443",6.08%,-18.14%,75.00%
-Greater Bridgeport Planning Region,109,"$679,965,531",6.59%,-17.37%,77.98%
-Lower Connecticut River Valley Planning Region,90,"$192,250,657",7.48%,-11.26%,64.44%
-Naugatuck Valley Planning Region,111,"$177,668,643",4.11%,-25.08%,80.18%
-Northeastern Connecticut Planning Region,21,"$54,730,137",0.60%,-23.30%,90.48%
-Northwest Hills Planning Region,91,"$56,641,434",15.73%,-7.62%,56.04%
-South Central Connecticut Planning Region,280,"$1,293,798,622",7.70%,-21.14%,70.71%
-Southeastern Connecticut Planning Region,135,"$269,424,945",5.90%,-27.96%,71.85%
-Western Connecticut Planning Region,304,"$305,571,545",8.59%,-9.43%,65.13%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Connecticut,71.11%,"1,561","$3,847,910,957",7.14%,-16.67%
+Capitol Planning Region,75.00%,420,"$817,859,443",6.08%,-18.14%
+Greater Bridgeport Planning Region,77.98%,109,"$679,965,531",6.59%,-17.37%
+Lower Connecticut River Valley Planning Region,64.44%,90,"$192,250,657",7.48%,-11.26%
+Naugatuck Valley Planning Region,80.18%,111,"$177,668,643",4.11%,-25.08%
+Northeastern Connecticut Planning Region,90.48%,21,"$54,730,137",0.60%,-23.30%
+Northwest Hills Planning Region,56.04%,91,"$56,641,434",15.73%,-7.62%
+South Central Connecticut Planning Region,70.71%,280,"$1,293,798,622",7.70%,-21.14%
+Southeastern Connecticut Planning Region,71.85%,135,"$269,424,945",5.90%,-27.96%
+Western Connecticut Planning Region,65.13%,304,"$305,571,545",8.59%,-9.43%

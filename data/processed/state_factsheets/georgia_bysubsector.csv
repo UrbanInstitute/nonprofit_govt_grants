@@ -1,14 +1,14 @@
-Subsector,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-"Arts, culture, and humanities",175,"$105,374,677",12.04%,-12.68%,65.71%
-Education,277,"$965,457,540",8.66%,-9.40%,65.70%
-Environment and animals,85,"$28,687,651",15.49%,-3.41%,55.29%
-Health,195,"$292,788,473",7.99%,-18.45%,71.28%
-Hospitals,36,"$187,046,011",8.73%,2.61%,38.89%
-Human services,682,"$546,282,967",8.48%,-16.89%,69.35%
-"International, foreign affairs",24,"$336,418,622",6.22%,-4.68%,66.67%
-"Public, societal benefit",162,"$303,562,477",8.96%,-18.10%,65.43%
-Religion-related,101,"$49,775,660",13.04%,2.66%,47.52%
-Mutual/membership benefit,3,"$2,247,915",1.44%,-89.21%,100.00%
-Universities,30,"$1,302,286,423",5.83%,-6.05%,63.33%
-Unclassified,360,"$1,109,955,333",9.55%,-16.29%,70.28%
-Total,"2,130","$5,229,883,749",9.35%,-11.79%,66.43%
+Subsector,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+"Arts, Culture, and Humanities",65.71%,175,"$105,374,677",12.04%,-12.68%
+Education (Excluding Universities),65.70%,277,"$965,457,540",8.66%,-9.40%
+Environment and Animals,55.29%,85,"$28,687,651",15.49%,-3.41%
+Health (Excluding Hospitals),71.28%,195,"$292,788,473",7.99%,-18.45%
+Hospitals,38.89%,36,"$187,046,011",8.73%,2.61%
+Human Services,69.35%,682,"$546,282,967",8.48%,-16.89%
+"International, Foreign Affairs",66.67%,24,"$336,418,622",6.22%,-4.68%
+Mutual/Membership Benefit,100.00%,3,"$2,247,915",1.44%,-89.21%
+"Public, Societal Benefit",65.43%,162,"$303,562,477",8.96%,-18.10%
+Religion Related,47.52%,101,"$49,775,660",13.04%,2.66%
+Unclassified,70.28%,360,"$1,109,955,333",9.55%,-16.29%
+Universities,63.33%,30,"$1,302,286,423",5.83%,-6.05%
+Total,66.43%,"2,130","$5,229,883,749",9.35%,-11.79%

@@ -1,41 +1,41 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Washington,"2,741","$6,452,428,730",10.77%,-10.62%,66.00%
-Adams County,2,"$15,081,967",22.56%,5.87%,50.00%
-Asotin County,6,"$1,970,662",12.54%,-17.10%,50.00%
-Benton County,50,"$92,591,435",8.34%,-14.62%,68.00%
-Chelan County,69,"$56,978,039",14.64%,-3.08%,55.07%
-Clallam County,44,"$21,174,573",15.38%,-10.91%,56.82%
-Clark County,85,"$258,301,547",15.28%,-6.97%,61.18%
-Columbia County,4,"$551,435",18.54%,1.04%,50.00%
-Cowlitz County,23,"$31,730,996",9.24%,-27.78%,69.57%
-Douglas County,5,"$4,712,626",4.88%,-0.41%,60.00%
-Ferry County,1,"$51,600",24.40%,14.18%,0.00%
-Franklin County,14,"$25,678,574",3.92%,-39.91%,78.57%
-Grant County,13,"$19,391,768",6.29%,-8.37%,76.92%
-Grays Harbor County,25,"$50,625,084",2.58%,-35.35%,76.00%
-Island County,34,"$7,215,515",17.64%,1.32%,44.12%
-Jefferson County,38,"$27,820,937",20.79%,-4.62%,55.26%
-King County,"1,129","$3,800,535,168",9.93%,-10.48%,66.34%
-Kitsap County,91,"$120,545,761",17.14%,1.02%,48.35%
-Kittitas County,21,"$19,709,311",13.09%,-5.22%,76.19%
-Klickitat County,9,"$10,459,559",4.20%,-43.96%,88.89%
-Lewis County,23,"$18,740,943",9.69%,-19.02%,78.26%
-Lincoln County,2,"$197,457",18.89%,-17.24%,100.00%
-Mason County,15,"$28,628,427",5.90%,-18.62%,73.33%
-Okanogan County,29,"$38,660,776",13.50%,-16.89%,62.07%
-Pacific County,13,"$1,888,319",12.91%,4.27%,38.46%
-Pend Oreille County,5,"$2,941,876",8.96%,-64.13%,80.00%
-Pierce County,209,"$573,667,961",7.84%,-16.44%,69.86%
-San Juan County,36,"$6,329,988",18.26%,-5.69%,58.33%
-Skagit County,51,"$34,099,630",12.83%,-7.44%,72.55%
-Skamania County,4,"$1,062,822",6.18%,-41.63%,75.00%
-Snohomish County,168,"$248,494,879",7.22%,-18.19%,70.24%
-Spokane County,185,"$304,433,917",8.72%,-15.98%,71.89%
-Stevens County,13,"$33,028,122",13.05%,-4.20%,53.85%
-Thurston County,102,"$116,776,860",13.69%,-14.97%,70.59%
-Wahkiakum County,1,"$166,737",11.99%,-4.22%,100.00%
-Walla Walla County,33,"$45,068,102",9.07%,-16.69%,66.67%
-Whatcom County,104,"$108,649,395",13.11%,-6.24%,66.35%
-Whitman County,13,"$19,151,155",5.11%,-63.19%,76.92%
-Yakima County,72,"$305,314,807",14.03%,-6.62%,62.50%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Washington,66.00%,"2,741","$6,452,428,730",10.77%,-10.62%
+Adams County,50.00%,2,"$15,081,967",22.56%,5.87%
+Asotin County,50.00%,6,"$1,970,662",12.54%,-17.10%
+Benton County,68.00%,50,"$92,591,435",8.34%,-14.62%
+Chelan County,55.07%,69,"$56,978,039",14.64%,-3.08%
+Clallam County,56.82%,44,"$21,174,573",15.38%,-10.91%
+Clark County,61.18%,85,"$258,301,547",15.28%,-6.97%
+Columbia County,50.00%,4,"$551,435",18.54%,1.04%
+Cowlitz County,69.57%,23,"$31,730,996",9.24%,-27.78%
+Douglas County,60.00%,5,"$4,712,626",4.88%,-0.41%
+Ferry County,0.00%,1,"$51,600",24.40%,14.18%
+Franklin County,78.57%,14,"$25,678,574",3.92%,-39.91%
+Grant County,76.92%,13,"$19,391,768",6.29%,-8.37%
+Grays Harbor County,76.00%,25,"$50,625,084",2.58%,-35.35%
+Island County,44.12%,34,"$7,215,515",17.64%,1.32%
+Jefferson County,55.26%,38,"$27,820,937",20.79%,-4.62%
+King County,66.34%,"1,129","$3,800,535,168",9.93%,-10.48%
+Kitsap County,48.35%,91,"$120,545,761",17.14%,1.02%
+Kittitas County,76.19%,21,"$19,709,311",13.09%,-5.22%
+Klickitat County,88.89%,9,"$10,459,559",4.20%,-43.96%
+Lewis County,78.26%,23,"$18,740,943",9.69%,-19.02%
+Lincoln County,100.00%,2,"$197,457",18.89%,-17.24%
+Mason County,73.33%,15,"$28,628,427",5.90%,-18.62%
+Okanogan County,62.07%,29,"$38,660,776",13.50%,-16.89%
+Pacific County,38.46%,13,"$1,888,319",12.91%,4.27%
+Pend Oreille County,80.00%,5,"$2,941,876",8.96%,-64.13%
+Pierce County,69.86%,209,"$573,667,961",7.84%,-16.44%
+San Juan County,58.33%,36,"$6,329,988",18.26%,-5.69%
+Skagit County,72.55%,51,"$34,099,630",12.83%,-7.44%
+Skamania County,75.00%,4,"$1,062,822",6.18%,-41.63%
+Snohomish County,70.24%,168,"$248,494,879",7.22%,-18.19%
+Spokane County,71.89%,185,"$304,433,917",8.72%,-15.98%
+Stevens County,53.85%,13,"$33,028,122",13.05%,-4.20%
+Thurston County,70.59%,102,"$116,776,860",13.69%,-14.97%
+Wahkiakum County,100.00%,1,"$166,737",11.99%,-4.22%
+Walla Walla County,66.67%,33,"$45,068,102",9.07%,-16.69%
+Whatcom County,66.35%,104,"$108,649,395",13.11%,-6.24%
+Whitman County,76.92%,13,"$19,151,155",5.11%,-63.19%
+Yakima County,62.50%,72,"$305,314,807",14.03%,-6.62%

@@ -1,14 +1,14 @@
-Subsector,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-"Arts, culture, and humanities",343,"$225,819,126",15.58%,-8.01%,61.81%
-Education,330,"$1,094,349,025",8.69%,-5.92%,63.64%
-Environment and animals,107,"$150,093,806",17.23%,1.66%,48.60%
-Health,307,"$816,223,303",8.54%,-13.62%,68.40%
-Hospitals,46,"$247,267,233",7.60%,1.97%,41.30%
-Human services,"1,062","$2,434,394,548",6.63%,-22.09%,73.82%
-"International, foreign affairs",37,"$12,928,834",17.92%,8.84%,40.54%
-"Public, societal benefit",305,"$611,222,174",6.55%,-22.32%,70.49%
-Religion-related,91,"$41,417,034",15.17%,2.46%,43.96%
-Mutual/membership benefit,4,"$1,214,334",0.28%,-26.46%,75.00%
-Universities,63,"$2,081,293,959",4.01%,-4.10%,60.32%
-Unclassified,773,"$2,270,326,439",6.76%,-13.35%,69.34%
-Total,"3,468","$9,986,549,815",8.22%,-13.23%,67.30%
+Subsector,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+"Arts, Culture, and Humanities",61.81%,343,"$225,819,126",15.58%,-8.01%
+Education (Excluding Universities),63.64%,330,"$1,094,349,025",8.69%,-5.92%
+Environment and Animals,48.60%,107,"$150,093,806",17.23%,1.66%
+Health (Excluding Hospitals),68.40%,307,"$816,223,303",8.54%,-13.62%
+Hospitals,41.30%,46,"$247,267,233",7.60%,1.97%
+Human Services,73.82%,"1,062","$2,434,394,548",6.63%,-22.09%
+"International, Foreign Affairs",40.54%,37,"$12,928,834",17.92%,8.84%
+Mutual/Membership Benefit,75.00%,4,"$1,214,334",0.28%,-26.46%
+"Public, Societal Benefit",70.49%,305,"$611,222,174",6.55%,-22.32%
+Religion Related,43.96%,91,"$41,417,034",15.17%,2.46%
+Unclassified,69.34%,773,"$2,270,326,439",6.76%,-13.35%
+Universities,60.32%,63,"$2,081,293,959",4.01%,-4.10%
+Total,67.30%,"3,468","$9,986,549,815",8.22%,-13.23%

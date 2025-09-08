@@ -1,7 +1,7 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Iowa,"1,294","$1,252,625,535",10.37%,-5.73%,62.36%
-1st Congressional district,291,"$217,551,696",13.07%,-2.86%,56.01%
-2nd Congressional district,339,"$323,370,144",8.00%,-5.57%,61.65%
-3rd Congressional district,319,"$411,849,966",10.18%,-8.42%,64.26%
-4th Congressional district,345,"$299,853,729",9.30%,-7.06%,66.67%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Iowa,62.36%,"1,294","$1,252,625,535",10.37%,-5.73%
+Congressional District 1,56.01%,291,"$217,551,696",13.07%,-2.86%
+Congressional District 2,61.65%,339,"$323,370,144",8.00%,-5.57%
+Congressional District 3,64.26%,319,"$411,849,966",10.18%,-8.42%
+Congressional District 4,66.67%,345,"$299,853,729",9.30%,-7.06%

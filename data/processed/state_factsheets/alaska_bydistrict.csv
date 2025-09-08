@@ -1,4 +1,4 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Alaska,548,"$848,313,307",7.18%,-28.55%,79.01%
-Congressional district (at large),548,"$848,313,307",7.18%,-28.55%,79.01%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Alaska,79.01%,548,"$848,313,307",7.18%,-28.55%
+Congressional District (at Large),79.01%,548,"$848,313,307",7.18%,-28.55%

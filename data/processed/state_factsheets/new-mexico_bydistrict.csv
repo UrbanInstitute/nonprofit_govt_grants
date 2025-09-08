@@ -1,6 +1,6 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-New Mexico,772,"$943,744,428",10.15%,-16.09%,70.47%
-1st Congressional district,301,"$329,867,767",11.46%,-11.34%,70.76%
-2nd Congressional district,147,"$215,756,702",10.56%,-21.42%,68.71%
-3rd Congressional district,324,"$398,119,959",8.48%,-17.47%,70.99%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+New Mexico,70.47%,772,"$943,744,428",10.15%,-16.09%
+Congressional District 1,70.76%,301,"$329,867,767",11.46%,-11.34%
+Congressional District 2,68.71%,147,"$215,756,702",10.56%,-21.42%
+Congressional District 3,70.99%,324,"$398,119,959",8.48%,-17.47%

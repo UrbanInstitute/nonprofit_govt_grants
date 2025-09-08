@@ -1,14 +1,14 @@
-Subsector,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-"Arts, culture, and humanities",155,"$109,336,570",7.40%,-22.94%,73.55%
-Education,212,"$431,916,066",9.40%,-8.47%,61.32%
-Environment and animals,77,"$294,622,837",9.82%,-6.54%,63.64%
-Health,111,"$267,540,870",10.52%,-3.01%,56.76%
-Hospitals,3,"$4,544,365",19.78%,-31.83%,100.00%
-Human services,315,"$989,140,755",8.74%,-23.71%,72.70%
-"International, foreign affairs",142,"$14,237,152,762",7.68%,-13.58%,67.61%
-"Public, societal benefit",241,"$510,468,702",12.57%,-1.75%,52.28%
-Religion-related,22,"$42,369,878",15.09%,6.87%,36.36%
-Mutual/membership benefit,2,"$1,669,607",25.74%,-30.49%,50.00%
-Universities,8,"$693,507,966",11.95%,-0.50%,50.00%
-Unclassified,304,"$1,106,137,720",10.60%,-5.70%,58.88%
-Total,"1,592","$18,688,408,098",9.72%,-9.87%,62.94%
+Subsector,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+"Arts, Culture, and Humanities",73.55%,155,"$109,336,570",7.40%,-22.94%
+Education (Excluding Universities),61.32%,212,"$431,916,066",9.40%,-8.47%
+Environment and Animals,63.64%,77,"$294,622,837",9.82%,-6.54%
+Health (Excluding Hospitals),56.76%,111,"$267,540,870",10.52%,-3.01%
+Hospitals,100.00%,3,"$4,544,365",19.78%,-31.83%
+Human Services,72.70%,315,"$989,140,755",8.74%,-23.71%
+"International, Foreign Affairs",67.61%,142,"$14,237,152,762",7.68%,-13.58%
+Mutual/Membership Benefit,50.00%,2,"$1,669,607",25.74%,-30.49%
+"Public, Societal Benefit",52.28%,241,"$510,468,702",12.57%,-1.75%
+Religion Related,36.36%,22,"$42,369,878",15.09%,6.87%
+Unclassified,58.88%,304,"$1,106,137,720",10.60%,-5.70%
+Universities,50.00%,8,"$693,507,966",11.95%,-0.50%
+Total,62.94%,"1,592","$18,688,408,098",9.72%,-9.87%

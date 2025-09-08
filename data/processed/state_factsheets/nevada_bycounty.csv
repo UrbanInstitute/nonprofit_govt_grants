@@ -1,18 +1,18 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Nevada,503,"$1,252,051,703",7.25%,-23.82%,73.76%
-Carson City,21,"$48,618,971",9.25%,-14.24%,71.43%
-Churchill County,8,"$10,294,157",10.13%,-21.23%,62.50%
-Clark County,265,"$740,588,241",6.58%,-22.99%,71.70%
-Douglas County,14,"$35,871,942",22.89%,-24.02%,71.43%
-Elko County,13,"$8,152,510",-1.42%,-48.97%,84.62%
-Esmeralda County,1,"$516,054",21.26%,7.27%,0.00%
-Humboldt County,3,"$901,858",-2.86%,-62.84%,100.00%
-Lincoln County,2,"$143,816",3.15%,-5.50%,50.00%
-Lyon County,5,"$7,036,488",12.74%,-4.16%,80.00%
-Mineral County,2,"$360,315",-0.44%,-54.68%,100.00%
-Nye County,5,"$5,418,508",15.59%,-46.20%,100.00%
-Pershing County,3,"$590,901",29.73%,26.56%,33.33%
-Storey County,6,"$18,066,978",17.19%,-40.47%,83.33%
-Washoe County,148,"$368,223,337",6.29%,-23.97%,76.35%
-White Pine County,7,"$7,267,627",25.36%,-13.92%,85.71%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Nevada,73.76%,503,"$1,252,051,703",7.25%,-23.82%
+Carson City,71.43%,21,"$48,618,971",9.25%,-14.24%
+Churchill County,62.50%,8,"$10,294,157",10.13%,-21.23%
+Clark County,71.70%,265,"$740,588,241",6.58%,-22.99%
+Douglas County,71.43%,14,"$35,871,942",22.89%,-24.02%
+Elko County,84.62%,13,"$8,152,510",-1.42%,-48.97%
+Esmeralda County,0.00%,1,"$516,054",21.26%,7.27%
+Humboldt County,100.00%,3,"$901,858",-2.86%,-62.84%
+Lincoln County,50.00%,2,"$143,816",3.15%,-5.50%
+Lyon County,80.00%,5,"$7,036,488",12.74%,-4.16%
+Mineral County,100.00%,2,"$360,315",-0.44%,-54.68%
+Nye County,100.00%,5,"$5,418,508",15.59%,-46.20%
+Pershing County,33.33%,3,"$590,901",29.73%,26.56%
+Storey County,83.33%,6,"$18,066,978",17.19%,-40.47%
+Washoe County,76.35%,148,"$368,223,337",6.29%,-23.97%
+White Pine County,85.71%,7,"$7,267,627",25.36%,-13.92%

@@ -1,5 +1,5 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Montana,667,"$680,827,015",9.74%,-10.06%,63.72%
-1st Congressional district,358,"$309,375,406",12.16%,-7.76%,60.06%
-2nd Congressional district,309,"$371,451,609",7.78%,-12.51%,67.96%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Montana,63.72%,667,"$680,827,015",9.74%,-10.06%
+Congressional District 1,60.06%,358,"$309,375,406",12.16%,-7.76%
+Congressional District 2,67.96%,309,"$371,451,609",7.78%,-12.51%

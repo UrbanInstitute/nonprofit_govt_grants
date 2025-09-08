@@ -44,7 +44,7 @@ set_urbn_defaults(style = "print")
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-## `r params$geography` - Financial Risk of Nonprofits Losing Government Grants
+## `r params$geography` - How Losing Government Grants Would Affect Nonprofit Finances
 
 <div class="over-table-spacing"></div>
 
@@ -130,30 +130,13 @@ national_bystate  |> mutate(State = factor(
     "West Virginia",
     "Wisconsin",
     "Wyoming",
-    "Other US Jurisdictions/Unmapped"
+    "Other/unmapped jurisdictions"
   )
 )) |>
   arrange(State) |>
-  dplyr::mutate(color = "") |>
   gt() |>
-  data_color(
-    columns = formatted_percentages,
-    target_columns = color,
-    method = "auto",
-    palette = c(
-      "#FFF2CF",
-      "#FCE39E",
-      "#FDD870",
-      "#FCCB41",
-      "#FDBF11",
-      "#E88E2D",
-      "#CA5800",
-      "#843215"
-    )
-  ) |>
   cols_hide(formatted_percentages) |>
-  cols_width(color ~ px(5)) |>
-  cols_label(color = "") |>
+  cols_width(State ~ px(200)) |>
   cols_align(align = "left", columns = c("State")) |>
   tab_style(
     style = cell_borders(
@@ -177,23 +160,17 @@ national_bysize |> mutate(Size = factor(
   Size,
   levels = c(
     "Less than $100K",
-    "$100K to $499K",
-    "$500K to $999K",
-    "$1M to $4.9M",
-    "$5M to $9.9M",
-    "$10M or more",
+    "Between $100K and $499K",
+    "Between $500K and $999K",
+    "Between $1M and $4.99M",
+    "Between $5M and $9.99M",
+    "Greater than $10M",
     "Total"
   )
 )) |>
   arrange(Size) |>
    dplyr::mutate(color = "") |>
   gt() |>
-  data_color(
-    columns = formatted_percentages,
-    target_columns = color,
-    method = "auto",
-    palette = c("#FFF2CF", "#FCE39E", "#FDD870", "#FCCB41", "#FDBF11", "#E88E2D", "#CA5800", "#843215")
-    ) |>
   cols_hide(formatted_percentages) |>
     cols_width(color ~ px(5)) |>
   cols_label(
@@ -231,16 +208,16 @@ national_bysize |> mutate(Size = factor(
 national_bysubsector |> mutate(Subsector = factor(
   Subsector,
   levels = c(
-        "Arts, culture, and humanities",
-        "Education",
-        "Environment and animals",
-        "Health",
+        "Arts, Culture, and Humanities",
+        "Education (Excluding Universities)",
+        "Environment and Animals",
+        "Health (Excluding Hospitals)",
         "Hospitals",
-        "Human services",
-        "International, foreign affairs",
-        "Public, societal benefit",
-        "Religion-related",
-        "Mutual/membership benefit",
+        "Human Services",
+        "International, Foreign Affairs",
+        "Public, Societal Benefit",
+        "Religion Related",
+        "Mutual/Membership Benefit",
         "Universities",
         "Unclassified",
         "Total"
@@ -249,21 +226,6 @@ national_bysubsector |> mutate(Subsector = factor(
   arrange(Subsector) |>
   dplyr::mutate(color = "") |>
   gt() |>
-  data_color(
-    columns = formatted_percentages,
-    target_columns = color,
-    method = "auto",
-    palette = c(
-      "#FFF2CF",
-      "#FCE39E",
-      "#FDD870",
-      "#FCCB41",
-      "#FDBF11",
-      "#E88E2D",
-      "#CA5800",
-      "#843215"
-    )
-  ) |>
   cols_hide(formatted_percentages) |>
   cols_width(color ~ px(5)) |>
   cols_label(color = "") |>
@@ -287,6 +249,6 @@ national_bysubsector |> mutate(Subsector = factor(
 
 ## {-}
 
-###### **Notes**: Operating surplus reported as the median.
+###### **Notes**: Includes 103,475 nonprofits that electronically filed an IRS Form 990 and reported receiving government grants in tax year 2021. Government grants are from governments at the local, state, federal, and territory levels, as well as foreign governments. A positive operating surplus indicates a nonprofit can cover all of its expenses and has funds available to reinvest in its mission. A negative surplus indicates they could not do so in that tax year. Operating surplus reported as the median.
 
 ###### **Source**: National Center for Charitable Statistics 2021 501(c)(3) Charities [E-file Data](https://nccs.urban.org/nccs/datasets/efile/).

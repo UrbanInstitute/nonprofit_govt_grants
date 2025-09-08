@@ -1,4 +1,4 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Vermont,721,"$610,463,403",8.62%,-10.12%,66.71%
-Congressional district (at large),721,"$610,463,403",8.62%,-10.12%,66.71%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Vermont,66.71%,721,"$610,463,403",8.62%,-10.12%
+Congressional District (at Large),66.71%,721,"$610,463,403",8.62%,-10.12%

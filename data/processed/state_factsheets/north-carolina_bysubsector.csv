@@ -1,14 +1,14 @@
-Subsector,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-"Arts, culture, and humanities",255,"$135,956,374",14.42%,-7.04%,64.31%
-Education,459,"$1,422,599,436",6.09%,-31.05%,74.73%
-Environment and animals,127,"$81,410,798",20.06%,3.59%,44.88%
-Health,269,"$443,921,216",7.26%,-16.43%,69.14%
-Hospitals,25,"$326,167,416",14.75%,1.40%,44.00%
-Human services,"1,181","$823,327,516",8.90%,-31.64%,73.41%
-"International, foreign affairs",18,"$31,224,101",8.48%,-11.53%,66.67%
-"Public, societal benefit",211,"$1,565,525,269",10.51%,-18.32%,66.35%
-Religion-related,83,"$79,980,571",15.81%,1.25%,48.19%
-Mutual/membership benefit,3,"$1,222,609",11.21%,-25.91%,100.00%
-Universities,39,"$1,304,591,970",10.80%,-4.27%,58.97%
-Unclassified,594,"$974,763,050",8.86%,-21.36%,71.38%
-Total,"3,264","$7,190,690,326",9.29%,-19.34%,69.55%
+Subsector,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+"Arts, Culture, and Humanities",64.31%,255,"$135,956,374",14.42%,-7.04%
+Education (Excluding Universities),74.73%,459,"$1,422,599,436",6.09%,-31.05%
+Environment and Animals,44.88%,127,"$81,410,798",20.06%,3.59%
+Health (Excluding Hospitals),69.14%,269,"$443,921,216",7.26%,-16.43%
+Hospitals,44.00%,25,"$326,167,416",14.75%,1.40%
+Human Services,73.41%,"1,181","$823,327,516",8.90%,-31.64%
+"International, Foreign Affairs",66.67%,18,"$31,224,101",8.48%,-11.53%
+Mutual/Membership Benefit,100.00%,3,"$1,222,609",11.21%,-25.91%
+"Public, Societal Benefit",66.35%,211,"$1,565,525,269",10.51%,-18.32%
+Religion Related,48.19%,83,"$79,980,571",15.81%,1.25%
+Unclassified,71.38%,594,"$974,763,050",8.86%,-21.36%
+Universities,58.97%,39,"$1,304,591,970",10.80%,-4.27%
+Total,69.55%,"3,264","$7,190,690,326",9.29%,-19.34%

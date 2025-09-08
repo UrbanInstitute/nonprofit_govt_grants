@@ -1,8 +1,8 @@
-Size,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-$100K to $499K,895,"$95,558,833",12.06%,-11.69%,65.14%
-$10M or more,551,"$7,954,485,008",4.68%,-7.69%,64.79%
-$1M to $4.9M,"1,034","$889,617,369",8.32%,-14.71%,67.99%
-$500K to $999K,561,"$155,916,336",8.59%,-15.40%,69.16%
-$5M to $9.9M,304,"$881,664,831",5.64%,-20.19%,74.34%
-Less than $100K,123,"$9,307,438",20.66%,-16.11%,62.60%
-Total,"3,468","$9,986,549,815",8.22%,-13.23%,67.30%
+Size,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+Between $100K and $499K,65.14%,895,"$95,558,833",12.06%,-11.69%
+Between $1M and $4.99M,67.99%,"1,034","$889,617,369",8.32%,-14.71%
+Between $500K and $999K,69.16%,561,"$155,916,336",8.59%,-15.40%
+Between $5M and $9.99M,74.34%,304,"$881,664,831",5.64%,-20.19%
+Greater than $10M,64.79%,551,"$7,954,485,008",4.68%,-7.69%
+Less than $100K,62.60%,123,"$9,307,438",20.66%,-16.11%
+Total,67.30%,"3,468","$9,986,549,815",8.22%,-13.23%

@@ -1,5 +1,5 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-New Hampshire,663,"$1,133,383,584",10.55%,-7.39%,62.90%
-1st Congressional district,319,"$495,923,217",10.76%,-7.71%,63.64%
-2nd Congressional district,344,"$637,460,367",10.39%,-7.00%,62.21%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+New Hampshire,62.90%,663,"$1,133,383,584",10.55%,-7.39%
+Congressional District 1,63.64%,319,"$495,923,217",10.76%,-7.71%
+Congressional District 2,62.21%,344,"$637,460,367",10.39%,-7.00%

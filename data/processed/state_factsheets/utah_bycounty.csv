@@ -1,26 +1,26 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Utah,718,"$1,665,786,876",9.73%,-23.91%,72.14%
-Box Elder County,6,"$6,366,119",-8.48%,-83.00%,100.00%
-Cache County,31,"$60,603,482",11.68%,-20.97%,74.19%
-Carbon County,8,"$20,921,831",8.09%,-67.28%,100.00%
-Davis County,38,"$140,229,596",9.82%,-16.52%,73.68%
-Duchesne County,2,"$2,080,847",5.87%,-43.81%,50.00%
-Emery County,4,"$2,616,748",24.85%,-37.78%,75.00%
-Garfield County,1,"$101,786",27.05%,10.72%,0.00%
-Grand County,18,"$9,590,593",18.01%,-10.63%,61.11%
-Iron County,8,"$11,912,615",4.08%,-82.15%,100.00%
-Juab County,1,"$3,175,040",10.96%,5.59%,0.00%
-Kane County,1,"$170,526",1.01%,-21.89%,100.00%
-Salt Lake County,358,"$902,347,176",9.68%,-22.27%,69.55%
-San Juan County,5,"$30,069,443",11.07%,-53.04%,100.00%
-Sanpete County,6,"$1,822,239",45.57%,26.61%,33.33%
-Sevier County,5,"$3,891,632",12.01%,-33.79%,80.00%
-Summit County,40,"$35,386,069",14.11%,-3.43%,55.00%
-Tooele County,4,"$21,128,522",15.11%,-47.46%,75.00%
-Uintah County,2,"$7,085,622",8.17%,-86.33%,100.00%
-Utah County,83,"$221,809,405",8.75%,-41.91%,78.31%
-Wasatch County,6,"$3,267,319",8.21%,-29.97%,100.00%
-Washington County,33,"$64,070,899",8.78%,-53.00%,75.76%
-Wayne County,3,"$3,520,279",46.69%,35.16%,33.33%
-Weber County,55,"$113,619,088",8.37%,-35.78%,81.82%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Utah,72.14%,718,"$1,665,786,876",9.73%,-23.91%
+Box Elder County,100.00%,6,"$6,366,119",-8.48%,-83.00%
+Cache County,74.19%,31,"$60,603,482",11.68%,-20.97%
+Carbon County,100.00%,8,"$20,921,831",8.09%,-67.28%
+Davis County,73.68%,38,"$140,229,596",9.82%,-16.52%
+Duchesne County,50.00%,2,"$2,080,847",5.87%,-43.81%
+Emery County,75.00%,4,"$2,616,748",24.85%,-37.78%
+Garfield County,0.00%,1,"$101,786",27.05%,10.72%
+Grand County,61.11%,18,"$9,590,593",18.01%,-10.63%
+Iron County,100.00%,8,"$11,912,615",4.08%,-82.15%
+Juab County,0.00%,1,"$3,175,040",10.96%,5.59%
+Kane County,100.00%,1,"$170,526",1.01%,-21.89%
+Salt Lake County,69.55%,358,"$902,347,176",9.68%,-22.27%
+San Juan County,100.00%,5,"$30,069,443",11.07%,-53.04%
+Sanpete County,33.33%,6,"$1,822,239",45.57%,26.61%
+Sevier County,80.00%,5,"$3,891,632",12.01%,-33.79%
+Summit County,55.00%,40,"$35,386,069",14.11%,-3.43%
+Tooele County,75.00%,4,"$21,128,522",15.11%,-47.46%
+Uintah County,100.00%,2,"$7,085,622",8.17%,-86.33%
+Utah County,78.31%,83,"$221,809,405",8.75%,-41.91%
+Wasatch County,100.00%,6,"$3,267,319",8.21%,-29.97%
+Washington County,75.76%,33,"$64,070,899",8.78%,-53.00%
+Wayne County,33.33%,3,"$3,520,279",46.69%,35.16%
+Weber County,81.82%,55,"$113,619,088",8.37%,-35.78%

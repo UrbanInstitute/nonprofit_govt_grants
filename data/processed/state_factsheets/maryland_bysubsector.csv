@@ -1,14 +1,14 @@
-Subsector,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-"Arts, culture, and humanities",227,"$112,805,894",9.84%,-18.95%,75.33%
-Education,233,"$248,396,639",8.32%,-7.70%,63.95%
-Environment and animals,108,"$121,578,975",12.85%,-1.68%,52.78%
-Health,251,"$970,861,783",6.48%,-12.32%,67.33%
-Hospitals,15,"$41,720,829",1.73%,-0.52%,53.33%
-Human services,816,"$926,775,977",8.34%,-23.21%,73.65%
-"International, foreign affairs",29,"$397,486,740",7.28%,-10.13%,68.97%
-"Public, societal benefit",221,"$616,962,728",10.61%,-22.62%,70.14%
-Religion-related,35,"$19,033,606",9.16%,-10.30%,71.43%
-Mutual/membership benefit,2,"$179,538",18.66%,-11.56%,50.00%
-Universities,19,"$1,389,272,584",8.41%,-2.59%,63.16%
-Unclassified,531,"$1,282,141,280",9.05%,-11.43%,65.91%
-Total,"2,487","$6,127,216,573",8.58%,-15.15%,69.08%
+Subsector,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+"Arts, Culture, and Humanities",75.33%,227,"$112,805,894",9.84%,-18.95%
+Education (Excluding Universities),63.95%,233,"$248,396,639",8.32%,-7.70%
+Environment and Animals,52.78%,108,"$121,578,975",12.85%,-1.68%
+Health (Excluding Hospitals),67.33%,251,"$970,861,783",6.48%,-12.32%
+Hospitals,53.33%,15,"$41,720,829",1.73%,-0.52%
+Human Services,73.65%,816,"$926,775,977",8.34%,-23.21%
+"International, Foreign Affairs",68.97%,29,"$397,486,740",7.28%,-10.13%
+Mutual/Membership Benefit,50.00%,2,"$179,538",18.66%,-11.56%
+"Public, Societal Benefit",70.14%,221,"$616,962,728",10.61%,-22.62%
+Religion Related,71.43%,35,"$19,033,606",9.16%,-10.30%
+Unclassified,65.91%,531,"$1,282,141,280",9.05%,-11.43%
+Universities,63.16%,19,"$1,389,272,584",8.41%,-2.59%
+Total,69.08%,"2,487","$6,127,216,573",8.58%,-15.15%

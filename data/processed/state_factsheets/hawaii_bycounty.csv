@@ -1,7 +1,7 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Hawaii,630,"$1,081,113,515",8.92%,-17.37%,70.00%
-Hawaii County,108,"$93,231,648",6.89%,-16.25%,73.15%
-Honolulu County,365,"$874,969,518",8.42%,-19.14%,71.78%
-Kauai County,40,"$13,473,937",20.31%,-0.86%,52.50%
-Maui County,117,"$99,438,412",11.26%,-18.60%,67.52%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Hawaii,70.00%,630,"$1,081,113,515",8.92%,-17.37%
+Hawaii County,73.15%,108,"$93,231,648",6.89%,-16.25%
+Honolulu County,71.78%,365,"$874,969,518",8.42%,-19.14%
+Kauai County,52.50%,40,"$13,473,937",20.31%,-0.86%
+Maui County,67.52%,117,"$99,438,412",11.26%,-18.60%

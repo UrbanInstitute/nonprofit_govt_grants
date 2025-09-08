@@ -1,14 +1,14 @@
-Subsector,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-"Arts, culture, and humanities","1,192","$1,019,505,109",13.35%,-9.26%,65.02%
-Education,"1,432","$8,303,105,620",7.60%,-23.13%,67.95%
-Environment and animals,559,"$733,078,321",15.87%,0.58%,49.02%
-Health,867,"$5,179,877,027",7.84%,-12.63%,68.28%
-Hospitals,54,"$427,780,254",3.76%,-2.28%,57.41%
-Human services,"3,022","$13,779,490,730",7.49%,-21.15%,68.99%
-"International, foreign affairs",159,"$281,019,935",11.42%,0.27%,49.69%
-"Public, societal benefit",860,"$1,611,192,720",11.60%,-10.00%,60.58%
-Religion-related,231,"$250,490,251",12.82%,-1.12%,51.08%
-Mutual/membership benefit,2,"$1,222,507",19.90%,-56.38%,100.00%
-Universities,104,"$2,388,946,839",6.57%,-0.03%,50.96%
-Unclassified,"2,031","$8,157,116,102",8.37%,-15.75%,69.03%
-Total,"10,513","$42,132,825,415",9.03%,-13.04%,65.68%
+Subsector,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+"Arts, Culture, and Humanities",65.02%,"1,192","$1,019,505,109",13.35%,-9.26%
+Education (Excluding Universities),67.95%,"1,432","$8,303,105,620",7.60%,-23.13%
+Environment and Animals,49.02%,559,"$733,078,321",15.87%,0.58%
+Health (Excluding Hospitals),68.28%,867,"$5,179,877,027",7.84%,-12.63%
+Hospitals,57.41%,54,"$427,780,254",3.76%,-2.28%
+Human Services,68.99%,"3,022","$13,779,490,730",7.49%,-21.15%
+"International, Foreign Affairs",49.69%,159,"$281,019,935",11.42%,0.27%
+Mutual/Membership Benefit,100.00%,2,"$1,222,507",19.90%,-56.38%
+"Public, Societal Benefit",60.58%,860,"$1,611,192,720",11.60%,-10.00%
+Religion Related,51.08%,231,"$250,490,251",12.82%,-1.12%
+Unclassified,69.03%,"2,031","$8,157,116,102",8.37%,-15.75%
+Universities,50.96%,104,"$2,388,946,839",6.57%,-0.03%
+Total,65.68%,"10,513","$42,132,825,415",9.03%,-13.04%

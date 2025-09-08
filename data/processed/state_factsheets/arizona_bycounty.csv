@@ -1,17 +1,17 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Arizona,"1,446","$3,710,995,891",8.70%,-12.71%,65.98%
-Apache County,12,"$18,172,896",11.26%,-21.44%,58.33%
-Cochise County,26,"$44,552,254",14.74%,-0.36%,50.00%
-Coconino County,64,"$113,828,497",11.76%,-12.58%,65.62%
-Gila County,12,"$8,907,691",19.00%,6.74%,41.67%
-Graham County,10,"$22,035,599",8.36%,-78.01%,90.00%
-La Paz County,4,"$1,385,422",4.46%,-61.05%,75.00%
-Maricopa County,847,"$2,462,139,658",8.26%,-10.59%,64.70%
-Mohave County,26,"$96,057,668",9.92%,-57.00%,84.62%
-Navajo County,20,"$30,957,201",8.03%,-43.16%,80.00%
-Pima County,267,"$691,213,787",8.22%,-14.05%,65.17%
-Pinal County,35,"$75,131,903",2.38%,-52.16%,82.86%
-Santa Cruz County,15,"$10,893,709",16.79%,-16.16%,53.33%
-Yavapai County,83,"$59,944,854",9.87%,-13.07%,69.88%
-Yuma County,25,"$75,774,752",8.94%,-18.38%,80.00%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Arizona,65.98%,"1,446","$3,710,995,891",8.70%,-12.71%
+Apache County,58.33%,12,"$18,172,896",11.26%,-21.44%
+Cochise County,50.00%,26,"$44,552,254",14.74%,-0.36%
+Coconino County,65.62%,64,"$113,828,497",11.76%,-12.58%
+Gila County,41.67%,12,"$8,907,691",19.00%,6.74%
+Graham County,90.00%,10,"$22,035,599",8.36%,-78.01%
+La Paz County,75.00%,4,"$1,385,422",4.46%,-61.05%
+Maricopa County,64.70%,847,"$2,462,139,658",8.26%,-10.59%
+Mohave County,84.62%,26,"$96,057,668",9.92%,-57.00%
+Navajo County,80.00%,20,"$30,957,201",8.03%,-43.16%
+Pima County,65.17%,267,"$691,213,787",8.22%,-14.05%
+Pinal County,82.86%,35,"$75,131,903",2.38%,-52.16%
+Santa Cruz County,53.33%,15,"$10,893,709",16.79%,-16.16%
+Yavapai County,69.88%,83,"$59,944,854",9.87%,-13.07%
+Yuma County,80.00%,25,"$75,774,752",8.94%,-18.38%

@@ -1,5 +1,5 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-West Virginia,769,"$1,067,242,685",9.05%,-27.48%,75.81%
-1st Congressional district,368,"$606,251,132",8.07%,-30.09%,76.36%
-2nd Congressional district,401,"$460,991,553",9.46%,-24.08%,75.31%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+West Virginia,75.81%,769,"$1,067,242,685",9.05%,-27.48%
+Congressional District 1,76.36%,368,"$606,251,132",8.07%,-30.09%
+Congressional District 2,75.31%,401,"$460,991,553",9.46%,-24.08%

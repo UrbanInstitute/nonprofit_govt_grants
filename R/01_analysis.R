@@ -28,7 +28,7 @@ source("R/summarise_data.R")
 source("R/retrieve_missing_counties.R")
 
 # Load in data
-full_sample_proc <- data.table::fread("data/processed/full_sample_processed.csv")
+full_sample_proc <- data.table::fread("data/processed/full_sample_processed_v1.0.csv")
 absent_counties <- data.table::fread("data/intermediate/absent_counties.csv")
 
 # (1) - National Summaries. 

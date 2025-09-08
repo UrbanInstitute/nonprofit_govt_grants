@@ -1,5 +1,5 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Hawaii,630,"$1,081,113,515",8.92%,-17.37%,70.00%
-1st Congressional district,298,"$790,093,863",8.27%,-19.57%,71.48%
-2nd Congressional district,332,"$291,019,652",9.73%,-15.63%,68.67%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Hawaii,70.00%,630,"$1,081,113,515",8.92%,-17.37%
+Congressional District 1,71.48%,298,"$790,093,863",8.27%,-19.57%
+Congressional District 2,68.67%,332,"$291,019,652",9.73%,-15.63%

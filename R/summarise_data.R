@@ -85,8 +85,8 @@ summarize_nonprofit_data <- function(data,
   rename_list <- list(
     "Number of 990 filers with government grants" = "num_990filers_govgrants",
     "Total government grants ($)" = "total_govt_grants",
-    "Operating surplus with government grants (%)" = "median_profit_margin",
-    "Operating surplus without government grants (%)" = "median_profit_margin_no_govt_grants",
+    "Size of operating surplus with government grants" = "median_profit_margin",
+    "Size of operating surplus without government grants" = "median_profit_margin_no_govt_grants",
     "Share of 990 filers with government grants at risk" = "proportion_at_risk"
   )
   
@@ -97,6 +97,11 @@ summarize_nonprofit_data <- function(data,
   
   summary <- summary |>
     dplyr::rename(!!!rename_list)
+  
+  # Reorder columns
+  summary <- summary |>
+    dplyr::relocate(`Share of 990 filers with government grants at risk`,
+                    .before = `Number of 990 filers with government grants`)
   
   return(summary)
 }

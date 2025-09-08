@@ -1,13 +1,13 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Washington,"2,741","$6,452,428,730",10.77%,-10.62%,66.00%
-1st Congressional district,149,"$113,372,062",8.37%,-10.06%,67.11%
-2nd Congressional district,336,"$376,584,433",11.69%,-9.28%,66.07%
-3rd Congressional district,152,"$312,460,157",12.93%,-10.55%,64.47%
-4th Congressional district,193,"$511,734,211",9.98%,-11.13%,66.84%
-5th Congressional district,263,"$407,551,627",9.07%,-15.94%,69.96%
-6th Congressional district,356,"$659,397,139",12.78%,-9.89%,60.67%
-7th Congressional district,618,"$2,054,332,608",10.19%,-9.86%,66.18%
-8th Congressional district,166,"$113,458,957",13.01%,-4.83%,61.45%
-9th Congressional district,348,"$1,625,052,047",8.54%,-11.31%,67.24%
-10th Congressional district,160,"$278,485,489",10.12%,-16.85%,71.88%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Washington,66.00%,"2,741","$6,452,428,730",10.77%,-10.62%
+Congressional District 1,67.11%,149,"$113,372,062",8.37%,-10.06%
+Congressional District 10,71.88%,160,"$278,485,489",10.12%,-16.85%
+Congressional District 2,66.07%,336,"$376,584,433",11.69%,-9.28%
+Congressional District 3,64.47%,152,"$312,460,157",12.93%,-10.55%
+Congressional District 4,66.84%,193,"$511,734,211",9.98%,-11.13%
+Congressional District 5,69.96%,263,"$407,551,627",9.07%,-15.94%
+Congressional District 6,60.67%,356,"$659,397,139",12.78%,-9.89%
+Congressional District 7,66.18%,618,"$2,054,332,608",10.19%,-9.86%
+Congressional District 8,61.45%,166,"$113,458,957",13.01%,-4.83%
+Congressional District 9,67.24%,348,"$1,625,052,047",8.54%,-11.31%

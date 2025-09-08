@@ -1,34 +1,34 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-New Mexico,772,"$943,744,428",10.15%,-16.09%,70.47%
-Bernalillo County,283,"$346,917,394",11.00%,-11.47%,71.02%
-Chaves County,10,"$5,323,393",6.77%,-49.67%,80.00%
-Cibola County,5,"$23,598,736",8.80%,-4.07%,60.00%
-Colfax County,4,"$722,348",7.53%,-38.16%,100.00%
-Curry County,9,"$2,635,056",4.93%,-12.67%,66.67%
-De Baca County,1,"$2,170,523",8.62%,-51.82%,100.00%
-Doña Ana County,53,"$71,467,566",10.56%,-21.42%,71.70%
-Eddy County,20,"$22,081,278",9.62%,-12.53%,75.00%
-Grant County,14,"$8,019,242",4.73%,-44.66%,85.71%
-Guadalupe County,1,"$602,405",-2.16%,-11.34%,100.00%
-Hidalgo County,1,"$7,780,850",15.82%,-15.03%,100.00%
-Lea County,21,"$12,805,810",8.15%,-27.18%,80.95%
-Lincoln County,10,"$2,057,788",23.41%,0.28%,50.00%
-Los Alamos County,10,"$2,745,715",21.41%,-2.83%,50.00%
-Luna County,9,"$3,950,441",2.79%,-41.07%,77.78%
-McKinley County,21,"$56,673,971",12.34%,-40.87%,85.71%
-Mora County,2,"$2,899,662",11.59%,-28.59%,100.00%
-Otero County,15,"$18,190,239",9.48%,-31.08%,66.67%
-Quay County,2,"$4,674,294",-6.49%,-64.18%,100.00%
-Rio Arriba County,17,"$31,207,765",10.97%,-20.58%,76.47%
-Roosevelt County,5,"$9,554,201",-0.92%,-64.56%,100.00%
-San Juan County,41,"$57,759,187",5.08%,-74.99%,75.61%
-San Miguel County,8,"$1,467,541",-1.55%,-51.02%,75.00%
-Sandoval County,32,"$9,362,716",13.38%,-9.00%,68.75%
-Santa Fe County,143,"$179,678,525",12.94%,-6.35%,60.84%
-Sierra County,5,"$5,472,921",2.68%,-68.81%,100.00%
-Socorro County,3,"$20,738,837",17.30%,4.09%,33.33%
-Taos County,16,"$17,893,635",6.47%,-20.04%,75.00%
-Torrance County,1,"$5,917",22.86%,21.66%,0.00%
-Union County,3,"$2,457,415",10.53%,-16.60%,66.67%
-Valencia County,7,"$12,829,057",23.30%,-65.39%,57.14%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+New Mexico,70.47%,772,"$943,744,428",10.15%,-16.09%
+Bernalillo County,71.02%,283,"$346,917,394",11.00%,-11.47%
+Chaves County,80.00%,10,"$5,323,393",6.77%,-49.67%
+Cibola County,60.00%,5,"$23,598,736",8.80%,-4.07%
+Colfax County,100.00%,4,"$722,348",7.53%,-38.16%
+Curry County,66.67%,9,"$2,635,056",4.93%,-12.67%
+De Baca County,100.00%,1,"$2,170,523",8.62%,-51.82%
+Doña Ana County,71.70%,53,"$71,467,566",10.56%,-21.42%
+Eddy County,75.00%,20,"$22,081,278",9.62%,-12.53%
+Grant County,85.71%,14,"$8,019,242",4.73%,-44.66%
+Guadalupe County,100.00%,1,"$602,405",-2.16%,-11.34%
+Hidalgo County,100.00%,1,"$7,780,850",15.82%,-15.03%
+Lea County,80.95%,21,"$12,805,810",8.15%,-27.18%
+Lincoln County,50.00%,10,"$2,057,788",23.41%,0.28%
+Los Alamos County,50.00%,10,"$2,745,715",21.41%,-2.83%
+Luna County,77.78%,9,"$3,950,441",2.79%,-41.07%
+McKinley County,85.71%,21,"$56,673,971",12.34%,-40.87%
+Mora County,100.00%,2,"$2,899,662",11.59%,-28.59%
+Otero County,66.67%,15,"$18,190,239",9.48%,-31.08%
+Quay County,100.00%,2,"$4,674,294",-6.49%,-64.18%
+Rio Arriba County,76.47%,17,"$31,207,765",10.97%,-20.58%
+Roosevelt County,100.00%,5,"$9,554,201",-0.92%,-64.56%
+San Juan County,75.61%,41,"$57,759,187",5.08%,-74.99%
+San Miguel County,75.00%,8,"$1,467,541",-1.55%,-51.02%
+Sandoval County,68.75%,32,"$9,362,716",13.38%,-9.00%
+Santa Fe County,60.84%,143,"$179,678,525",12.94%,-6.35%
+Sierra County,100.00%,5,"$5,472,921",2.68%,-68.81%
+Socorro County,33.33%,3,"$20,738,837",17.30%,4.09%
+Taos County,75.00%,16,"$17,893,635",6.47%,-20.04%
+Torrance County,0.00%,1,"$5,917",22.86%,21.66%
+Union County,66.67%,3,"$2,457,415",10.53%,-16.60%
+Valencia County,57.14%,7,"$12,829,057",23.30%,-65.39%

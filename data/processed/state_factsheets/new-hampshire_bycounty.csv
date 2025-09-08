@@ -1,13 +1,13 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-New Hampshire,663,"$1,133,383,584",10.55%,-7.39%,62.90%
-Belknap County,29,"$11,058,626",12.78%,0.76%,44.83%
-Carroll County,55,"$19,490,173",15.35%,-2.36%,56.36%
-Cheshire County,39,"$45,943,451",12.71%,-7.58%,69.23%
-Coos County,18,"$46,524,474",8.52%,-27.19%,66.67%
-Grafton County,75,"$298,933,446",10.48%,-1.82%,58.67%
-Hillsborough County,162,"$407,439,385",9.25%,-10.30%,66.67%
-Merrimack County,118,"$165,086,443",6.37%,-13.16%,67.80%
-Rockingham County,101,"$62,471,837",13.93%,-4.80%,59.41%
-Strafford County,48,"$67,164,393",14.72%,-6.79%,64.58%
-Sullivan County,18,"$9,271,356",14.71%,-1.91%,61.11%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+New Hampshire,62.90%,663,"$1,133,383,584",10.55%,-7.39%
+Belknap County,44.83%,29,"$11,058,626",12.78%,0.76%
+Carroll County,56.36%,55,"$19,490,173",15.35%,-2.36%
+Cheshire County,69.23%,39,"$45,943,451",12.71%,-7.58%
+Coos County,66.67%,18,"$46,524,474",8.52%,-27.19%
+Grafton County,58.67%,75,"$298,933,446",10.48%,-1.82%
+Hillsborough County,66.67%,162,"$407,439,385",9.25%,-10.30%
+Merrimack County,67.80%,118,"$165,086,443",6.37%,-13.16%
+Rockingham County,59.41%,101,"$62,471,837",13.93%,-4.80%
+Strafford County,64.58%,48,"$67,164,393",14.72%,-6.79%
+Sullivan County,61.11%,18,"$9,271,356",14.71%,-1.91%

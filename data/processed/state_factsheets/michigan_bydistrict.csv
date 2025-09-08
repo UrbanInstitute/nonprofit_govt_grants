@@ -1,16 +1,16 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Michigan,"2,473","$4,577,112,023",9.00%,-10.23%,65.79%
-1st Congressional district,298,"$374,163,528",12.02%,-5.70%,60.40%
-2nd Congressional district,134,"$149,137,817",7.39%,-9.28%,66.42%
-3rd Congressional district,269,"$630,419,073",9.94%,-6.27%,59.85%
-4th Congressional district,272,"$361,911,439",9.45%,-9.63%,64.71%
-5th Congressional district,136,"$151,074,124",10.90%,-8.56%,65.44%
-6th Congressional district,209,"$511,155,105",13.18%,-9.67%,62.20%
-7th Congressional district,223,"$476,840,968",7.58%,-14.28%,69.96%
-8th Congressional district,203,"$265,671,727",6.53%,-15.02%,70.44%
-9th Congressional district,88,"$63,415,248",9.85%,-5.90%,68.18%
-10th Congressional district,115,"$84,335,392",5.52%,-45.56%,80.87%
-11th Congressional district,142,"$253,245,286",7.37%,-8.25%,68.31%
-12th Congressional district,144,"$375,535,499",9.59%,-9.33%,61.81%
-13th Congressional district,240,"$880,206,817",7.53%,-19.69%,68.33%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Michigan,65.79%,"2,473","$4,577,112,023",9.00%,-10.23%
+Congressional District 1,60.40%,298,"$374,163,528",12.02%,-5.70%
+Congressional District 10,80.87%,115,"$84,335,392",5.52%,-45.56%
+Congressional District 11,68.31%,142,"$253,245,286",7.37%,-8.25%
+Congressional District 12,61.81%,144,"$375,535,499",9.59%,-9.33%
+Congressional District 13,68.33%,240,"$880,206,817",7.53%,-19.69%
+Congressional District 2,66.42%,134,"$149,137,817",7.39%,-9.28%
+Congressional District 3,59.85%,269,"$630,419,073",9.94%,-6.27%
+Congressional District 4,64.71%,272,"$361,911,439",9.45%,-9.63%
+Congressional District 5,65.44%,136,"$151,074,124",10.90%,-8.56%
+Congressional District 6,62.20%,209,"$511,155,105",13.18%,-9.67%
+Congressional District 7,69.96%,223,"$476,840,968",7.58%,-14.28%
+Congressional District 8,70.44%,203,"$265,671,727",6.53%,-15.02%
+Congressional District 9,68.18%,88,"$63,415,248",9.85%,-5.90%

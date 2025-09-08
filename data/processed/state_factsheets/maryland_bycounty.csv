@@ -1,27 +1,27 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Maryland,"2,487","$6,127,216,573",8.58%,-15.15%,69.08%
-Allegany County,42,"$35,699,469",4.54%,-28.46%,80.95%
-Anne Arundel County,195,"$378,913,128",9.15%,-6.92%,62.05%
-Baltimore County,236,"$315,002,407",6.58%,-16.82%,71.61%
-Baltimore city,447,"$2,675,479,642",5.05%,-18.22%,71.36%
-Calvert County,29,"$10,976,834",5.33%,-9.13%,72.41%
-Caroline County,20,"$19,743,417",25.10%,-5.40%,65.00%
-Carroll County,52,"$53,210,864",8.89%,-17.37%,75.00%
-Cecil County,34,"$16,255,429",10.76%,-26.68%,70.59%
-Charles County,53,"$54,923,788",2.50%,-33.94%,79.25%
-Dorchester County,20,"$15,203,105",30.19%,-20.09%,75.00%
-Frederick County,92,"$83,893,530",10.69%,-8.02%,63.04%
-Garrett County,20,"$22,034,238",10.99%,-38.46%,80.00%
-Harford County,81,"$63,325,603",11.98%,-19.20%,71.60%
-Howard County,126,"$201,961,017",8.81%,-11.13%,65.87%
-Kent County,21,"$12,975,413",23.90%,-5.38%,57.14%
-Montgomery County,513,"$1,591,683,195",9.52%,-10.24%,65.30%
-Prince George's County,196,"$215,589,708",12.43%,-20.96%,69.90%
-Queen Anne's County,26,"$10,759,984",5.36%,-19.30%,84.62%
-Somerset County,15,"$25,201,364",10.81%,-53.01%,93.33%
-St. Mary's County,40,"$19,648,030",12.92%,-8.64%,62.50%
-Talbot County,45,"$129,742,889",9.43%,-27.68%,66.67%
-Washington County,96,"$75,021,894",8.69%,-14.37%,66.67%
-Wicomico County,61,"$87,814,272",9.34%,-21.45%,75.41%
-Worcester County,27,"$12,157,353",7.87%,-43.80%,77.78%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Maryland,69.08%,"2,487","$6,127,216,573",8.58%,-15.15%
+Allegany County,80.95%,42,"$35,699,469",4.54%,-28.46%
+Anne Arundel County,62.05%,195,"$378,913,128",9.15%,-6.92%
+Baltimore County,71.61%,236,"$315,002,407",6.58%,-16.82%
+Baltimore city,71.36%,447,"$2,675,479,642",5.05%,-18.22%
+Calvert County,72.41%,29,"$10,976,834",5.33%,-9.13%
+Caroline County,65.00%,20,"$19,743,417",25.10%,-5.40%
+Carroll County,75.00%,52,"$53,210,864",8.89%,-17.37%
+Cecil County,70.59%,34,"$16,255,429",10.76%,-26.68%
+Charles County,79.25%,53,"$54,923,788",2.50%,-33.94%
+Dorchester County,75.00%,20,"$15,203,105",30.19%,-20.09%
+Frederick County,63.04%,92,"$83,893,530",10.69%,-8.02%
+Garrett County,80.00%,20,"$22,034,238",10.99%,-38.46%
+Harford County,71.60%,81,"$63,325,603",11.98%,-19.20%
+Howard County,65.87%,126,"$201,961,017",8.81%,-11.13%
+Kent County,57.14%,21,"$12,975,413",23.90%,-5.38%
+Montgomery County,65.30%,513,"$1,591,683,195",9.52%,-10.24%
+Prince George's County,69.90%,196,"$215,589,708",12.43%,-20.96%
+Queen Anne's County,84.62%,26,"$10,759,984",5.36%,-19.30%
+Somerset County,93.33%,15,"$25,201,364",10.81%,-53.01%
+St. Mary's County,62.50%,40,"$19,648,030",12.92%,-8.64%
+Talbot County,66.67%,45,"$129,742,889",9.43%,-27.68%
+Washington County,66.67%,96,"$75,021,894",8.69%,-14.37%
+Wicomico County,75.41%,61,"$87,814,272",9.34%,-21.45%
+Worcester County,77.78%,27,"$12,157,353",7.87%,-43.80%

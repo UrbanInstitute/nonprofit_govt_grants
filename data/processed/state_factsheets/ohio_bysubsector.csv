@@ -1,14 +1,14 @@
-Subsector,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-"Arts, culture, and humanities",341,"$263,650,974",15.23%,-7.87%,63.05%
-Education,458,"$1,048,218,003",8.48%,-39.09%,78.60%
-Environment and animals,126,"$351,476,653",18.17%,4.50%,48.41%
-Health,365,"$1,032,476,665",7.10%,-17.26%,75.07%
-Hospitals,41,"$580,246,423",6.17%,0.22%,48.78%
-Human services,"1,332","$1,621,546,800",5.15%,-25.29%,74.92%
-"International, foreign affairs",16,"$2,337,272",13.62%,-3.59%,50.00%
-"Public, societal benefit",341,"$619,148,951",10.24%,-19.03%,72.14%
-Religion-related,114,"$70,150,922",4.99%,-19.66%,70.18%
-Mutual/membership benefit,1,"$4,048,815",16.63%,-82.76%,100.00%
-Universities,53,"$637,060,967",4.63%,-3.97%,66.04%
-Unclassified,837,"$1,769,148,054",6.61%,-16.21%,69.06%
-Total,"4,025","$7,999,510,499",7.17%,-17.50%,71.45%
+Subsector,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+"Arts, Culture, and Humanities",63.05%,341,"$263,650,974",15.23%,-7.87%
+Education (Excluding Universities),78.60%,458,"$1,048,218,003",8.48%,-39.09%
+Environment and Animals,48.41%,126,"$351,476,653",18.17%,4.50%
+Health (Excluding Hospitals),75.07%,365,"$1,032,476,665",7.10%,-17.26%
+Hospitals,48.78%,41,"$580,246,423",6.17%,0.22%
+Human Services,74.92%,"1,332","$1,621,546,800",5.15%,-25.29%
+"International, Foreign Affairs",50.00%,16,"$2,337,272",13.62%,-3.59%
+Mutual/Membership Benefit,100.00%,1,"$4,048,815",16.63%,-82.76%
+"Public, Societal Benefit",72.14%,341,"$619,148,951",10.24%,-19.03%
+Religion Related,70.18%,114,"$70,150,922",4.99%,-19.66%
+Unclassified,69.06%,837,"$1,769,148,054",6.61%,-16.21%
+Universities,66.04%,53,"$637,060,967",4.63%,-3.97%
+Total,71.45%,"4,025","$7,999,510,499",7.17%,-17.50%

@@ -1,8 +1,8 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Rhode Island,547,"$1,009,094,930",9.60%,-11.45%,66.00%
-Bristol County,23,"$21,640,086",11.00%,0.89%,43.48%
-Kent County,54,"$85,404,142",5.56%,-28.77%,81.48%
-Newport County,59,"$63,188,348",15.77%,1.34%,47.46%
-Providence County,343,"$807,901,665",8.52%,-13.70%,69.39%
-Washington County,68,"$30,960,689",14.38%,-5.99%,60.29%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Rhode Island,66.00%,547,"$1,009,094,930",9.60%,-11.45%
+Bristol County,43.48%,23,"$21,640,086",11.00%,0.89%
+Kent County,81.48%,54,"$85,404,142",5.56%,-28.77%
+Newport County,47.46%,59,"$63,188,348",15.77%,1.34%
+Providence County,69.39%,343,"$807,901,665",8.52%,-13.70%
+Washington County,60.29%,68,"$30,960,689",14.38%,-5.99%

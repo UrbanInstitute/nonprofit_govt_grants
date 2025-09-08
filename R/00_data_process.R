@@ -702,7 +702,7 @@ full_sample_proc <- full_sample_int |>
   dplyr::mutate(
     CENSUS_STATE_NAME = dplyr::case_when(
       CENSUS_STATE_ABBR %in% states ~ usdata::abbr2state(CENSUS_STATE_ABBR),
-      .default = "Other US Jurisdictions/Unmapped"
+      .default = "Other/unmapped jurisdictions"
     ),
     CONGRESS_DISTRICT_NAME = dplyr::case_when(
       NAMELSAD == "Congressional District" ~ "Unmapped",
@@ -908,4 +908,4 @@ sum(table(full_sample_proc$CONGRESS_DISTRICT_NAME)) == numrec_w_gvgrnt
 sum(full_sample_proc$AT_RISK_NUM) == sum(efile_sample$at_risk)
 sum(full_sample_proc$GOVERNMENT_GRANT_DOLLAR_AMOUNT) == total_gvgrnt
 
-data.table::fwrite(full_sample_proc, "data/processed/full_sample_processed.csv")
+data.table::fwrite(full_sample_proc, "data/processed/full_sample_processed_v1.1.csv")

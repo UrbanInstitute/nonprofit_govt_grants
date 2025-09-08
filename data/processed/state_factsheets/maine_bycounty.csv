@@ -1,19 +1,19 @@
-Geography,Number of 990 filers with government grants,Total government grants ($),Operating surplus with government grants (%),Operating surplus without government grants (%),Share of 990 filers with government grants at risk
-United States,"103,475","$267,700,640,005",9.05%,-12.83%,67.35%
-Maine,875,"$1,125,149,145",11.09%,-7.21%,60.34%
-Androscoggin County,63,"$173,273,798",7.11%,-19.67%,80.95%
-Aroostook County,29,"$82,763,262",4.94%,-18.23%,89.66%
-Cumberland County,260,"$305,124,356",11.68%,-5.43%,59.62%
-Franklin County,17,"$15,413,036",18.51%,-1.95%,52.94%
-Hancock County,75,"$132,161,229",17.84%,4.66%,45.33%
-Kennebec County,77,"$124,671,618",7.59%,-15.07%,70.13%
-Knox County,46,"$11,495,941",14.24%,0.92%,45.65%
-Lincoln County,40,"$19,331,801",16.53%,2.29%,50.00%
-Oxford County,30,"$44,984,515",13.11%,-4.34%,53.33%
-Penobscot County,67,"$93,595,589",4.83%,-15.36%,73.13%
-Piscataquis County,9,"$1,557,999",16.90%,-1.23%,55.56%
-Sagadahoc County,16,"$5,676,081",18.04%,11.25%,43.75%
-Somerset County,20,"$11,664,387",9.90%,-0.75%,50.00%
-Waldo County,23,"$12,395,735",17.51%,-9.17%,56.52%
-Washington County,33,"$24,262,685",14.90%,-8.52%,60.61%
-York County,70,"$66,777,113",15.70%,-1.81%,54.29%
+Geography,Share of 990 filers with government grants at risk,Number of 990 filers with government grants,Total government grants ($),Size of operating surplus with government grants,Size of operating surplus without government grants
+United States,67.35%,"103,475","$267,700,640,005",9.05%,-12.83%
+Maine,60.34%,875,"$1,125,149,145",11.09%,-7.21%
+Androscoggin County,80.95%,63,"$173,273,798",7.11%,-19.67%
+Aroostook County,89.66%,29,"$82,763,262",4.94%,-18.23%
+Cumberland County,59.62%,260,"$305,124,356",11.68%,-5.43%
+Franklin County,52.94%,17,"$15,413,036",18.51%,-1.95%
+Hancock County,45.33%,75,"$132,161,229",17.84%,4.66%
+Kennebec County,70.13%,77,"$124,671,618",7.59%,-15.07%
+Knox County,45.65%,46,"$11,495,941",14.24%,0.92%
+Lincoln County,50.00%,40,"$19,331,801",16.53%,2.29%
+Oxford County,53.33%,30,"$44,984,515",13.11%,-4.34%
+Penobscot County,73.13%,67,"$93,595,589",4.83%,-15.36%
+Piscataquis County,55.56%,9,"$1,557,999",16.90%,-1.23%
+Sagadahoc County,43.75%,16,"$5,676,081",18.04%,11.25%
+Somerset County,50.00%,20,"$11,664,387",9.90%,-0.75%
+Waldo County,56.52%,23,"$12,395,735",17.51%,-9.17%
+Washington County,60.61%,33,"$24,262,685",14.90%,-8.52%
+York County,54.29%,70,"$66,777,113",15.70%,-1.81%
