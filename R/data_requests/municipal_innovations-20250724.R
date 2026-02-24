@@ -1,4 +1,9 @@
 #------------------------------------------------------------------------------
+# Note: This is a frozen, date-stamped data request script for reproducibility.
+# The canonical summarization function is summarize_nonprofit_data() in
+# R/summarize_data.R. Future data requests should use that function where
+# possible.
+#------------------------------------------------------------------------------
 # File: municipal_innovations-20250724.R
 # Programmer: Thiyaghessan [tpoongundranar@urban.org]
 # Date Created: 2025-07-24

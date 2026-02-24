@@ -1,4 +1,4 @@
-#' Process Missing Counties Data
+#' Retrieve Missing Counties Data
 #' 
 #' This function processes a dataset of absent counties, converting state abbreviations
 #' to full names and initializing default values for various metrics. It filters the
@@ -28,10 +28,10 @@
 #' @examples
 #' \dontrun{
 #' # Process data for California
-#' ca_counties <- process_missing_counties(absent_counties_data, "California")
-#' 
-#' # Process data for New York
-#' ny_counties <- process_missing_counties(absent_counties_data, "New York")
+#' ca_counties <- retrieve_missing_counties(absent_counties_data, "California")
+#'
+#' # Retrieve data for New York
+#' ny_counties <- retrieve_missing_counties(absent_counties_data, "New York")
 #' }
 #'
 #' @export
