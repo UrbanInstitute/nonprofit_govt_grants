@@ -1,6 +1,6 @@
 ---
 title: ""
-author: 
+author:
 subtitle: ''
 output:
   html_document:
@@ -12,14 +12,14 @@ params:
 ---
 
 ```{=html}
-<!-- this calls Lato font --> 
+<!-- this calls Lato font -->
 <style>
 @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
 </style>
 ```
 
 ```{=html}
-<!-- this calls crucial iframe resizing script --> 
+<!-- this calls crucial iframe resizing script -->
 <script type="text/javascript" src="https://apps.urban.org/features/dataviz-libs/pym-js/v1.3.2/pym.nprapps.org_pym.v1.min.js">
 </script>
 
@@ -49,15 +49,18 @@ knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 <div class="over-table-spacing"></div>
 
 ```{r r-data, echo=FALSE}
+setwd(rprojroot::find_rstudio_root_file())
+source("R/config.R")
 source("R/format_percentages.R")
+source("R/format_gt_table.R")
 
-national_bystate <- data.table::fread("data/processed/national_bystate.csv")
-national_bysize <- data.table::fread("data/processed/national_bysize.csv")
-national_bysubsector <- data.table::fread("data/processed/national_bysubsector.csv")
+national_bystate <- data.table::fread(file.path(DIR_PROCESSED, "national_bystate.csv"))
+national_bysize <- data.table::fread(file.path(DIR_PROCESSED, "national_bysize.csv"))
+national_bysubsector <- data.table::fread(file.path(DIR_PROCESSED, "national_bysubsector.csv"))
 ```
 
 ```{r formatting, echo=FALSE}
-national_bystate <- format_percentages(national_bystate, 
+national_bystate <- format_percentages(national_bystate,
                              "Share of 990 filers with government grants at risk",
                              "formatted_percentages")
 national_bysize <- format_percentages(national_bysize,
@@ -74,177 +77,35 @@ In the United States, nonprofits received a total of $267B in government grants.
 
 ### State
 ```{r}
-national_bystate  |> mutate(State = factor(
-  State,
-  levels = c(
-    "United States",
-    "Alabama",
-    "Alaska",
-    "Arizona",
-    "Arkansas",
-    "California",
-    "Colorado",
-    "Connecticut",
-    "Delaware",
-    "District of Columbia",
-    "Florida",
-    "Georgia",
-    "Hawaii",
-    "Idaho",
-    "Illinois",
-    "Indiana",
-    "Iowa",
-    "Kansas",
-    "Kentucky",
-    "Louisiana",
-    "Maine",
-    "Maryland",
-    "Massachusetts",
-    "Michigan",
-    "Minnesota",
-    "Mississippi",
-    "Missouri",
-    "Montana",
-    "Nebraska",
-    "Nevada",
-    "New Hampshire",
-    "New Jersey",
-    "New Mexico",
-    "New York",
-    "North Carolina",
-    "North Dakota",
-    "Ohio",
-    "Oklahoma",
-    "Oregon",
-    "Other U.S. Territories",
-    "Pennsylvania",
-    "Rhode Island",
-    "South Carolina",
-    "South Dakota",
-    "Tennessee",
-    "Texas",
-    "Utah",
-    "Vermont",
-    "Virginia",
-    "Washington",
-    "West Virginia",
-    "Wisconsin",
-    "Wyoming",
-    "Other/unmapped jurisdictions"
-  )
-)) |>
+national_bystate |>
+  mutate(State = factor(State, levels = STATE_NAME_LEVELS)) |>
   arrange(State) |>
   gt() |>
-  cols_hide(formatted_percentages) |>
-  cols_width(State ~ px(200)) |>
-  cols_align(align = "left", columns = c("State")) |>
-  tab_style(
-    style = cell_borders(
-      sides = "right",
-      color = "#d2d2d2",
-      weight = px(1)
-    ),
-    locations = cells_body(columns = 1)
-  ) |>
-  tab_style(
-    style = cell_text(weight = "bold"),
-    locations = list(cells_body(columns = 1), cells_column_labels())
-  ) |>
-  tab_options(table.border.top.style = "hidden",
-              data_row.padding = px(10))
+  style_factsheet_table()
 ```
 
 ### Size
 ```{r}
-national_bysize |> mutate(Size = factor(
-  Size,
-  levels = c(
-    "Less than $100K",
-    "Between $100K and $499K",
-    "Between $500K and $999K",
-    "Between $1M and $4.99M",
-    "Between $5M and $9.99M",
-    "Greater than $10M",
-    "Total"
-  )
-)) |>
+national_bysize |>
+  mutate(Size = factor(Size, levels = c(EXPENSE_LABELS, "Total"))) |>
   arrange(Size) |>
-   dplyr::mutate(color = "") |>
+  dplyr::mutate(color = "") |>
   gt() |>
-  cols_hide(formatted_percentages) |>
-    cols_width(color ~ px(5)) |>
-  cols_label(
-    color = ""  # This sets the column name to an empty string
-) |>
-  cols_align(
-    align = "left",
-    columns = c("Size")
-  ) |>
-  tab_style(
-    style = cell_borders(
-      sides = "right",
-      color = "#d2d2d2",
-      weight = px(1)
-    ),
-    locations = cells_body(
-      columns = 1
-    )
-  ) |>
-  tab_style(
-    style = cell_text(weight = "bold"),
-    locations = list(
-      cells_body(columns = 1),  # First column
-      cells_column_labels()      # All headers
-    )
-  ) |>
-  tab_options(
-    table.border.top.style = "hidden",
-    data_row.padding = px(10)
-  )
+  cols_width(color ~ px(5)) |>
+  cols_label(color = "") |>
+  style_factsheet_table()
 ```
 
 ### Subsector
 ```{r}
-national_bysubsector |> mutate(Subsector = factor(
-  Subsector,
-  levels = c(
-        "Arts, Culture, and Humanities",
-        "Education (Excluding Universities)",
-        "Environment and Animals",
-        "Health (Excluding Hospitals)",
-        "Hospitals",
-        "Human Services",
-        "International, Foreign Affairs",
-        "Public, Societal Benefit",
-        "Religion Related",
-        "Mutual/Membership Benefit",
-        "Universities",
-        "Unclassified",
-        "Total"
-      )
-)) |>
+national_bysubsector |>
+  mutate(Subsector = factor(Subsector, levels = c(SUBSECTOR_LEVELS, "Total"))) |>
   arrange(Subsector) |>
   dplyr::mutate(color = "") |>
   gt() |>
-  cols_hide(formatted_percentages) |>
   cols_width(color ~ px(5)) |>
   cols_label(color = "") |>
-  cols_align(align = "left", columns = c("Subsector")) |>
-  tab_style(
-    style = cell_borders(
-      sides = "right",
-      color = "#d2d2d2",
-      weight = px(1)
-    ),
-    locations = cells_body(columns = 1)
-  ) |>
-  tab_style(
-    style = cell_text(weight = "bold"),
-    locations = list(cells_body(columns = 1), cells_column_labels())
-  ) |>
-  tab_options(table.border.top.style = "hidden",
-              data_row.padding = px(10))
-                
+  style_factsheet_table()
 ```
 
 ## {-}
