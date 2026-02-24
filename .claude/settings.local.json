@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tail:*)",
+      "Bash(grep:*)",
+      "Bash(head:*)",
+      "Bash(echo ✓ $file EXISTS:*)",
+      "Bash(ls:*)",
+      "Bash(git status:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
