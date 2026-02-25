@@ -247,12 +247,26 @@ analyze_year <- function(year) {
                                            qa = TRUE) |>
     dplyr::bind_rows(dplyr::mutate(qa_national, Subsector = "Total"))
 
+  # Load notable government grant values (produced by 01_data_process.R)
+  notable_grants_path <- notable_grants_file(year)
+  if (file.exists(notable_grants_path)) {
+    qa_notable_grants <- data.table::fread(notable_grants_path)
+  } else {
+    qa_notable_grants <- data.frame(
+      ein = character(0), tax_year = integer(0),
+      nonprofit_name = character(0), total_revenue = numeric(0),
+      total_expenses = numeric(0), government_grant_dollars = numeric(0),
+      notes = character(0)
+    )
+  }
+
   writexl::write_xlsx(list(
     "State" = qa_state,
     "County" = qa_county,
     "Congressional District" = qa_district,
     "Size" = qa_size,
-    "Subsector" = qa_subsector
+    "Subsector" = qa_subsector,
+    "Notable government grant values" = qa_notable_grants
   ), path = file.path(out_intermediate, "qa.xlsx"))
 
   cat("\n== Year", year, "analysis complete ==\n")

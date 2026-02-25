@@ -28,7 +28,8 @@ render_factsheet <- function(template, output_dir, output_file, params) {
     input = template,
     output_dir = output_dir,
     output_file = output_file,
-    params = params
+    params = params,
+    envir = new.env(parent = globalenv())
   )
 }
 

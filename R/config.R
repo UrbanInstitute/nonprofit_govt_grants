@@ -54,6 +54,9 @@ intermediate_full_sample_file <- function(year) {
 intermediate_absent_counties_file <- function(year) {
   file.path(dir_intermediate_year(year), "absent_counties.csv")
 }
+notable_grants_file <- function(year) {
+  file.path(dir_intermediate_year(year), "notable_govt_grants.csv")
+}
 
 # ==============================================================================
 # (3) DATA SOURCE URLs (formerly in R/data.R)

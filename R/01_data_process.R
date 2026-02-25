@@ -203,7 +203,11 @@ create_efile_sample <- function(efile_hd, efile_p08, efile_p01, efile_p09,
   cat("  Records with govt grants:", numrec_w_gvgrnt, "\n")
   cat("  Total govt grants: $", format(total_gvgrnt, big.mark = ","), "\n")
 
-  # (3.2) Merge Part VIII with Parts IX and I
+  # (3.2) Deduplicate P09 and P01 on join key before merging
+  efile_p09 <- dplyr::distinct(efile_p09, EIN2, OBJECTID, .keep_all = TRUE)
+  efile_p01 <- dplyr::distinct(efile_p01, EIN2, OBJECTID, .keep_all = TRUE)
+
+  # (3.3) Merge Part VIII with Parts IX and I
   efile_sample <- efile_p08_filtered |>
     dplyr::select(!RETURN_TIME_STAMP) |>
     dplyr::filter(!is.na(F9_08_REV_CONTR_GOVT_GRANT),
@@ -211,14 +215,37 @@ create_efile_sample <- function(efile_hd, efile_p08, efile_p01, efile_p09,
     tidylog::left_join(efile_p09, by = c("EIN2", "OBJECTID")) |>
     tidylog::left_join(efile_p01, by = c("EIN2", "OBJECTID"))
 
-  cat("  QC: nrow(efile_sample) == numrec_w_gvgrnt:",
-      nrow(efile_sample) == numrec_w_gvgrnt, "\n")
-  cat("  QC: sum(govt_grant) == total_gvgrnt:",
-      sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT) == total_gvgrnt, "\n")
+  if (nrow(efile_sample) != numrec_w_gvgrnt) {
+    stop("Join created duplicates: expected ", numrec_w_gvgrnt,
+         " rows but got ", nrow(efile_sample))
+  }
+  if (sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT) != total_gvgrnt) {
+    stop("Join altered grant totals: expected ", total_gvgrnt,
+         " but got ", sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT))
+  }
 
-  # Update counts to reflect actual post-join state
-  numrec_w_gvgrnt <- nrow(efile_sample)
-  total_gvgrnt <- sum(efile_sample$F9_08_REV_CONTR_GOVT_GRANT)
+  # Capture records with negative government grant values for QA
+  org_names <- efile_hd |>
+    dplyr::select(EIN2, F9_00_ORG_NAME_L1) |>
+    dplyr::distinct(EIN2, .keep_all = TRUE)
+
+  notable_grants <- efile_sample |>
+    dplyr::filter(F9_08_REV_CONTR_GOVT_GRANT < 0) |>
+    dplyr::left_join(org_names, by = "EIN2") |>
+    dplyr::transmute(
+      ein                      = EIN2,
+      tax_year                 = year,
+      nonprofit_name           = F9_00_ORG_NAME_L1,
+      total_revenue            = F9_01_REV_TOT_CY,
+      total_expenses           = F9_01_EXP_TOT_CY,
+      government_grant_dollars = F9_08_REV_CONTR_GOVT_GRANT,
+      notes                    = "Negative government grant value"
+    )
+
+  if (nrow(notable_grants) > 0) {
+    cat("  NOTE:", nrow(notable_grants),
+        "records have negative government grant values\n")
+  }
 
   efile_sample <- efile_sample |>
     dplyr::select(
@@ -238,7 +265,8 @@ create_efile_sample <- function(efile_hd, efile_p08, efile_p01, efile_p09,
   list(
     efile_sample    = efile_sample,
     numrec_w_gvgrnt = numrec_w_gvgrnt,
-    total_gvgrnt    = total_gvgrnt
+    total_gvgrnt    = total_gvgrnt,
+    notable_grants  = notable_grants
   )
 }
 
@@ -281,8 +309,9 @@ wrangle_bmf <- function(unified_bmf, cd_transformed) {
   bmf_sample <- sf::st_join(bmf_sample, cd_transformed, join = sf::st_intersects)
 
   ## Save intermediate dataset (convert geometry to WKT so fwrite can handle it)
-  bmf_to_save <- data.table::as.data.table(bmf_sample)
-  bmf_to_save <- bmf_to_save[, geometry := sf::st_as_text(geometry)]
+  bmf_to_save <- data.table::as.data.table(bmf_sample)[
+    , geometry := sf::st_as_text(geometry, digits = 15)
+  ]
   data.table::fwrite(bmf_to_save, INTERMEDIATE_BMF_SAMPLE_FILE)
 
   bmf_sample
@@ -559,7 +588,9 @@ process_year <- function(year, ref_data = NULL) {
   } else {
     cat("== Loading pre-wrangled BMF ==\n")
     bmf_sample <- data.table::fread(INTERMEDIATE_BMF_SAMPLE_FILE) |>
-      sf::st_as_sf(wkt = "geometry", crs = 4326)
+      as.data.frame() |>
+      dplyr::mutate(geometry = sf::st_as_sfc(geometry, crs = 4326)) |>
+      sf::st_as_sf()
   }
 
   # Load efile data for this year
@@ -574,6 +605,9 @@ process_year <- function(year, ref_data = NULL) {
     foreign_ein = ref_data$foreign_ein,
     year        = year
   )
+
+  # Save notable grants for QA sheet
+  data.table::fwrite(sample_result$notable_grants, notable_grants_file(year))
 
   # Free efile raw data
   rm(efile_data)

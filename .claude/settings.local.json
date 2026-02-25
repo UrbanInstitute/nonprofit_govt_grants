@@ -8,7 +8,8 @@
       "Bash(ls:*)",
       "Bash(git status:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(grep:*. can you add it to .claude permissions?)"
     ]
   }
 }
