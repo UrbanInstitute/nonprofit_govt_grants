@@ -29,17 +29,64 @@ INTERMEDIATE_BMF_SAMPLE_FILE  <- paste0(DIR_INTERMEDIATE, "/bmf_sample.csv")
 INTERMEDIATE_ABSENT_COUNTIES_FILE <- paste0(DIR_INTERMEDIATE, "/absent_counties.csv")
 
 # ==============================================================================
+# (2a) MULTI-YEAR SUPPORT
+# ==============================================================================
+
+SUPPORTED_YEARS <- c(2021L, 2022L, 2023L)
+MIN_EXPECTED_ROWS <- 50000L
+
+# Year-aware directory functions
+dir_raw_year <- function(year) file.path(DIR_RAW, year)
+dir_intermediate_year <- function(year) file.path(DIR_INTERMEDIATE, year)
+dir_processed_year <- function(year) file.path(DIR_PROCESSED, year)
+dir_state_factsheets_year <- function(year) file.path(DIR_PROCESSED, year, "state_factsheets")
+dir_state_overviews_year <- function(year) file.path(DIR_PROCESSED, year, "state_overviews")
+dir_docs_year <- function(year) file.path(DIR_DOCS, year)
+
+# Year-aware file functions
+processed_data_file <- function(year) {
+  file.path(dir_processed_year(year),
+            paste0("full_sample_processed_", PROCESSED_DATA_VERSION, ".csv"))
+}
+intermediate_full_sample_file <- function(year) {
+  file.path(dir_intermediate_year(year), "full_sample.csv")
+}
+intermediate_absent_counties_file <- function(year) {
+  file.path(dir_intermediate_year(year), "absent_counties.csv")
+}
+
+# ==============================================================================
 # (3) DATA SOURCE URLs (formerly in R/data.R)
 # ==============================================================================
 
+# Legacy hardcoded URLs for backward compatibility (TY2021 only)
 EFILE_URLS <- list(
   "efile_hd_2021_0225.csv" = "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P00-T00-HEADER-2021.csv",
   "efile_p01_2021_0225.csv" = "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P01-T00-SUMMARY-2021.csv",
-  "efile_p05_2021_0225.csv" = "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_0/F9-P05-T00-OTHER-IRS-FILING-2021.CSV",
   "efile_p08_2021_0225.csv" = "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P08-T00-REVENUE-2021.csv",
-  "efile_p09_2021_0225.csv" = "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P09-T00-EXPENSES-2021.csv",
-  "efile_p10_2021_0225.csv" = "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P10-T00-BALANCE-SHEET-2021.csv"
+  "efile_p09_2021_0225.csv" = "https://nccs-efile.s3.us-east-1.amazonaws.com/public/v2025/F9-P09-T00-EXPENSES-2021.csv"
 )
+
+# Multi-year efile URL builder (v2_1 base)
+EFILE_BASE_URL <- "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1"
+
+EFILE_PARTS <- list(
+  list(part = "P00", name = "HEADER",   local = "efile_p00.csv"),
+  list(part = "P01", name = "SUMMARY",  local = "efile_p01.csv"),
+  list(part = "P08", name = "REVENUE",  local = "efile_p08.csv"),
+  list(part = "P09", name = "EXPENSES", local = "efile_p09.csv")
+)
+
+#' Build efile download URLs for a given tax year
+#' @param year Integer tax year (e.g. 2021L)
+#' @return Named list: local filename -> URL
+build_efile_urls <- function(year) {
+  urls <- lapply(EFILE_PARTS, function(p) {
+    url <- paste0(EFILE_BASE_URL, "/F9-", p$part, "-T00-", p$name, "-", year, ".CSV")
+    setNames(url, p$local)
+  })
+  unlist(urls, recursive = FALSE)
+}
 
 BMF_URLS <- list(
   "unified_bmf.csv" = "https://nccsdata.s3.amazonaws.com/harmonized/bmf/unified/BMF_UNIFIED_V1.1.csv"
@@ -108,20 +155,10 @@ EFILE_COLS <- list(
   numeric = c(
     "F9_01_ACT_GVRN_EMPL_TOT",
     "F9_01_ACT_GVRN_VOL_TOT",
-    "F9_05_NUM_EMPL",
     "F9_08_REV_CONTR_GOVT_GRANT",
     "F9_08_REV_TOT_TOT",
     "F9_09_EXP_TOT_TOT",
     "F9_09_EXP_DEPREC_PROG",
-    "F9_10_ASSET_CASH_EOY",
-    "F9_10_ASSET_SAVING_EOY",
-    "F9_10_ASSET_PLEDGE_NET_EOY",
-    "F9_10_ASSET_ACC_NET_EOY",
-    "F9_10_NAFB_UNRESTRICT_EOY",
-    "F9_10_ASSET_LAND_BLDG_NET_EOY",
-    "F9_10_LIAB_TAX_EXEMPT_BOND_EOY",
-    "F9_10_LIAB_MTG_NOTE_EOY",
-    "F9_10_LIAB_NOTE_UNSEC_EOY",
     "F9_01_EXP_TOT_CY",
     "F9_01_REV_TOT_CY",
     "F9_09_EXP_DEPREC_TOT",

@@ -9,6 +9,7 @@ output:
   pdf_document: default
 params:
   geography: United States
+  year: 2021
 ---
 
 ```{=html}
@@ -54,9 +55,17 @@ source("R/config.R")
 source("R/format_percentages.R")
 source("R/format_gt_table.R")
 
-national_bystate <- data.table::fread(file.path(DIR_PROCESSED, "national_bystate.csv"))
-national_bysize <- data.table::fread(file.path(DIR_PROCESSED, "national_bysize.csv"))
-national_bysubsector <- data.table::fread(file.path(DIR_PROCESSED, "national_bysubsector.csv"))
+data_dir <- dir_processed_year(params$year)
+national_bystate <- data.table::fread(file.path(data_dir, "national_bystate.csv"))
+national_bysize <- data.table::fread(file.path(data_dir, "national_bysize.csv"))
+national_bysubsector <- data.table::fread(file.path(data_dir, "national_bysubsector.csv"))
+
+total_filers <- format(
+  sum(as.numeric(gsub(",", "", national_bystate$`Number of 990 filers with government grants`[
+    national_bystate$State == "United States"
+  ]))),
+  big.mark = ","
+)
 ```
 
 ```{r formatting, echo=FALSE}
@@ -110,6 +119,6 @@ national_bysubsector |>
 
 ## {-}
 
-###### **Notes**: Includes 103,475 nonprofits that electronically filed an IRS Form 990 and reported receiving government grants in tax year 2021. Government grants are from governments at the local, state, federal, and territory levels, as well as foreign governments. A positive operating surplus indicates a nonprofit can cover all of its expenses and has funds available to reinvest in its mission. A negative surplus indicates they could not do so in that tax year. Operating surplus reported as the median.
+###### **Notes**: Includes `r total_filers` nonprofits that electronically filed an IRS Form 990 and reported receiving government grants in tax year `r params$year`. Government grants are from governments at the local, state, federal, and territory levels, as well as foreign governments. A positive operating surplus indicates a nonprofit can cover all of its expenses and has funds available to reinvest in its mission. A negative surplus indicates they could not do so in that tax year. Operating surplus reported as the median.
 
-###### **Source**: National Center for Charitable Statistics 2021 501(c)(3) Charities [E-file Data](https://nccs.urban.org/nccs/datasets/efile/).
+###### **Source**: National Center for Charitable Statistics `r params$year` 501(c)(3) Charities [E-file Data](https://nccs.urban.org/nccs/datasets/efile/).
