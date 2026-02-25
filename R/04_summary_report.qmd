@@ -1,0 +1,656 @@
+---
+title: "Financial Risk to Nonprofits from Losing Government Grants: Trends 2021–2023"
+author: "National Center for Charitable Statistics"
+date: today
+format:
+  docx:
+    toc: true
+    number-sections: true
+    fig-width: 6.5
+    fig-height: 4
+    fig-dpi: 300
+execute:
+  echo: false
+  warning: false
+  message: false
+knitr:
+  opts_knit:
+    root.dir: ".."
+---
+
+```{r}
+#| label: setup
+
+# Additional dependencies beyond the main pipeline:
+#   patchwork  — multi-panel figures
+#   kableExtra — docx-compatible tables (used via knitr::kable())
+
+library(tidyverse)
+library(data.table)
+library(scales)
+library(urbnthemes)
+library(kableExtra)
+library(patchwork)
+
+source(here::here("R", "config.R"))
+source(here::here("R", "summarize_data.R"))
+
+set_urbn_defaults(style = "print")
+
+year_colors <- c("2021" = "#1696d2", "2022" = "#fdbf11", "2023" = "#ec008b")
+
+# ---------------------------------------------------------------------------
+# Load all years
+# ---------------------------------------------------------------------------
+all_years <- purrr::map_dfr(SUPPORTED_YEARS, function(yr) {
+  fread(processed_data_file(yr)) |>
+    as_tibble() |>
+    mutate(year = yr)
+})
+
+all_years <- all_years |>
+  mutate(
+    SUBSECTOR = factor(SUBSECTOR, levels = SUBSECTOR_LEVELS),
+    EXPENSE_CATEGORY = factor(EXPENSE_CATEGORY, levels = EXPENSE_LABELS)
+  )
+
+# ---------------------------------------------------------------------------
+# Pre-compute summary data frames
+# ---------------------------------------------------------------------------
+
+# Helper: standard group-level summary
+summarise_risk <- function(data, ...) {
+  data |>
+    group_by(...) |>
+    summarise(
+      n_orgs         = n(),
+      total_grants   = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT, na.rm = TRUE),
+      median_surplus = median(PROFIT_MARGIN, na.rm = TRUE),
+      median_surplus_nogrant = median(PROFIT_MARGIN_NOGOVTGRANT, na.rm = TRUE),
+      n_at_risk      = sum(AT_RISK_NUM, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    mutate(pct_at_risk = n_at_risk / n_orgs)
+}
+
+national_by_year  <- summarise_risk(all_years, year)
+state_by_year     <- summarise_risk(all_years, year, CENSUS_STATE_NAME)
+subsector_by_year <- summarise_risk(all_years, year, SUBSECTOR)
+size_by_year      <- summarise_risk(all_years, year, EXPENSE_CATEGORY)
+region_by_year    <- summarise_risk(all_years, year, CENSUS_REGION) |>
+  filter(!is.na(CENSUS_REGION), CENSUS_REGION != "")
+
+district_by_year <- all_years |>
+  filter(
+    !is.na(CONGRESS_DISTRICT_NAME),
+    CONGRESS_DISTRICT_NAME != "",
+    CONGRESS_DISTRICT_NAME != "Unmapped"
+  ) |>
+  summarise_risk(year, CENSUS_STATE_NAME, CONGRESS_DISTRICT_NAME)
+
+county_by_year <- all_years |>
+  group_by(year, CENSUS_STATE_NAME, CENSUS_COUNTY_NAME) |>
+  summarise(
+    n_orgs    = n(),
+    n_at_risk = sum(AT_RISK_NUM, na.rm = TRUE),
+    .groups   = "drop"
+  ) |>
+  mutate(pct_at_risk = n_at_risk / n_orgs)
+
+# ---------------------------------------------------------------------------
+# Convenience helpers for inline R
+# ---------------------------------------------------------------------------
+nat <- function(col, yr) national_by_year[[col]][national_by_year$year == yr]
+
+n_orgs_2021          <- nat("n_orgs", 2021)
+n_orgs_2022          <- nat("n_orgs", 2022)
+n_orgs_2023          <- nat("n_orgs", 2023)
+pct_risk_2021        <- nat("pct_at_risk", 2021)
+pct_risk_2022        <- nat("pct_at_risk", 2022)
+pct_risk_2023        <- nat("pct_at_risk", 2023)
+grants_2021          <- nat("total_grants", 2021)
+grants_2023          <- nat("total_grants", 2023)
+surplus_2021         <- nat("median_surplus", 2021)
+surplus_2023         <- nat("median_surplus", 2023)
+surplus_nogrant_2021 <- nat("median_surplus_nogrant", 2021)
+surplus_nogrant_2023 <- nat("median_surplus_nogrant", 2023)
+
+pp_change_risk   <- pct_risk_2023 - pct_risk_2021
+pct_change_orgs  <- (n_orgs_2023 - n_orgs_2021) / n_orgs_2021
+pct_change_grants <- (grants_2023 - grants_2021) / grants_2021
+gap_2021 <- surplus_2021 - surplus_nogrant_2021
+gap_2023 <- surplus_2023 - surplus_nogrant_2023
+```
+
+# Executive Summary
+
+Between tax years 2021 and 2023, the financial vulnerability of nonprofits that receive government grants increased substantially. The share of 501(c)(3) public charities at financial risk --- defined as having a negative operating surplus once government grants are removed --- rose from `r percent(pct_risk_2021, accuracy = 1)` to `r percent(pct_risk_2023, accuracy = 1)`, an increase of `r percent(pp_change_risk, accuracy = 1, style_positive = "plus")` percentage points.
+
+Over the same period, the number of Form 990 electronic filers reporting government grants fell from `r comma(n_orgs_2021)` to `r comma(n_orgs_2023)` (`r percent(pct_change_orgs, accuracy = 1)`), and total government grant dollars declined from `r dollar(grants_2021, scale = 1e-9, suffix = "B", accuracy = 0.1)` to `r dollar(grants_2023, scale = 1e-9, suffix = "B", accuracy = 0.1)` (`r percent(pct_change_grants, accuracy = 1)`).
+
+The median operating surplus with government grants was `r percent(surplus_2021, accuracy = 0.1)` in 2021 and `r percent(surplus_2023, accuracy = 0.1)` in 2023. Without grants, the median surplus fell from `r percent(surplus_nogrant_2021, accuracy = 0.1)` to `r percent(surplus_nogrant_2023, accuracy = 0.1)`. Every major metric --- the share at risk, grant volume, filer count, and operating margins --- worsened over this three-year window. The sections that follow examine these trends by geography, congressional district, subsector, and organization size.
+
+
+# National Trends (2021–2023)
+
+## Share of nonprofits at financial risk
+
+```{r}
+#| label: fig-pct-at-risk
+#| fig-cap: "Share of 990 filers with government grants at financial risk, by tax year"
+
+ggplot(national_by_year, aes(x = factor(year), y = pct_at_risk, fill = factor(year))) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = percent(pct_at_risk, accuracy = 0.1)),
+            vjust = -0.5, size = 3.5) +
+  scale_y_continuous(labels = percent, limits = c(0, 1),
+                     expand = expansion(mult = c(0, 0.05))) +
+  scale_fill_manual(values = year_colors) +
+  labs(x = NULL, y = "Share at risk") +
+  theme(legend.position = "none")
+```
+
+The share of nonprofits at financial risk rose from `r percent(pct_risk_2021, accuracy = 0.1)` in 2021 to `r percent(pct_risk_2023, accuracy = 0.1)` in 2023. The bulk of the increase occurred between 2021 and 2022 (`r percent(pct_risk_2021, accuracy = 0.1)` to `r percent(pct_risk_2022, accuracy = 0.1)`), with a smaller shift from 2022 to 2023.
+
+
+## Number of filers and total government grants
+
+```{r}
+#| label: fig-filers-grants
+#| fig-cap: "Number of 990 filers with government grants (left) and total government grant dollars (right)"
+
+p_orgs <- ggplot(national_by_year, aes(x = factor(year), y = n_orgs, fill = factor(year))) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = comma(n_orgs)), vjust = -0.5, size = 3) +
+  scale_y_continuous(labels = comma,
+                     expand = expansion(mult = c(0, 0.15))) +
+  scale_fill_manual(values = year_colors) +
+  labs(x = NULL, y = "Number of filers") +
+  theme(legend.position = "none")
+
+p_grants <- ggplot(national_by_year, aes(x = factor(year), y = total_grants, fill = factor(year))) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = dollar(total_grants, scale = 1e-9, suffix = "B", accuracy = 0.1)),
+            vjust = -0.5, size = 3) +
+  scale_y_continuous(labels = label_dollar(scale = 1e-9, suffix = "B"),
+                     expand = expansion(mult = c(0, 0.15))) +
+  scale_fill_manual(values = year_colors) +
+  labs(x = NULL, y = "Total grants") +
+  theme(legend.position = "none")
+
+p_orgs + p_grants
+```
+
+The number of electronic filers reporting government grants declined from `r comma(n_orgs_2021)` to `r comma(n_orgs_2023)` (`r percent(pct_change_orgs, accuracy = 1)`). Total grant dollars fell from `r dollar(grants_2021, scale = 1e-9, suffix = "B", accuracy = 0.1)` to `r dollar(grants_2023, scale = 1e-9, suffix = "B", accuracy = 0.1)` (`r percent(pct_change_grants, accuracy = 1)`).
+
+
+## Operating surplus with and without government grants
+
+```{r}
+#| label: fig-surplus-comparison
+#| fig-cap: "Median operating surplus with and without government grants"
+
+surplus_long <- national_by_year |>
+  select(year, median_surplus, median_surplus_nogrant) |>
+  pivot_longer(-year, names_to = "measure", values_to = "value") |>
+  mutate(
+    measure = recode(measure,
+      "median_surplus"         = "With grants",
+      "median_surplus_nogrant" = "Without grants"
+    ),
+    measure = factor(measure, levels = c("With grants", "Without grants"))
+  )
+
+ggplot(surplus_long, aes(x = factor(year), y = value, fill = measure)) +
+  geom_col(position = position_dodge(width = 0.7), width = 0.6) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey40") +
+  geom_text(
+    aes(label = percent(value, accuracy = 0.1),
+        vjust = ifelse(value >= 0, -0.5, 1.5)),
+    position = position_dodge(width = 0.7), size = 3
+  ) +
+  scale_y_continuous(labels = percent,
+                     expand = expansion(mult = c(0.15, 0.15))) +
+  scale_fill_manual(values = c("With grants" = "#1696d2", "Without grants" = "#ec008b")) +
+  labs(x = NULL, y = "Median operating surplus", fill = NULL) +
+  theme(legend.position = "bottom")
+```
+
+In 2021 the median nonprofit had an operating surplus of `r percent(surplus_2021, accuracy = 0.1)` with grants, which became `r percent(surplus_nogrant_2021, accuracy = 0.1)` when grants were removed --- a gap of `r percent(gap_2021, accuracy = 0.1, style_positive = "plus")` percentage points. By 2023, those figures were `r percent(surplus_2023, accuracy = 0.1)` and `r percent(surplus_nogrant_2023, accuracy = 0.1)`, respectively, widening the gap to `r percent(gap_2023, accuracy = 0.1, style_positive = "plus")` percentage points.
+
+
+# Geographic Trends
+
+## State-level risk: 2023 vs. 2021
+
+```{r}
+#| label: fig-state-dumbbell
+#| fig-cap: "Top 15 states by share at risk in 2023 (showing 2021 and 2023)"
+#| fig-height: 5.5
+
+state_wide <- state_by_year |>
+  filter(year %in% c(2021, 2023)) |>
+  select(year, CENSUS_STATE_NAME, pct_at_risk) |>
+  pivot_wider(names_from = year, values_from = pct_at_risk, names_prefix = "y")
+
+top_states <- state_wide |>
+  slice_max(y2023, n = 15) |>
+  mutate(CENSUS_STATE_NAME = fct_reorder(CENSUS_STATE_NAME, y2023))
+
+ggplot(top_states) +
+  geom_segment(aes(x = y2021, xend = y2023,
+                   y = CENSUS_STATE_NAME, yend = CENSUS_STATE_NAME),
+               color = "grey60", linewidth = 0.8) +
+  geom_point(aes(x = y2021, y = CENSUS_STATE_NAME), color = "#1696d2", size = 3) +
+  geom_point(aes(x = y2023, y = CENSUS_STATE_NAME), color = "#ec008b", size = 3) +
+  scale_x_continuous(labels = percent) +
+  labs(x = "Share at risk", y = NULL,
+       subtitle = "Blue = 2021, Magenta = 2023") +
+  theme(plot.subtitle = element_text(size = 9, color = "grey40"))
+```
+
+```{r}
+#| label: state-dumbbell-narrative
+
+top1_state <- top_states |> slice_max(y2023, n = 1)
+biggest_increase <- state_wide |>
+  mutate(change = y2023 - y2021) |>
+  slice_max(change, n = 1)
+```
+
+The state with the highest share of nonprofits at risk in 2023 was `r top1_state$CENSUS_STATE_NAME` (`r percent(top1_state$y2023, accuracy = 0.1)`). The largest increase between 2021 and 2023 occurred in `r biggest_increase$CENSUS_STATE_NAME`, where the at-risk share rose by `r percent(biggest_increase$change, accuracy = 0.1, style_positive = "plus")` percentage points.
+
+
+## Geographic persistence: same states at top?
+
+```{r}
+#| label: fig-bump-chart
+#| fig-cap: "Rank of most-at-risk states across 2021–2023 (top 10 in any year)"
+#| fig-height: 5.5
+
+state_ranks <- state_by_year |>
+  group_by(year) |>
+  mutate(rank = rank(-pct_at_risk, ties.method = "first")) |>
+  ungroup()
+
+# States in top 10 in any year
+top10_states <- state_ranks |>
+  filter(rank <= 10) |>
+  distinct(CENSUS_STATE_NAME) |>
+  pull()
+
+bump_data <- state_ranks |>
+  filter(CENSUS_STATE_NAME %in% top10_states)
+
+ggplot(bump_data, aes(x = factor(year), y = rank,
+                      group = CENSUS_STATE_NAME, color = CENSUS_STATE_NAME)) +
+  geom_line(linewidth = 1, alpha = 0.7) +
+  geom_point(size = 3) +
+  geom_text(data = bump_data |> filter(year == max(SUPPORTED_YEARS)),
+            aes(label = CENSUS_STATE_NAME), hjust = -0.1, size = 2.5) +
+  scale_y_reverse(breaks = 1:max(bump_data$rank)) +
+  ggplot2::scale_color_discrete(guide = "none") +
+  labs(x = NULL, y = "Rank (1 = highest risk)") +
+  theme(plot.margin = margin(5.5, 80, 5.5, 5.5))
+```
+
+```{r}
+#| label: bump-narrative
+
+persistent_top5 <- state_ranks |>
+  filter(rank <= 5) |>
+  count(CENSUS_STATE_NAME) |>
+  filter(n == length(SUPPORTED_YEARS)) |>
+  pull(CENSUS_STATE_NAME)
+```
+
+`r if (length(persistent_top5) > 0) paste0(paste(persistent_top5, collapse = ", "), " ranked in the top five in all three years, indicating persistent geographic concentration of risk.") else "No state ranked in the top five in all three years, indicating considerable movement in which states are most at risk."`
+
+
+## Census region patterns
+
+```{r}
+#| label: fig-region-risk
+#| fig-cap: "Share at risk by Census region, 2021–2023"
+#| fig-height: 5
+
+ggplot(region_by_year, aes(x = factor(year), y = pct_at_risk, fill = factor(year))) +
+  geom_col(width = 0.7) +
+  geom_text(aes(label = percent(pct_at_risk, accuracy = 1)),
+            vjust = -0.3, size = 2.5) +
+  facet_wrap(~CENSUS_REGION, ncol = 3) +
+  scale_y_continuous(labels = percent, limits = c(0, 1),
+                     expand = expansion(mult = c(0, 0.12))) +
+  scale_fill_manual(values = year_colors) +
+  labs(x = NULL, y = "Share at risk") +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 8))
+```
+
+```{r}
+#| label: region-narrative
+
+region_2023 <- region_by_year |> filter(year == 2023)
+top_region <- region_2023 |> slice_max(pct_at_risk, n = 1)
+low_region <- region_2023 |> slice_min(pct_at_risk, n = 1)
+```
+
+In 2023, `r top_region$CENSUS_REGION` had the highest share of nonprofits at risk (`r percent(top_region$pct_at_risk, accuracy = 0.1)`), while `r low_region$CENSUS_REGION` had the lowest (`r percent(low_region$pct_at_risk, accuracy = 0.1)`). All nine Census regions saw increases in financial risk between 2021 and 2023.
+
+
+## County-level concentration of risk
+
+```{r}
+#| label: fig-county-concentration
+#| fig-cap: "Number of counties where at least 90% of nonprofits are at risk"
+
+county_90 <- county_by_year |>
+  filter(pct_at_risk >= 0.90) |>
+  count(year, name = "n_counties")
+
+ggplot(county_90, aes(x = factor(year), y = n_counties, fill = factor(year))) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = comma(n_counties)), vjust = -0.5, size = 3.5) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.12))) +
+  scale_fill_manual(values = year_colors) +
+  labs(x = NULL, y = "Number of counties") +
+  theme(legend.position = "none")
+```
+
+```{r}
+#| label: county-narrative
+
+county_90_2021 <- county_90$n_counties[county_90$year == 2021]
+county_90_2023 <- county_90$n_counties[county_90$year == 2023]
+```
+
+The number of counties where at least 90% of nonprofits are at financial risk rose from `r comma(county_90_2021)` in 2021 to `r comma(county_90_2023)` in 2023. These near-universally-at-risk counties represent localized pockets of extreme vulnerability where nearly every nonprofit receiving government grants would face a deficit without that funding.
+
+
+# Congressional District Analysis
+
+## Districts with negative operating surplus (excluding grants)
+
+```{r}
+#| label: fig-district-negative
+#| fig-cap: "Number of congressional districts where the median operating surplus without grants is negative"
+
+neg_districts <- district_by_year |>
+  filter(median_surplus_nogrant < 0) |>
+  count(year, name = "n_districts")
+
+ggplot(neg_districts, aes(x = factor(year), y = n_districts, fill = factor(year))) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = comma(n_districts)), vjust = -0.5, size = 3.5) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.12))) +
+  scale_fill_manual(values = year_colors) +
+  labs(x = NULL, y = "Number of districts") +
+  theme(legend.position = "none")
+```
+
+```{r}
+#| label: district-neg-narrative
+
+n_dist_2021 <- neg_districts$n_districts[neg_districts$year == 2021]
+n_dist_2023 <- neg_districts$n_districts[neg_districts$year == 2023]
+total_districts <- district_by_year |> filter(year == 2023) |> nrow()
+```
+
+In 2021, `r comma(n_dist_2021)` congressional districts had a negative median operating surplus once government grants were removed. By 2023 that number reached `r comma(n_dist_2023)` out of `r comma(total_districts)` total districts in the analysis (excluding unmapped returns and the DC delegate district).
+
+
+## Most vulnerable districts in 2023
+
+```{r}
+#| label: fig-district-top15
+#| fig-cap: "Top 15 congressional districts by share at risk in 2023"
+#| fig-height: 5
+
+top_districts <- district_by_year |>
+  filter(year == 2023) |>
+  slice_max(pct_at_risk, n = 15) |>
+  mutate(label = paste0(CENSUS_STATE_NAME, " — ", CONGRESS_DISTRICT_NAME)) |>
+  mutate(label = fct_reorder(label, pct_at_risk))
+
+# Get 2021 values for comparison
+top_dist_2021 <- district_by_year |>
+  filter(year == 2021) |>
+  semi_join(top_districts, by = c("CENSUS_STATE_NAME", "CONGRESS_DISTRICT_NAME")) |>
+  mutate(label = paste0(CENSUS_STATE_NAME, " — ", CONGRESS_DISTRICT_NAME))
+
+ggplot(top_districts, aes(x = pct_at_risk, y = label)) +
+  geom_col(fill = "#ec008b", width = 0.6) +
+  geom_point(data = top_dist_2021, aes(x = pct_at_risk, y = label),
+             color = "#1696d2", size = 2.5) +
+  scale_x_continuous(labels = percent) +
+  labs(x = "Share at risk", y = NULL,
+       subtitle = "Bar = 2023, Blue dot = 2021") +
+  theme(plot.subtitle = element_text(size = 9, color = "grey40"))
+```
+
+```{r}
+#| label: district-top-narrative
+
+top1_dist <- top_districts |> slice_max(pct_at_risk, n = 1)
+```
+
+The most vulnerable congressional district in 2023 was the `r top1_dist$CONGRESS_DISTRICT_NAME` in `r top1_dist$CENSUS_STATE_NAME`, where `r percent(top1_dist$pct_at_risk, accuracy = 0.1)` of nonprofits with government grants were at financial risk. Blue dots indicate each district's 2021 value; in most cases the 2023 bar exceeds the 2021 dot, reflecting the national trend of worsening risk.
+
+
+# 2023 Snapshot vs. 2021
+
+```{r}
+#| label: tbl-comparison
+
+comparison <- tibble(
+  Metric = c(
+    "Number of 990 filers with government grants",
+    "Total government grants",
+    "Share at financial risk",
+    "Median operating surplus (with grants)",
+    "Median operating surplus (without grants)"
+  ),
+  `2021` = c(
+    comma(n_orgs_2021),
+    dollar(grants_2021, accuracy = 1),
+    percent(pct_risk_2021, accuracy = 0.1),
+    percent(surplus_2021, accuracy = 0.1),
+    percent(surplus_nogrant_2021, accuracy = 0.1)
+  ),
+  `2023` = c(
+    comma(n_orgs_2023),
+    dollar(grants_2023, accuracy = 1),
+    percent(pct_risk_2023, accuracy = 0.1),
+    percent(surplus_2023, accuracy = 0.1),
+    percent(surplus_nogrant_2023, accuracy = 0.1)
+  ),
+  Change = c(
+    percent(pct_change_orgs, accuracy = 0.1),
+    percent(pct_change_grants, accuracy = 0.1),
+    paste0(percent(pp_change_risk, accuracy = 0.1, style_positive = "plus"), " pp"),
+    paste0(percent(surplus_2023 - surplus_2021, accuracy = 0.1, style_positive = "plus"), " pp"),
+    paste0(percent(surplus_nogrant_2023 - surplus_nogrant_2021, accuracy = 0.1, style_positive = "plus"), " pp")
+  )
+)
+
+knitr::kable(comparison, align = c("l", "r", "r", "r"))
+```
+
+Every key metric worsened between 2021 and 2023. The filer count and total grant volume both declined, while the share of organizations at financial risk rose and operating surpluses --- particularly those calculated without government grants --- deteriorated.
+
+
+# Subsector Trends
+
+## At-risk share by subsector
+
+```{r}
+#| label: fig-subsector-risk
+#| fig-cap: "Share at risk by subsector and tax year"
+#| fig-height: 6
+
+ggplot(subsector_by_year,
+       aes(x = pct_at_risk, y = fct_rev(SUBSECTOR), fill = factor(year))) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.65) +
+  scale_x_continuous(labels = percent) +
+  scale_fill_manual(values = year_colors) +
+  labs(x = "Share at risk", y = NULL, fill = "Tax year") +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+#| label: subsector-narrative
+
+sub_2023 <- subsector_by_year |> filter(year == 2023)
+most_risk_sub <- sub_2023 |> slice_max(pct_at_risk, n = 1)
+least_risk_sub <- sub_2023 |> slice_min(pct_at_risk, n = 1)
+```
+
+In 2023, `r most_risk_sub$SUBSECTOR` had the highest share of nonprofits at financial risk (`r percent(most_risk_sub$pct_at_risk, accuracy = 0.1)`), while `r least_risk_sub$SUBSECTOR` had the lowest (`r percent(least_risk_sub$pct_at_risk, accuracy = 0.1)`). Across nearly all subsectors, the at-risk share increased from 2021 to 2023.
+
+
+## Subsectors with largest increases in risk
+
+```{r}
+#| label: fig-subsector-dumbbell
+#| fig-cap: "Change in at-risk share by subsector, 2021 to 2023"
+#| fig-height: 5.5
+
+sub_wide <- subsector_by_year |>
+  filter(year %in% c(2021, 2023)) |>
+  select(year, SUBSECTOR, pct_at_risk) |>
+  pivot_wider(names_from = year, values_from = pct_at_risk, names_prefix = "y") |>
+  mutate(change = y2023 - y2021) |>
+  mutate(SUBSECTOR = fct_reorder(SUBSECTOR, change))
+
+ggplot(sub_wide) +
+  geom_segment(aes(x = y2021, xend = y2023,
+                   y = SUBSECTOR, yend = SUBSECTOR),
+               color = "grey60", linewidth = 0.8) +
+  geom_point(aes(x = y2021, y = SUBSECTOR), color = "#1696d2", size = 3) +
+  geom_point(aes(x = y2023, y = SUBSECTOR), color = "#ec008b", size = 3) +
+  scale_x_continuous(labels = percent) +
+  labs(x = "Share at risk", y = NULL,
+       subtitle = "Blue = 2021, Magenta = 2023") +
+  theme(plot.subtitle = element_text(size = 9, color = "grey40"))
+```
+
+```{r}
+#| label: subsector-change-narrative
+
+biggest_sub_increase <- sub_wide |> slice_max(change, n = 1)
+smallest_sub_increase <- sub_wide |> slice_min(change, n = 1)
+```
+
+`r biggest_sub_increase$SUBSECTOR` experienced the largest increase in at-risk share (`r percent(biggest_sub_increase$change, accuracy = 0.1, style_positive = "plus")` percentage points), while `r smallest_sub_increase$SUBSECTOR` saw the `r if (smallest_sub_increase$change > 0) "smallest increase" else "only decrease"` (`r percent(smallest_sub_increase$change, accuracy = 0.1, style_positive = "plus")` pp).
+
+
+# Additional Analyses
+
+## Risk by organization size
+
+```{r}
+#| label: fig-size-risk
+#| fig-cap: "Share at risk by organization size (total expenses) and tax year"
+#| fig-height: 4.5
+
+ggplot(size_by_year,
+       aes(x = pct_at_risk, y = fct_rev(EXPENSE_CATEGORY), fill = factor(year))) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.65) +
+  scale_x_continuous(labels = percent) +
+  scale_fill_manual(values = year_colors) +
+  labs(x = "Share at risk", y = NULL, fill = "Tax year") +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+#| label: size-narrative
+
+size_2023 <- size_by_year |> filter(year == 2023)
+most_risk_size <- size_2023 |> slice_max(pct_at_risk, n = 1)
+least_risk_size <- size_2023 |> slice_min(pct_at_risk, n = 1)
+```
+
+In 2023, the `r most_risk_size$EXPENSE_CATEGORY` category had the highest at-risk share (`r percent(most_risk_size$pct_at_risk, accuracy = 0.1)`), while the `r least_risk_size$EXPENSE_CATEGORY` category had the lowest (`r percent(least_risk_size$pct_at_risk, accuracy = 0.1)`). Across all size classes, the at-risk share increased between 2021 and 2023.
+
+
+## Grant concentration
+
+```{r}
+#| label: tbl-concentration
+
+concentration <- all_years |>
+  group_by(year) |>
+  arrange(desc(GOVERNMENT_GRANT_DOLLAR_AMOUNT)) |>
+  mutate(
+    rank   = row_number(),
+    n_total = n()
+  ) |>
+  summarise(
+    `Top 1%`  = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT[rank <= ceiling(first(n_total) * 0.01)]) /
+                sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT),
+    `Top 5%`  = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT[rank <= ceiling(first(n_total) * 0.05)]) /
+                sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT),
+    `Top 10%` = sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT[rank <= ceiling(first(n_total) * 0.10)]) /
+                sum(GOVERNMENT_GRANT_DOLLAR_AMOUNT),
+    .groups = "drop"
+  ) |>
+  mutate(across(`Top 1%`:`Top 10%`, ~ percent(.x, accuracy = 0.1))) |>
+  rename(`Tax Year` = year)
+
+knitr::kable(concentration, align = c("l", "r", "r", "r"))
+```
+
+Government grants are heavily concentrated among a small number of large organizations --- primarily hospitals and universities. The table above shows the share of total grant dollars received by the top 1%, 5%, and 10% of recipients. This concentration means that headline grant totals can be disproportionately influenced by a handful of very large recipients.
+
+
+## Subsector and size interaction (2023)
+
+```{r}
+#| label: fig-heatmap
+#| fig-cap: "Share at risk by subsector and organization size, 2023"
+#| fig-height: 6
+
+heatmap_data <- all_years |>
+  filter(year == max(SUPPORTED_YEARS)) |>
+  group_by(SUBSECTOR, EXPENSE_CATEGORY) |>
+  summarise(
+    n_orgs    = n(),
+    n_at_risk = sum(AT_RISK_NUM, na.rm = TRUE),
+    .groups   = "drop"
+  ) |>
+  mutate(pct_at_risk = n_at_risk / n_orgs)
+
+ggplot(heatmap_data,
+       aes(x = EXPENSE_CATEGORY, y = fct_rev(SUBSECTOR), fill = pct_at_risk)) +
+  geom_tile(color = "white", linewidth = 0.5) +
+  geom_text(aes(label = ifelse(n_orgs >= 10, percent(pct_at_risk, accuracy = 1), "n<10")),
+            size = 2.5) +
+  scale_fill_gradient(low = "#cfe8f3", high = "#062635", labels = percent,
+                      name = "Share\nat risk") +
+  labs(x = NULL, y = NULL) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 7),
+        axis.text.y = element_text(size = 8))
+```
+
+The heatmap reveals where subsector and size interact. Cells with fewer than 10 organizations are labeled "n<10" rather than showing potentially unreliable percentages. The darkest cells indicate the subsector--size combinations with the greatest share of nonprofits at financial risk.
+
+
+# Methodology Notes
+
+**Data source.** IRS Form 990 electronic filing data (Parts 00, 01, 08, and 09), downloaded from the NCCS E-file archive. The Business Master File (BMF) provides organization-level metadata including geographic identifiers and NTEE subsector codes.
+
+**Universe.** 501(c)(3) public charities that filed a Form 990 electronically and reported receiving government grants (Part VIII, Line 1e > 0) for each tax year. Group and amended returns are deduplicated, retaining the most recent non-group filing per EIN.
+
+**"At risk" definition.** An organization is classified as "at risk" if its operating surplus turns negative once government grants are removed. Specifically:
+
+- Operating surplus (profit margin) = (Total Revenue − Total Expenses) / Total Revenue
+- Operating surplus without grants = (Total Revenue − Total Expenses − Government Grants) / Total Revenue
+- At risk = 1 if operating surplus without grants < 0
+
+**Operating surplus.** All surplus figures reported in this document are *medians* for each group, not means, to reduce the influence of outliers.
+
+**Geographic assignment.** State and county are drawn from Census geocoding in the BMF. Congressional districts are assigned via TIGRIS shapefiles. Returns that cannot be mapped to a congressional district are labeled "Unmapped" and excluded from district-level analyses. The DC delegate district is also excluded; Puerto Rico's resident commissioner district is included.
+
+**Tax years covered.** 2021, 2022, and 2023. These reflect the tax year of the filing, not the calendar year in which the return was filed.
+
+**Source.** NCCS E-file Data, National Center for Charitable Statistics, Urban Institute.
