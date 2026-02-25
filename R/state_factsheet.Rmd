@@ -9,6 +9,7 @@ output:
   pdf_document: default
 params:
   state: California
+  year: 2021
 ---
 
 ```{=html}
@@ -59,15 +60,23 @@ source("R/format_districts.R")
 source("R/format_gt_table.R")
 
 state <- gsub(" ", "-", tolower(params$state))
+factsheet_dir <- dir_state_factsheets_year(params$year)
 
-county <- data.table::fread(sprintf(file.path(DIR_STATE_FACTSHEETS, "%s_bycounty.csv"),
+county <- data.table::fread(sprintf(file.path(factsheet_dir, "%s_bycounty.csv"),
                                     state))
-district <- data.table::fread(sprintf(file.path(DIR_STATE_FACTSHEETS, "%s_bydistrict.csv"),
+district <- data.table::fread(sprintf(file.path(factsheet_dir, "%s_bydistrict.csv"),
                                       state))
-size <- data.table::fread(sprintf(file.path(DIR_STATE_FACTSHEETS, "%s_bysize.csv"),
+size <- data.table::fread(sprintf(file.path(factsheet_dir, "%s_bysize.csv"),
                                   state))
-subsector <- data.table::fread(sprintf(file.path(DIR_STATE_FACTSHEETS, "%s_bysubsector.csv"),
+subsector <- data.table::fread(sprintf(file.path(factsheet_dir, "%s_bysubsector.csv"),
                                        state))
+
+total_filers <- format(
+  sum(as.numeric(gsub(",", "", size$`Number of 990 filers with government grants`[
+    size$Size == "Total"
+  ]))),
+  big.mark = ","
+)
 ```
 
 ```{r into-para, echo=FALSE}
@@ -227,6 +236,6 @@ subsector |>
 
 ## {-}
 
-###### **Notes**: Includes 103,475 nonprofits that electronically filed an IRS Form 990 and reported receiving government grants in tax year 2021. Government grants are from governments at the local, state, federal, and territory levels, as well as foreign governments. A positive operating surplus indicates a nonprofit can cover all of its expenses and has funds available to reinvest in its mission. A negative surplus indicates they could not do so in that tax year. Operating surplus reported as the median.
+###### **Notes**: Includes `r total_filers` nonprofits that electronically filed an IRS Form 990 and reported receiving government grants in tax year `r params$year`. Government grants are from governments at the local, state, federal, and territory levels, as well as foreign governments. A positive operating surplus indicates a nonprofit can cover all of its expenses and has funds available to reinvest in its mission. A negative surplus indicates they could not do so in that tax year. Operating surplus reported as the median.
 
-###### **Source**: National Center for Charitable Statistics 2021 501(c)(3) Charities [E-file Data](https://nccs.urban.org/nccs/datasets/efile/).
+###### **Source**: National Center for Charitable Statistics `r params$year` 501(c)(3) Charities [E-file Data](https://nccs.urban.org/nccs/datasets/efile/).
