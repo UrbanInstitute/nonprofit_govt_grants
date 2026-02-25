@@ -9,7 +9,9 @@
       "Bash(git status:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(grep:*. can you add it to .claude permissions?)"
+      "Bash(done)",
+      "Bash(wc:*)",
+      "Bash(Rscript:*)"
     ]
   }
 }
