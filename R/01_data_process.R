@@ -281,7 +281,8 @@ wrangle_bmf <- function(unified_bmf, cd_transformed) {
   bmf_sample <- sf::st_join(bmf_sample, cd_transformed, join = sf::st_intersects)
 
   ## Save intermediate dataset (convert geometry to WKT so fwrite can handle it)
-  bmf_to_save <- bmf_sample[, geometry := sf::st_as_text(geometry)]
+  bmf_to_save <- data.table::as.data.table(bmf_sample)
+  bmf_to_save <- bmf_to_save[, geometry := sf::st_as_text(geometry)]
   data.table::fwrite(bmf_to_save, INTERMEDIATE_BMF_SAMPLE_FILE)
 
   bmf_sample

@@ -4,37 +4,49 @@
 
 An R data pipeline that produces **52 interactive HTML factsheets** (1 national + 51 state/DC) analyzing the financial risk to nonprofits if they lost government grants. Published as Urban Institute's [interactive data tool](https://www.urban.org/research/publication/what-financial-risk-nonprofits-losing-government-grants).
 
-The unit of analysis is a **501(c)(3) public charity** that electronically filed IRS Form 990 and reported receiving government grants in **tax year 2021**. The final sample contains ~103,475 returns.
+The unit of analysis is a **501(c)(3) public charity** that electronically filed IRS Form 990 and reported receiving government grants. The pipeline supports **tax years 2021, 2022, and 2023** (`SUPPORTED_YEARS` in config). Outputs are organized into year-specific subdirectories.
 
 ## Pipeline Execution Order
 
+### Orchestrated (recommended)
 ```
-R/00_download.R        → Downloads raw data (~1.5 GB BMF + efile CSVs)
-R/00_data_process.R    → Cleans, deduplicates, computes metrics → data/processed/full_sample_processed_v1.0.csv
-R/01_analysis.R        → Aggregates into national + 51 state summary CSVs
-R/02_iterate_factsheet.R → Renders national_factsheet.Rmd and state_factsheet.Rmd → docs/*.html
+Rscript R/run_pipeline.R              # All 3 years (2021, 2022, 2023)
+Rscript R/run_pipeline.R --year 2022  # Single year
 ```
 
-All three numbered scripts `source("R/config.R")` for shared constants. Run them from the project root (the working directory must be the repo root).
+### Individual scripts (standalone, defaults to TY2021)
+```
+R/00_download.R          → Downloads raw data (~1.5 GB BMF + year-specific efile CSVs)
+R/01_data_process.R      → Cleans, deduplicates, computes metrics → data/processed/{year}/full_sample_processed_v1.0.csv
+R/validate_processed_data.R → Validates processed data integrity (called by run_pipeline.R)
+R/02_analysis.R          → Aggregates into national + 51 state summary CSVs
+R/03_iterate_factsheet.R → Renders national_factsheet.Rmd and state_factsheet.Rmd → docs/{year}/*.html
+```
+
+All pipeline scripts `source("R/config.R")` for shared constants. Run them from the project root (the working directory must be the repo root). Each script has a standalone guard that defaults to TY2021 when run outside the orchestrator.
 
 ## Key Architecture Decisions
 
-- **`R/config.R`** is the single source of truth for all paths, URLs, column specs, factor levels, subsector mappings, expense breaks, census regions, and state vectors. Every pipeline script and both Rmd templates source it. It contains no `library()` calls — purely constants.
+- **`R/config.R`** is the single source of truth for all paths, URLs, column specs, factor levels, subsector mappings, expense breaks, census regions, and state vectors. It also defines year-aware path functions (`dir_processed_year()`, `processed_data_file()`, etc.) and `build_efile_urls()` for multi-year support. No `library()` calls — purely constants and path functions.
+- **`R/run_pipeline.R`** is the orchestration entry point. Sets `.PIPELINE_ORCHESTRATED <- TRUE` to suppress standalone auto-execution in each script. Loads shared reference data (BMF, TIGRIS, foreign nonprofits) once and passes it to each year's processing. Uses `tryCatch` per year so one failure doesn't halt others.
 - **Processed data version** is `v1.0` (defined as `PROCESSED_DATA_VERSION` in config). The filename `full_sample_processed_v1.0.csv` is canonical. Never change this without updating config.
 - **Data request scripts** in `R/data_requests/` are **frozen and date-stamped** for reproducibility. Do not refactor them to use shared helpers. They may duplicate logic from the main pipeline intentionally.
 - **Helper functions** (`cash_on_hand.R`, `operating_reserve_ratio.R`, `proportion_govt_grant.R`) are unused by the pipeline but kept for potential future use.
+- **E-file parts**: Only 4 parts are used (P00 Header, P01 Summary, P08 Revenue, P09 Expenses). P05 (Other IRS Filing) and P10 (Balance Sheet) were dropped as unused in calculations.
 
 ## Directory Structure
 
 ```
 R/
-  config.R                  # All constants, paths, mappings, URLs
-  00_download.R             # Download orchestration (run first)
-  00_data_process.R         # Data processing pipeline (~473 lines)
-  01_analysis.R             # Aggregation and summary tables (~231 lines)
-  02_iterate_factsheet.R    # Rmd rendering loop (~61 lines)
-  national_factsheet.Rmd    # Template for national HTML factsheet
-  state_factsheet.Rmd       # Template for 51 state HTML factsheets
+  config.R                  # All constants, paths, mappings, URLs, year-aware functions
+  run_pipeline.R            # Orchestration entry point (multi-year)
+  00_download.R             # Download orchestration: download_year(year)
+  01_data_process.R         # Data processing: process_year(year, ref_data)
+  validate_processed_data.R # Validation: validate_processed_data(file, year)
+  02_analysis.R             # Analysis: analyze_year(year)
+  03_iterate_factsheet.R    # Rendering: render_year(year)
+  national_factsheet.Rmd    # Template for national HTML factsheet (year param)
+  state_factsheet.Rmd       # Template for 51 state HTML factsheets (year param)
   summarize_data.R          # Core: summarize_nonprofit_data()
   deduplicate_returns.R     # Helper: deduplicate group/amended returns
   impute_missing_geography.R # Helper: spatial join to fill missing geo fields
@@ -53,22 +65,40 @@ R/
   data_requests/            # Frozen, date-stamped ad-hoc analyses
 
 data/
-  raw/                      # Downloaded CSVs (not in git, ~1.5 GB total)
-  intermediate/             # BMF sample, absent counties, full intermediate sample
-  processed/                # Final CSVs consumed by Rmd templates
-    full_sample_processed_v1.0.csv  # The canonical processed dataset
-    national_by{state,size,subsector}.csv
-    state_factsheets/       # 51 × 4 CSVs (county, district, size, subsector)
+  raw/
+    unified_bmf.csv                   # Shared BMF (~1.5 GB)
+    foreign_nonprofits.csv            # Shared foreign nonprofits list
+    {year}/                           # Per-year efile downloads
+      efile_p00.csv, efile_p01.csv, efile_p08.csv, efile_p09.csv
+  intermediate/
+    bmf_sample.csv                    # Shared wrangled BMF
+    qa_all_years.xlsx                 # Consolidated QA across years
+    {year}/
+      full_sample.csv, absent_counties.csv, qa.xlsx
+  processed/
+    full_sample_processed_v1.0.csv    # Legacy TY2021 (root level)
+    national_by{state,size,subsector}.csv  # Legacy TY2021 (root level)
+    state_factsheets/                 # Legacy TY2021 state CSVs
+    {year}/
+      full_sample_processed_v1.0.csv
+      national_bystate.csv, national_bysize.csv, national_bysubsector.csv
+      national_overview.xlsx
+      state_factsheets/               # 51 × 4 CSVs
+      state_overviews/                # 51 .xlsx files
 
-docs/                       # 52 rendered HTML factsheets (national + 51 states)
+docs/
+  *.html                              # Legacy TY2021 factsheets (root level)
+  {year}/
+    national.html, alabama.html, ... wyoming.html
+    web_report.css
 ```
 
 ## Data Sources
 
-All URLs are defined in `R/config.R` under `EFILE_URLS`, `BMF_URLS`, `XX_URLS`:
-- **E-file data** (6 files): IRS Form 990 Parts Header, I, V, VIII, IX, X for TY2021 from NCCS S3
-- **Unified BMF**: NCCS Business Master File V1.1 (~1.5 GB)
-- **Foreign nonprofits**: IRS SOI eo_xx.csv (used to exclude non-US orgs)
+All URLs are defined in `R/config.R`:
+- **E-file data** (4 parts per year): IRS Form 990 Parts Header (P00), Summary (P01), Revenue (P08), Expenses (P09). Built dynamically by `build_efile_urls(year)` using the `efile_v2_1` S3 base URL.
+- **Unified BMF**: NCCS Business Master File V1.1 (~1.5 GB) — shared across years
+- **Foreign nonprofits**: IRS SOI eo_xx.csv (used to exclude non-US orgs) — shared across years
 - **TIGRIS**: US Census state, county, and congressional district shapefiles (fetched via `tigris` R package at runtime, not stored)
 
 ## Key Columns in the Processed Dataset
@@ -91,25 +121,29 @@ All URLs are defined in `R/config.R` under `EFILE_URLS`, `BMF_URLS`, `XX_URLS`:
 - **Factor levels** for subsectors, expense categories, and congressional districts are defined in `config.R` (`SUBSECTOR_LEVELS`, `EXPENSE_LABELS`, `CONGRESS_DISTRICT_LEVELS`). Both Rmd templates reference these. If you add/change a level, update it in config.
 - **`summarize_nonprofit_data()`** in `R/summarize_data.R` is the canonical aggregation function used everywhere. It groups, summarizes, formats, and renames columns. It has a `qa` mode for internal QA datasets.
 - **GT table styling** uses `style_factsheet_table()` from `R/format_gt_table.R` in both Rmd files.
-- **`profit_margin_vec()`** is the vectorized version of `profit_margin()` — always prefer the vectorized version for column operations. The scalar version is kept for `pmap_dbl` compatibility.
+- **`profit_margin_vec()`** is the vectorized version of `profit_margin()` — always prefer the vectorized version for column operations. Both profit margin calculations now use the vectorized version.
+- **Standalone guards**: Each pipeline script checks `if (!exists(".PIPELINE_ORCHESTRATED"))` and runs for TY2021 by default. This preserves backward compatibility for interactive/standalone use.
 
 ## R Package Dependencies
 
 Core: `tidyverse`, `data.table`, `dtplyr`, `sf`, `tigris`, `lubridate`, `tidylog`, `usdata`, `rio`, `scales`
-Analysis: `rlang`, `janitor`, `writexl`
+Analysis: `rlang`, `janitor`, `writexl`, `readxl`
 Rendering: `rmarkdown`, `gt`, `gtExtras`, `urbnthemes`, `epoxy`, `glue`, `rprojroot`
 
 ## Common Tasks
 
-- **Re-render all factsheets**: `source("R/02_iterate_factsheet.R")` (takes several minutes)
-- **Re-render one state**: Use the render call from `02_iterate_factsheet.R` with a single state name
-- **Update a metric or column**: Change in `00_data_process.R`, re-run pipeline from that point
-- **Add a new disaggregation**: Add to `01_analysis.R`'s `create_state_summaries()` and update the Rmd templates
+- **Run full pipeline for all years**: `Rscript R/run_pipeline.R`
+- **Run pipeline for one year**: `Rscript R/run_pipeline.R --year 2022`
+- **Re-render all factsheets for one year**: `source("R/03_iterate_factsheet.R")` (defaults to 2021) or call `render_year(2022)` after sourcing config
+- **Re-render one state**: Use `render_factsheet()` from `03_iterate_factsheet.R` with specific params
+- **Update a metric or column**: Change in `01_data_process.R`, re-run pipeline from that point
+- **Add a new disaggregation**: Add to `02_analysis.R`'s `create_state_summaries()` and update the Rmd templates
 
 ## Things to Watch Out For
 
-- The `data/raw/` directory is **not in git** — it must be populated by running `R/00_download.R` first.
+- The `data/raw/` directory is **not in git** — it must be populated by running `R/00_download.R` or the full pipeline first.
 - The BMF download is ~1.5 GB and may timeout — `download_data.R` has a 600-second timeout.
-- `00_data_process.R` uses `tidylog` which prints verbose join diagnostics — this is intentional for QA.
-- TIGRIS data is fetched live from Census servers each run; if their API is down, steps 1.2 in `00_data_process.R` will fail.
-- The `rowwise()` bottleneck for `profit_margin` has been replaced by `profit_margin_vec()`. If you see `rowwise()` in old code, it's a sign of pre-refactor code.
+- `01_data_process.R` uses `tidylog` which prints verbose join diagnostics — this is intentional for QA.
+- TIGRIS data is fetched live from Census servers each run; if their API is down, `load_reference_data()` will fail.
+- The `rowwise()` bottleneck for `profit_margin` has been replaced by `profit_margin_vec()`. Both profit margin calculations now use the vectorized version.
+- Legacy root-level outputs (`data/processed/*.csv`, `docs/*.html`) are preserved for backward compatibility with the published TY2021 tool. New outputs go to year-specific subdirectories.
