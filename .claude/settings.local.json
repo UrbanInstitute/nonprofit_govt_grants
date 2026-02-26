@@ -11,7 +11,11 @@
       "Bash(git commit:*)",
       "Bash(done)",
       "Bash(wc:*)",
-      "Bash(Rscript:*)"
+      "Bash(Rscript:*)",
+      "Bash(git rev-list:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(git branch:*)",
+      "Bash(git stash:*)"
     ]
   }
 }
