@@ -625,11 +625,12 @@ ggplot(heatmap_data,
   geom_tile(color = "white", linewidth = 0.5) +
   geom_text(aes(label = ifelse(n_orgs >= 10, percent(pct_at_risk, accuracy = 1), "n<10")),
             size = 2.5) +
-  scale_fill_gradient(low = "#cfe8f3", high = "#062635", labels = percent,
+  scale_fill_gradient(low = "#cfe8f3", high = "#1696d2", labels = percent,
                       name = "Share\nat risk") +
   labs(x = NULL, y = NULL) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 7),
-        axis.text.y = element_text(size = 8))
+        axis.text.y = element_text(size = 8),
+        legend.text = element_text(size = 6, margin = margin(l = 10, unit = "pt")))
 ```
 
 The heatmap reveals where subsector and size interact. Cells with fewer than 10 organizations are labeled "n<10" rather than showing potentially unreliable percentages. The darkest cells indicate the subsector--size combinations with the greatest share of nonprofits at financial risk.
