@@ -47,7 +47,7 @@ set_urbn_defaults(style = "print")
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-## `r params$state` - How Losing Government Grants Would Affect Nonprofit Finances
+## `r params$state` - How Losing Government Grants Would Have Affected Nonprofit Finances in `r params$year`
 
 <div class="over-table-spacing"></div>
 
@@ -145,11 +145,16 @@ topcounties_surplus <- paste(topcounties_surplus, collapse = ", ")
 topcounties_atrisk <- paste(topcounties_atrisk, collapse = ", ")
 
 topcounties_grants <- gsub(",([^,]*)$", ", and\\1", topcounties_grants)
-topcounties_grants <- gsub(" County", "", topcounties_grants)
 topcounties_surplus <- gsub(",([^,]*)$", ", and\\1", topcounties_surplus)
-topcounties_surplus <- gsub(" County", "", topcounties_surplus)
 topcounties_atrisk <- gsub(",([^,]*)$", ", and\\1", topcounties_atrisk)
-topcounties_atrisk <- gsub(" County", "", topcounties_atrisk)
+
+# Strip all county-equivalent geographic suffixes (County, Parish, Borough, etc.)
+strip_county_suffix <- function(x) {
+  gsub(" (County|Parish|Borough|Census Area|Municipality|city|City and Borough)(?=,|$)", "", x, perl = TRUE)
+}
+topcounties_grants <- strip_county_suffix(topcounties_grants)
+topcounties_surplus <- strip_county_suffix(topcounties_surplus)
+topcounties_atrisk <- strip_county_suffix(topcounties_atrisk)
 
 topdistricts_grants <- format_districts(topdistricts_grants)
 topdistricts_surplus <- format_districts(topdistricts_surplus)
@@ -157,9 +162,21 @@ topdistricts_atrisk <- format_districts(topdistricts_atrisk)
 ```
 
 ```{r, echo=FALSE}
+# Build "Counties [and the Xth congressional district(s)]" fragments,
+# avoiding double spaces when district text is empty
+fmt_geo <- function(counties, districts) {
+  geo <- paste(counties, "Counties")
+  if (nchar(districts) > 0) geo <- paste(geo, districts)
+  geo
+}
+
 if (state_title != "District of Columbia"){
+  geo_grants  <- fmt_geo(topcounties_grants, topdistricts_grants)
+  geo_surplus <- fmt_geo(topcounties_surplus, topdistricts_surplus)
+  geo_atrisk  <- fmt_geo(topcounties_atrisk, topdistricts_atrisk)
+
   text <- glue::glue(
-    "In {state_title}, nonprofits received a total of ${total_govgrants} in government grants. Nonprofits in {topcounties_grants} counties {topdistricts_grants} received the most government funding. Nonprofits in {topcounties_surplus} counties {topdistricts_surplus} would have the biggest gap to fill if they lost their government grants. Nonprofits in {topcounties_atrisk} counties {topdistricts_atrisk} have the highest share of nonprofits at risk of not covering their expenses if they lost their government grants."
+    "In {state_title}, nonprofits received a total of ${total_govgrants} in government grants. Nonprofits in {geo_grants} received the most government funding. Nonprofits in {geo_surplus} would have the biggest gap to fill if they lost their government grants. Nonprofits in {geo_atrisk} have the highest share of nonprofits at risk of not covering their expenses if they lost their government grants."
   )
 } else {
   text <- glue::glue("In the District of Columbia, nonprofits received a total of ${total_govgrants} in government grants.")
@@ -236,6 +253,6 @@ subsector |>
 
 ## {-}
 
-###### **Notes**: Includes `r total_filers` nonprofits that electronically filed an IRS Form 990 and reported receiving government grants in tax year `r params$year`. Government grants are from governments at the local, state, federal, and territory levels, as well as foreign governments. A positive operating surplus indicates a nonprofit can cover all of its expenses and has funds available to reinvest in its mission. A negative surplus indicates they could not do so in that tax year. Operating surplus reported as the median.
+###### **Notes**: Includes `r total_filers` nonprofits that electronically filed an IRS Form 990 and reported receiving government grants in tax year `r params$year`. Government grants are from governments at the local, state, federal, and territory levels, as well as foreign governments. A positive operating surplus indicates a nonprofit can cover all of its expenses and has funds available to reinvest in its mission. A negative surplus indicates the nonprofit could not do so in that tax year. Operating surplus reported as the median.
 
 ###### **Source**: National Center for Charitable Statistics `r params$year` 501(c)(3) Charities [E-file Data](https://nccs.urban.org/nccs/datasets/efile/).

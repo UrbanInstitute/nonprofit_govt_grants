@@ -9,9 +9,10 @@
 #' @param districts A character vector of Congressional district names (e.g., "District 1", "NY-12")
 #'
 #' @return A character string with properly formatted district numbers in a readable list.
-#'   If fewer than 3 districts are provided (after removing "at Large" districts),
-#'   an empty string is returned. Otherwise, returns a string in the format
-#'   "and 1st, 2nd, and 3rd Congressional districts".
+#'   If no numbered districts remain (after removing "at Large" districts),
+#'   an empty string is returned. For 1-2 districts, returns a simplified format.
+#'   For 3+ districts, returns a string in the format
+#'   "and the 1st, 2nd, and 3rd congressional districts".
 #'
 #' @details
 #' The function handles ordinal suffixes correctly (1st, 2nd, 3rd, 4th, etc.) and
@@ -21,43 +22,56 @@
 #' @examples
 #' districts <- c("District 1", "NY-12", "FL-07")
 #' format_districts(districts)
-#' # Returns: "and 1st, 7th, and 12th Congressional districts"
+#' # Returns: "and the 1st, 7th, and 12th congressional districts"
 #'
 #' # With fewer than 3 valid districts
 #' format_districts(c("District at Large", "District 2"))
+#' # Returns: "and the 2nd congressional district"
+#'
+#' format_districts(c("District at Large"))
 #' # Returns: ""
 #'
 #' @export
 format_districts <- function(districts) {
   # Extract numbers from district names
   numbers <- as.numeric(gsub("\\D", "", districts))
-  
+
   # Remove "at Large" districts which will have NA after number extraction
   numbers <- numbers[!is.na(numbers)]
-  
-  if (length(numbers) < 3) {
+
+  # Helper: convert number to ordinal string (1st, 2nd, 3rd, 10th, 11th, etc.)
+  make_ordinal <- function(n) {
+    last_two <- n %% 100
+    if (last_two %in% c(11, 12, 13)) return(paste0(n, "th"))
+    suffix <- switch(n %% 10 + 1L,
+                     "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th")
+    paste0(n, suffix)
+  }
+
+  if (length(numbers) == 0) {
     return("")
+  } else if (length(numbers) == 1) {
+    result <- make_ordinal(numbers)
+    result <- paste("and the", result, "congressional district")
+    return(result)
+  } else if (length(numbers) == 2) {
+    ordinals <- sapply(numbers, make_ordinal)
+    result <- paste(ordinals[1], "and", ordinals[2])
+    result <- paste("and the", result, "congressional districts")
+    return(result)
   } else {
-    # Format the numbers with Oxford comma
-    make_ordinal <- function(n) {
-      if (n %in% c(11,12,13)) return(paste0(n, "th"))
-      suffix <- switch(n %% 10,
-                       "st", "nd", "rd", "th", "th", "th", "th", "th", "th", "th")
-      paste0(n, suffix)
-    }
-    
     # Convert numbers to ordinals
     ordinals <- sapply(numbers, make_ordinal)
-    
+
     # Combine with Oxford comma and "and"
     result <- paste(
       paste(ordinals[-length(ordinals)], collapse = ", "),
       ordinals[length(ordinals)],
       sep = ", and "
     )
-    
+
     # Add the final text
-    result <- paste("and", result, "Congressional districts")
+    result <- paste("and the", result, "congressional districts")
     return(result)
   }
 }

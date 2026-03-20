@@ -50,6 +50,17 @@ R/03_iterate_factsheet.R → Renders HTML factsheets
 
 # Known Technical Issues
 
+## Geographic Name Handling in State Factsheets
+
+County-equivalent geographies vary by state. The state factsheet templates strip all county-equivalent suffixes (County, Parish, Borough, Census Area, Municipality, city, City and Borough) before composing the summary paragraph. Key edge-case states for rendering verification:
+
+- **Alaska**: at-large congressional district; Municipality, Borough, and Census Area suffixes
+- **Louisiana**: Parish instead of County
+- **Hawaii**: only 2 congressional districts
+- **Delaware**: at-large congressional district, exactly 3 counties
+- **California/New York/Texas**: high district numbers including multiples of 10 (10th, 20th, etc.)
+- **District of Columbia**: special-case bypass (no county/district paragraph); duplicate county row handled via `distinct()`
+
 ## Roundtripping `sf` Objects Through `data.table`
 
 `sf` stores spatial metadata (geometry column name, CRS) as R attributes on the data frame. `data.table` does not preserve these attributes through its operations, so naively converting between the two formats will corrupt the `sf` object. This means `data.table` should be treated as a **transit format only** — use it for I/O performance, but always land back on a plain `data.frame` before handing off to `sf`.

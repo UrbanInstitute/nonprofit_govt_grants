@@ -54,7 +54,7 @@ R/
   download_data.R           # Helper: download_files() with error handling
   profit_margin.R           # profit_margin() (scalar) + profit_margin_vec() (vectorized)
   format_ein.R              # EIN formatting (XX-XXXXXXX ↔ numeric)
-  format_districts.R        # Congressional district name formatting
+  format_districts.R        # Congressional district name formatting (handles 0, 1, 2, 3+ districts)
   format_percentages.R      # Percentage string → numeric conversion
   retrieve_missing_counties.R # Counties with 0 nonprofits receiving govt grants
   create_sorted_plot.R      # Exploratory sorted scatter plots (interactive only)
@@ -122,13 +122,16 @@ All URLs are defined in `R/config.R`:
 - **`summarize_nonprofit_data()`** in `R/summarize_data.R` is the canonical aggregation function used everywhere. It groups, summarizes, formats, and renames columns. It has a `qa` mode for internal QA datasets.
 - **GT table styling** uses `style_factsheet_table()` from `R/format_gt_table.R` in both Rmd files.
 - **`profit_margin_vec()`** is the vectorized version of `profit_margin()` — always prefer the vectorized version for column operations. Both profit margin calculations now use the vectorized version.
+- **`format_districts()`** in `R/format_districts.R` handles all district counts: 0 (at-large only → empty string), 1 (singular "district"), 2 ("X and Y districts"), 3+ (Oxford comma list). The `make_ordinal()` helper uses `n %% 10 + 1L` offset to correctly handle multiples of 10 (10th, 20th, etc.) and checks `n %% 100` for 11th/12th/13th.
+- **County suffix stripping** in `state_factsheet.Rmd` uses `strip_county_suffix()` to remove all county-equivalent geographic suffixes (County, Parish, Borough, Census Area, Municipality, city, City and Borough) — not just "County". This is needed for Alaska (Borough/Municipality/Census Area) and Louisiana (Parish).
+- **Both Rmd templates require `library(epoxy)`** for the `{epoxy}` chunk engine. If the package is not loaded, the intro paragraph chunk is silently skipped.
 - **Standalone guards**: Each pipeline script checks `if (!exists(".PIPELINE_ORCHESTRATED"))` and runs for TY2021 by default. This preserves backward compatibility for interactive/standalone use.
 
 ## R Package Dependencies
 
 Core: `tidyverse`, `data.table`, `dtplyr`, `sf`, `tigris`, `lubridate`, `tidylog`, `usdata`, `rio`, `scales`
 Analysis: `rlang`, `janitor`, `writexl`, `readxl`
-Rendering: `rmarkdown`, `gt`, `gtExtras`, `urbnthemes`, `epoxy`, `glue`, `rprojroot`
+Rendering: `rmarkdown`, `gt`, `gtExtras`, `urbnthemes`, `epoxy`, `glue`, `rprojroot`, `stringr`
 
 ## Common Tasks
 
@@ -147,3 +150,4 @@ Rendering: `rmarkdown`, `gt`, `gtExtras`, `urbnthemes`, `epoxy`, `glue`, `rprojr
 - TIGRIS data is fetched live from Census servers each run; if their API is down, `load_reference_data()` will fail.
 - The `rowwise()` bottleneck for `profit_margin` has been replaced by `profit_margin_vec()`. Both profit margin calculations now use the vectorized version.
 - Legacy root-level outputs (`data/processed/*.csv`, `docs/*.html`) are preserved for backward compatibility with the published TY2021 tool. New outputs go to year-specific subdirectories.
+- **DC duplicate county row**: DC's county CSV has a duplicate "District of Columbia" row. `state_factsheet.Rmd` uses `dplyr::distinct()` as a workaround. This is a known data quirk, not a bug in the rendering code.

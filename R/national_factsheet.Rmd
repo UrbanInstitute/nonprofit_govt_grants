@@ -40,12 +40,13 @@ library(tidyverse)
 library(urbnthemes)
 library(gt)
 library(gtExtras)
+library(epoxy)
 
 set_urbn_defaults(style = "print")
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-## `r params$geography` - How Losing Government Grants Would Affect Nonprofit Finances
+## `r params$geography` - How Losing Government Grants Would Have Affected Nonprofit Finances in `r params$year`
 
 <div class="over-table-spacing"></div>
 
@@ -80,7 +81,57 @@ national_bysubsector <- format_percentages(national_bysubsector,
                                 "formatted_percentages")
 ```
 
-In the United States, nonprofits received a total of $267B in government grants. Nonprofits in California, New York, and the District of Columbia received the most government funding. Nonprofits in Alaska, West Virginia, and Louisiana would have the biggest gap to fill if they lost their government grants. Nonprofits in Alaska, West Virginia, and Arkansas have the highest share of nonprofits at risk of not covering their expenses if they lost their government grants.
+```{r intro-stats, echo=FALSE}
+# Total government grants (national)
+total_govgrants <- national_bystate |>
+  dplyr::filter(State == "United States") |>
+  dplyr::pull(`Total government grants ($)`)
+total_govgrants <- as.numeric(gsub("[$,]", "", total_govgrants))
+total_govgrants <- scales::label_number(accuracy = 0.1, scale_cut = scales::cut_short_scale())(total_govgrants)
+
+# Top 3 states by total government grants
+topstates_grants <- national_bystate |>
+  dplyr::filter(State != "United States") |>
+  dplyr::mutate(val = as.numeric(gsub("[$,]", "", `Total government grants ($)`))) |>
+  dplyr::arrange(desc(val)) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(State)
+
+# Top 3 states by biggest gap (most negative surplus without govt grants)
+topstates_surplus <- national_bystate |>
+  dplyr::filter(State != "United States") |>
+  dplyr::mutate(val = as.numeric(gsub("[%]", "", `Size of operating surplus without government grants`))) |>
+  dplyr::arrange(val) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(State)
+
+# Top 3 states by share at risk
+topstates_atrisk <- national_bystate |>
+  dplyr::filter(State != "United States") |>
+  dplyr::mutate(val = as.numeric(gsub("[%]", "", `Share of 990 filers with government grants at risk`))) |>
+  dplyr::arrange(desc(val)) |>
+  dplyr::slice_head(n = 3) |>
+  dplyr::pull(State)
+
+# Format as "X, Y, and Z"
+fmt_list <- function(x) gsub(",([^,]*)$", ", and\\1", paste(x, collapse = ", "))
+topstates_grants <- fmt_list(topstates_grants)
+topstates_surplus <- fmt_list(topstates_surplus)
+topstates_atrisk <- fmt_list(topstates_atrisk)
+
+intro_text <- glue::glue(
+  "In the United States, nonprofits received a total of ${total_govgrants} ",
+  "in government grants. Nonprofits in {topstates_grants} received the most ",
+  "government funding. Nonprofits in {topstates_surplus} would have the biggest ",
+  "gap to fill if they lost their government grants. Nonprofits in ",
+  "{topstates_atrisk} have the highest share of nonprofits at risk of not ",
+  "covering their expenses if they lost their government grants."
+)
+```
+
+```{epoxy}
+{intro_text}
+```
 
 ## {.tabset}
 
@@ -119,6 +170,6 @@ national_bysubsector |>
 
 ## {-}
 
-###### **Notes**: Includes `r total_filers` nonprofits that electronically filed an IRS Form 990 and reported receiving government grants in tax year `r params$year`. Government grants are from governments at the local, state, federal, and territory levels, as well as foreign governments. A positive operating surplus indicates a nonprofit can cover all of its expenses and has funds available to reinvest in its mission. A negative surplus indicates they could not do so in that tax year. Operating surplus reported as the median.
+###### **Notes**: Includes `r total_filers` nonprofits that electronically filed an IRS Form 990 and reported receiving government grants in tax year `r params$year`. Government grants are from governments at the local, state, federal, and territory levels, as well as foreign governments. A positive operating surplus indicates a nonprofit can cover all of its expenses and has funds available to reinvest in its mission. A negative surplus indicates the nonprofit could not do so in that tax year. Operating surplus reported as the median.
 
 ###### **Source**: National Center for Charitable Statistics `r params$year` 501(c)(3) Charities [E-file Data](https://nccs.urban.org/nccs/datasets/efile/).
