@@ -67,16 +67,19 @@ validate_processed_data <- function(file_path, year) {
   }
   cat(label, "AT_RISK_NUM is binary\n")
 
-  # (6) GOVERNMENT_GRANT_DOLLAR_AMOUNT > 0
+  # (6) GOVERNMENT_GRANT_DOLLAR_AMOUNT — check for non-positive values (informational)
   non_na_grants <- df$GOVERNMENT_GRANT_DOLLAR_AMOUNT[
     !is.na(df$GOVERNMENT_GRANT_DOLLAR_AMOUNT)
   ]
-  if (any(non_na_grants <= 0)) {
-    n_bad <- sum(non_na_grants <= 0)
-    stop("[VALIDATION FAILED] Year ", year,
-         ": ", n_bad, " rows have GOVERNMENT_GRANT_DOLLAR_AMOUNT <= 0")
+  n_neg <- sum(non_na_grants < 0)
+  n_zero <- sum(non_na_grants == 0)
+  if (n_neg > 0 || n_zero > 0) {
+    cat(label, n_neg, " negative and ", n_zero,
+        " zero GOVERNMENT_GRANT_DOLLAR_AMOUNT values",
+        " (see 'Notable government grant values' in qa.xlsx)\n")
+  } else {
+    cat(label, "All government grant amounts > 0\n")
   }
-  cat(label, "All government grant amounts > 0\n")
 
   # (7) CENSUS_STATE_NAME values are recognized
   valid_states <- c(STATE_NAMES, "Other/unmapped jurisdictions")

@@ -2,3 +2,13 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# Raw data (downloaded by pipeline, too large for git)
+data/raw/
+
+# Intermediate data (ignore large files, keep year subdirs and QA workbook)
+data/intermediate/*
+!data/intermediate/qa_all_years.xlsx
+!data/intermediate/2021/
+!data/intermediate/2022/
+!data/intermediate/2023/

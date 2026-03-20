@@ -8,7 +8,14 @@
       "Bash(ls:*)",
       "Bash(git status:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(done)",
+      "Bash(wc:*)",
+      "Bash(Rscript:*)",
+      "Bash(git rev-list:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(git branch:*)",
+      "Bash(git stash:*)"
     ]
   }
 }
