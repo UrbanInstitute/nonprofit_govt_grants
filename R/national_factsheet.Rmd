@@ -91,7 +91,9 @@ total_govgrants <- scales::label_number(accuracy = 0.1, scale_cut = scales::cut_
 
 # Top 3 states by total government grants
 topstates_grants <- national_bystate |>
-  dplyr::filter(State != "United States") |>
+  dplyr::filter(State != "United States",
+                State != "Other U.S. Territories",
+                State != "Other/unmapped jurisdictions") |>
   dplyr::mutate(val = as.numeric(gsub("[$,]", "", `Total government grants ($)`))) |>
   dplyr::arrange(desc(val)) |>
   dplyr::slice_head(n = 3) |>
@@ -99,7 +101,9 @@ topstates_grants <- national_bystate |>
 
 # Top 3 states by biggest gap (most negative surplus without govt grants)
 topstates_surplus <- national_bystate |>
-  dplyr::filter(State != "United States") |>
+  dplyr::filter(State != "United States",
+                State != "Other U.S. Territories",
+                State != "Other/unmapped jurisdictions") |>
   dplyr::mutate(val = as.numeric(gsub("[%]", "", `Size of operating surplus without government grants`))) |>
   dplyr::arrange(val) |>
   dplyr::slice_head(n = 3) |>
@@ -107,7 +111,9 @@ topstates_surplus <- national_bystate |>
 
 # Top 3 states by share at risk
 topstates_atrisk <- national_bystate |>
-  dplyr::filter(State != "United States") |>
+  dplyr::filter(State != "United States",
+                State != "Other U.S. Territories",
+                State != "Other/unmapped jurisdictions") |>
   dplyr::mutate(val = as.numeric(gsub("[%]", "", `Share of 990 filers with government grants at risk`))) |>
   dplyr::arrange(desc(val)) |>
   dplyr::slice_head(n = 3) |>
