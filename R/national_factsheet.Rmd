@@ -5,7 +5,7 @@ subtitle: ''
 output:
   html_document:
     css: web_report.css
-    self_contained: false
+    self_contained: true
   pdf_document: default
 params:
   geography: United States

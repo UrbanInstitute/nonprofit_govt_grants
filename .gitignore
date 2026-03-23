@@ -3,6 +3,12 @@
 .RData
 .Ruserdata
 
+# Rmd asset directories (assets are embedded with self_contained: true)
+docs/**/*_files/
+docs/*_files/
+R/*_files/
+docs/**/web_report.css
+
 # Raw data (downloaded by pipeline, too large for git)
 data/raw/
 

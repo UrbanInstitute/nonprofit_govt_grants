@@ -51,10 +51,6 @@ render_year <- function(year) {
   output_dir <- dir_docs_year(year)
   dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-  # Copy CSS to output directory (Rmd uses relative path to web_report.css)
-  file.copy("R/web_report.css", file.path(output_dir, "web_report.css"),
-            overwrite = TRUE)
-
   # (1) Render national factsheet
   cat("Rendering national factsheet\n")
   render_factsheet(

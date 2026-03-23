@@ -89,8 +89,7 @@ data/
 docs/
   *.html                              # Legacy TY2021 factsheets (root level)
   {year}/
-    national.html, alabama.html, ... wyoming.html
-    web_report.css
+    national.html, alabama.html, ... wyoming.html  # self-contained (CSS/JS embedded)
 ```
 
 ## Data Sources
