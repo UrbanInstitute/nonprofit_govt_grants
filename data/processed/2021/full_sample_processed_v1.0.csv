@@ -7094,7 +7094,7 @@ EIN-94-3089825,Pacific,Butte County,California,1st Congressional district,Human 
 EIN-82-4774925,West South Central,Harris County,Texas,9th Congressional district,Human services,$1M to $4.9M,390734,0.0418978740972986,-0.302803954330761,1
 EIN-05-0368134,New England,Providence County,Rhode Island,1st Congressional district,Health,$10M or more,8374090,0.0408939377203517,-0.0535587393182293,1
 EIN-71-0305932,West South Central,Columbia County,Arkansas,4th Congressional district,Unclassified,$100K to $499K,134604,0.337064492435999,0.137740928529966,0
-EIN-66-0930434,Unmapped,,Other/unmapped jurisdictions,,Human services,$100K to $499K,2e+05,0.486420647363512,-0.50585941376094,1
+EIN-66-0930434,Unmapped,,Other/unmapped jurisdictions,Unmapped,Human services,$100K to $499K,2e+05,0.486420647363512,-0.50585941376094,1
 EIN-65-1032601,South Atlantic,Palm Beach County,Florida,22nd Congressional district,"Public, societal benefit",$1M to $4.9M,898680,0.183844128122869,-0.0999232702654912,1
 EIN-22-2701789,New England,Plymouth County,Massachusetts,9th Congressional district,Human services,$1M to $4.9M,266250,0.0743696364245384,-0.0942191001382269,1
 EIN-82-2251923,West South Central,Benton County,Arkansas,3rd Congressional district,"Arts, culture, and humanities",$500K to $999K,79244,0.144060892540575,0.0268947968400462,0
@@ -8202,7 +8202,7 @@ EIN-84-4949668,West South Central,St. Tammany Parish,Louisiana,1st Congressional
 EIN-04-2794776,East North Central,Macomb County,Michigan,10th Congressional district,Unclassified,$1M to $4.9M,1354933,0.00917723151195057,-0.689666910801415,1
 EIN-41-1269275,West North Central,Hennepin County,Minnesota,5th Congressional district,"Public, societal benefit",$5M to $9.9M,194500,0.0389545873835235,0.0121002097678967,0
 EIN-59-2283261,South Atlantic,Duval County,Florida,5th Congressional district,Environment and animals,$100K to $499K,5281,-0.004476033545658,-0.0174639089053393,1
-EIN-98-0031007,Unmapped,,Other/unmapped jurisdictions,,"Public, societal benefit",$1M to $4.9M,2626592,0.0565918718999444,-0.871602042273132,1
+EIN-98-0031007,Unmapped,,Other/unmapped jurisdictions,Unmapped,"Public, societal benefit",$1M to $4.9M,2626592,0.0565918718999444,-0.871602042273132,1
 EIN-46-1235166,West North Central,Johnson County,Iowa,1st Congressional district,Education,$100K to $499K,78159,0.142866353170622,-0.0146049667766723,1
 EIN-20-5485984,West North Central,Douglas County,Nebraska,2nd Congressional district,Religion-related,$1M to $4.9M,195859,0.147168898728845,0.0184571465748212,0
 EIN-62-1721187,East South Central,Davidson County,Tennessee,7th Congressional district,Education,$100K to $499K,1e+05,0.141521726552103,-0.0899195741480067,1
@@ -15971,6 +15971,7 @@ EIN-36-3332673,East North Central,Cook County,Illinois,7th Congressional distric
 EIN-41-1441236,West North Central,Washington County,Minnesota,8th Congressional district,Human services,$100K to $499K,43528,0.137043269940488,-0.0465471355122252,1
 EIN-91-2122256,Pacific,Jefferson County,Washington,6th Congressional district,"Arts, culture, and humanities",$500K to $999K,62651,0.618599007957749,0.575604791668382,0
 EIN-72-1559413,East South Central,Fayette County,Kentucky,6th Congressional district,Environment and animals,$500K to $999K,42668,0.259793892551337,0.204049770977207,0
+EIN-66-0824289,Unmapped,St. Croix Island,Other/unmapped jurisdictions,Delegate district (at large),Human services,Less than $100K,675500,0.955865616507224,-0.0284767102128249,1
 EIN-85-0384782,Mountain,Doña Ana County,New Mexico,2nd Congressional district,Unclassified,$500K to $999K,516586,-0.0320710855259005,-0.963717814845073,1
 EIN-43-0918161,West North Central,Adair County,Missouri,6th Congressional district,Education,$500K to $999K,140960,0.0174096843220487,-0.228218291059393,1
 EIN-23-2152039,Mid-Atlantic,Philadelphia County,Pennsylvania,3rd Congressional district,Unclassified,$1M to $4.9M,707079,0.035630744722971,-0.238294769808181,1
@@ -16593,7 +16594,7 @@ EIN-36-2984359,East North Central,Will County,Illinois,14th Congressional distri
 EIN-46-2965698,South Atlantic,Miami-Dade County,Florida,27th Congressional district,Health,$1M to $4.9M,708333,0.210161434217481,-0.248096825595019,1
 EIN-20-0697012,Pacific,Yakima County,Washington,4th Congressional district,"Public, societal benefit",$5M to $9.9M,108741,0.64385783314415,0.638338357782868,0
 EIN-59-1522614,South Atlantic,Sarasota County,Florida,17th Congressional district,Human services,$10M or more,2015187,0.110798062525688,-0.0271968567195098,1
-EIN-99-0248675,Unmapped,,Other/unmapped jurisdictions,,Unclassified,$100K to $499K,195664,-0.187041630898387,-0.848323340746098,1
+EIN-99-0248675,Unmapped,,Other/unmapped jurisdictions,Unmapped,Unclassified,$100K to $499K,195664,-0.187041630898387,-0.848323340746098,1
 EIN-13-2906899,Mid-Atlantic,New York County,New York,13th Congressional district,Human services,$1M to $4.9M,148723,0.336040148016868,0.269814177379781,0
 EIN-72-1210144,West South Central,Orleans Parish,Louisiana,2nd Congressional district,Education,$5M to $9.9M,7217398,0.0251309388131371,-0.924273851279607,1
 EIN-95-6006417,Pacific,Santa Barbara County,California,24th Congressional district,Human services,$1M to $4.9M,830036,0.117989755440456,-0.145778258259632,1
@@ -18730,7 +18731,7 @@ EIN-20-2028893,New England,Suffolk County,Massachusetts,7th Congressional distri
 EIN-82-2686401,Mountain,Delta County,Colorado,3rd Congressional district,"Arts, culture, and humanities",$100K to $499K,12395,0.176857620482765,0.127640058608408,0
 EIN-95-4089601,Pacific,Los Angeles County,California,30th Congressional district,"Arts, culture, and humanities",$1M to $4.9M,264287,0.0627627710358402,-0.00465328890745919,1
 EIN-23-2152044,Mid-Atlantic,York County,Pennsylvania,11th Congressional district,Human services,$100K to $499K,173380,0.558582958134202,0.130139322022171,0
-EIN-98-0401962,Unmapped,,Other/unmapped jurisdictions,,Human services,$10M or more,53701954,0.0149162966188008,-0.961277387121623,1
+EIN-98-0401962,Unmapped,,Other/unmapped jurisdictions,Unmapped,Human services,$10M or more,53701954,0.0149162966188008,-0.961277387121623,1
 EIN-84-1054192,Mountain,Mesa County,Colorado,3rd Congressional district,"Public, societal benefit",$1M to $4.9M,1592585,0.299811914044198,-0.29240412376041,1
 EIN-38-3843137,South Atlantic,Seminole County,Florida,7th Congressional district,Human services,$100K to $499K,5625,0.391283716844235,0.37324903253938,0
 EIN-37-1424390,Pacific,Sacramento County,California,6th Congressional district,Health,$10M or more,9824633,0.0897471349673928,-0.0710281506194555,1
@@ -27804,7 +27805,7 @@ EIN-82-3968137,Mountain,Arapahoe County,Colorado,6th Congressional district,Huma
 EIN-04-3790899,Mid-Atlantic,Queens County,New York,6th Congressional district,"Arts, culture, and humanities",$100K to $499K,45860,0.126560400256363,-0.063065186379706,1
 EIN-39-1357562,West South Central,Ellis County,Texas,6th Congressional district,Religion-related,$100K to $499K,14052,-0.0713424420586939,-0.129770230600993,1
 EIN-83-0253203,Mountain,Lincoln County,Wyoming,Congressional district (at large),Human services,$100K to $499K,202974,-0.0153636230169354,-0.891815567434992,1
-EIN-98-0192780,Unmapped,,Other/unmapped jurisdictions,,"Arts, culture, and humanities",$1M to $4.9M,1297700,0.667232861844277,0.341497019380241,0
+EIN-98-0192780,Unmapped,,Other/unmapped jurisdictions,Unmapped,"Arts, culture, and humanities",$1M to $4.9M,1297700,0.667232861844277,0.341497019380241,0
 EIN-26-3840730,Pacific,Sacramento County,California,6th Congressional district,Human services,$1M to $4.9M,999482,-0.0344889313204845,-0.99640058591532,1
 EIN-20-0153451,Mid-Atlantic,Philadelphia County,Pennsylvania,3rd Congressional district,"Public, societal benefit",$5M to $9.9M,276975,-0.0842495714145861,-0.136798241187153,1
 EIN-72-0423635,West South Central,East Baton Rouge Parish,Louisiana,5th Congressional district,Unclassified,$10M or more,3104658,0.113932422871854,0.108216365544828,0
@@ -29429,7 +29430,7 @@ EIN-46-3851119,West South Central,Logan County,Arkansas,4th Congressional distri
 EIN-85-3813668,East North Central,Lake County,Illinois,11th Congressional district,Unclassified,$1M to $4.9M,9500,0.134625431170188,0.128051923788831,0
 EIN-59-2993242,South Atlantic,Hardee County,Florida,18th Congressional district,Human services,$100K to $499K,7995,0.0914658200229073,0.0697148018467281,0
 EIN-58-1474838,South Atlantic,DeKalb County,Georgia,5th Congressional district,Unclassified,$500K to $999K,31700,-0.0828095637382231,-0.127633400404122,1
-EIN-16-1001616,Unmapped,,Other/unmapped jurisdictions,,Human services,$100K to $499K,11000,0.20525225129135,0.177317446047733,0
+EIN-16-1001616,Unmapped,,Other/unmapped jurisdictions,Unmapped,Human services,$100K to $499K,11000,0.20525225129135,0.177317446047733,0
 EIN-33-0774719,Mountain,Ada County,Idaho,2nd Congressional district,Human services,$100K to $499K,14000,0.4214478328016,0.387558882051928,0
 EIN-58-1294613,South Atlantic,Thomas County,Georgia,2nd Congressional district,"Arts, culture, and humanities",Less than $100K,10570,-0.557549434221054,-0.859583952451709,1
 EIN-35-2116640,East North Central,Switzerland County,Indiana,9th Congressional district,Education,$500K to $999K,780158,0.0920613516343611,-0.887473036870745,1
@@ -30208,7 +30209,6 @@ EIN-91-1376917,Pacific,Snohomish County,Washington,1st Congressional district,Un
 EIN-95-1810837,Pacific,Los Angeles County,California,27th Congressional district,Human services,$1M to $4.9M,428443,0.318978549918282,0.0712859816261085,0
 EIN-26-0773199,South Atlantic,Baltimore County,Maryland,2nd Congressional district,Human services,$100K to $499K,34937,0.00464231083917328,-0.15071057593113,1
 EIN-45-0324907,West North Central,Williams County,North Dakota,Congressional district (at large),Unclassified,$10M or more,10931736,0.0610553028931874,-0.780886941185079,1
-EIN-95-3814898,Pacific,Riverside County,California,25th Congressional district,"Public, societal benefit",$10M or more,2815025,0.050774222930373,-0.0918785962823739,1
 EIN-94-2848318,Pacific,San Francisco County,California,11th Congressional district,Unclassified,$5M to $9.9M,631685,-0.0978948478937597,-0.228822512216855,1
 EIN-74-3089412,Pacific,Snohomish County,Washington,2nd Congressional district,"Arts, culture, and humanities",$500K to $999K,144500,0.206651192119713,0.0552925255005311,0
 EIN-43-1847771,South Atlantic,Montgomery County,Maryland,8th Congressional district,Human services,$500K to $999K,238058,-0.0366725643293973,-0.494494019000731,1
@@ -30966,6 +30966,7 @@ EIN-38-2899980,East North Central,Washtenaw County,Michigan,6th Congressional di
 EIN-55-0880534,South Atlantic,Edgecombe County,North Carolina,1st Congressional district,"Arts, culture, and humanities",Less than $100K,1000,0.339245297020519,0.302140922414753,0
 EIN-14-1909563,South Atlantic,Greenville County,South Carolina,4th Congressional district,Education,$100K to $499K,166350,0.25169395892369,-0.02641121448454,1
 EIN-25-1021790,Mid-Atlantic,Westmoreland County,Pennsylvania,12th Congressional district,Unclassified,$100K to $499K,118939,0.197818038268068,-0.513586420159221,1
+EIN-43-1677739,West North Central,St. Louis County,Missouri,2nd Congressional district,Unclassified,$100K to $499K,425604,0.00217805417822226,-0.991378827352439,1
 EIN-33-1215331,Mid-Atlantic,Essex County,New Jersey,11th Congressional district,"International, foreign affairs",$5M to $9.9M,2e+05,0.011780641282815,-0.00866015007424607,1
 EIN-34-1028559,East North Central,Cuyahoga County,Ohio,11th Congressional district,"Public, societal benefit",$500K to $999K,440678,0.132500114521622,-0.279476696953351,1
 EIN-68-0235031,Pacific,Nevada County,California,3rd Congressional district,Education,$500K to $999K,813720,0.0311392149689908,-0.957800056148299,1
@@ -37283,7 +37284,7 @@ EIN-34-1369608,East North Central,Cuyahoga County,Ohio,11th Congressional distri
 EIN-57-0672342,South Atlantic,Chesterfield County,South Carolina,7th Congressional district,Unclassified,$10M or more,5991157,0.107604746699321,-0.132726641181483,1
 EIN-95-4834034,Pacific,Los Angeles County,California,30th Congressional district,Human services,$1M to $4.9M,354580,0.282280486823355,0.199078342311428,0
 EIN-84-4998415,Pacific,Santa Cruz County,California,19th Congressional district,"Arts, culture, and humanities",$100K to $499K,551952,0.258546764096904,-0.630816206504838,1
-EIN-26-3029396,Unmapped,,Other/unmapped jurisdictions,,Unclassified,$100K to $499K,322049,-0.0302393796670707,-1.02356475526891,1
+EIN-26-3029396,Unmapped,,Other/unmapped jurisdictions,Unmapped,Unclassified,$100K to $499K,322049,-0.0302393796670707,-1.02356475526891,1
 EIN-22-2238073,Mid-Atlantic,Oneida County,New York,22nd Congressional district,Human services,$5M to $9.9M,151319,0.138932044634693,0.11693838435062,0
 EIN-27-2131087,South Atlantic,Orangeburg County,South Carolina,6th Congressional district,Education,$500K to $999K,71288,0.458816036837134,0.411325340051989,0
 EIN-65-0462144,South Atlantic,Highlands County,Florida,18th Congressional district,Health,$500K to $999K,620215,0.00741780459011517,-0.953449712924146,1
@@ -64371,7 +64372,7 @@ EIN-81-3843682,East South Central,Colbert County,Alabama,4th Congressional distr
 EIN-27-4892529,Mid-Atlantic,Franklin County,New York,21st Congressional district,Health,Less than $100K,22719,0.663973780294972,0.570664651451243,0
 EIN-59-0704733,South Atlantic,Duval County,Florida,5th Congressional district,Human services,$5M to $9.9M,3824034,0.125977225534919,-0.447921825559051,1
 EIN-83-0421169,New England,Plymouth County,Massachusetts,8th Congressional district,"Arts, culture, and humanities",$100K to $499K,21463,0.205982561266037,0.164761465775524,0
-EIN-23-7396123,Unmapped,,Other/unmapped jurisdictions,,"International, foreign affairs",$10M or more,18472875,-0.011825245016058,-0.342812470503361,1
+EIN-23-7396123,Unmapped,,Other/unmapped jurisdictions,Unmapped,"International, foreign affairs",$10M or more,18472875,-0.011825245016058,-0.342812470503361,1
 EIN-23-2992925,Mid-Atlantic,York County,Pennsylvania,10th Congressional district,"Public, societal benefit",$1M to $4.9M,45840,0.0929582080205064,0.059577055555151,0
 EIN-46-1383538,West South Central,Gregg County,Texas,1st Congressional district,Environment and animals,$500K to $999K,414040,0.491984602373053,0.112596750591247,0
 EIN-01-0353682,New England,Cumberland County,Maine,1st Congressional district,Human services,$1M to $4.9M,1707325,-0.159705026976006,-0.99816869604676,1
@@ -72922,6 +72923,7 @@ EIN-38-1742032,East North Central,Branch County,Michigan,5th Congressional distr
 EIN-20-1560065,West South Central,Potter County,Texas,13th Congressional district,"Arts, culture, and humanities",$100K to $499K,10157,0.125605526712676,0.0903094875697615,0
 EIN-25-1220005,Mid-Atlantic,Centre County,Pennsylvania,15th Congressional district,Human services,$1M to $4.9M,964420,0.0523362519492276,-0.18528410492234,1
 EIN-20-5484868,Mountain,Ravalli County,Montana,1st Congressional district,Human services,$100K to $499K,140017,-0.0143289746221016,-0.455080301437304,1
+EIN-83-1994985,South Atlantic,Hillsborough County,Florida,16th Congressional district,Human services,$500K to $999K,24573,-0.0112551311202331,-0.0549405421165193,1
 EIN-26-3134868,Mid-Atlantic,Westchester County,New York,17th Congressional district,"Arts, culture, and humanities",$100K to $499K,28680,-0.540065652719751,-0.687629916236185,1
 EIN-25-1290469,Mid-Atlantic,Allegheny County,Pennsylvania,12th Congressional district,Unclassified,$1M to $4.9M,223523,0.0886247069674114,-0.0217367476196965,1
 EIN-95-1643360,Pacific,Orange County,California,40th Congressional district,Hospitals,$10M or more,13866216,-0.00137011964870447,-0.0194756563139134,1
@@ -80557,7 +80559,7 @@ EIN-42-1183810,West North Central,Polk County,Iowa,3rd Congressional district,Un
 EIN-20-0798736,South Atlantic,Virginia Beach city,Virginia,2nd Congressional district,Education,$100K to $499K,19885,0.358681786466886,0.288609405944083,0
 EIN-27-0719761,Pacific,Alameda County,California,12th Congressional district,Education,$500K to $999K,82385,0.518615233601974,0.456742197057942,0
 EIN-56-1412830,South Atlantic,Granville County,North Carolina,13th Congressional district,Human services,$100K to $499K,123476,0.139830639908186,-0.817674245479078,1
-EIN-13-3137686,Unmapped,,Other/unmapped jurisdictions,,Human services,$1M to $4.9M,345990,0.126791492916245,-0.157668642050014,1
+EIN-13-3137686,Unmapped,,Other/unmapped jurisdictions,Unmapped,Human services,$1M to $4.9M,345990,0.126791492916245,-0.157668642050014,1
 EIN-23-6297039,East North Central,Cook County,Illinois,1st Congressional district,Unclassified,$1M to $4.9M,830655,0.240948910936182,-0.0160573408390114,1
 EIN-31-0502562,East North Central,Greene County,Ohio,10th Congressional district,Human services,$1M to $4.9M,384052,0.0974162805766769,-0.236168944988474,1
 EIN-23-7165901,Mid-Atlantic,Kings County,New York,10th Congressional district,Human services,$1M to $4.9M,2546712,0.145931360394393,-0.425533242154937,1
@@ -81345,7 +81347,7 @@ EIN-68-0544296,Unmapped,,Other/unmapped jurisdictions,Unmapped,Unclassified,Less
 EIN-27-2793072,South Atlantic,Greenville County,South Carolina,4th Congressional district,Education,$1M to $4.9M,1464899,0.113081099213896,-0.403106642578594,1
 EIN-35-2215865,West North Central,Hennepin County,Minnesota,5th Congressional district,Education,$10M or more,13373708,0.0135263356527241,-0.984153229142398,1
 EIN-11-2157354,Mid-Atlantic,Suffolk County,New York,2nd Congressional district,Unclassified,$1M to $4.9M,1530510,0.0487626819446441,-0.827577657675815,1
-EIN-23-7185638,Unmapped,,Other/unmapped jurisdictions,,"International, foreign affairs",$10M or more,15219367,0.00208958978073304,-0.274031389185412,1
+EIN-23-7185638,Unmapped,,Other/unmapped jurisdictions,Unmapped,"International, foreign affairs",$10M or more,15219367,0.00208958978073304,-0.274031389185412,1
 EIN-51-0448351,Pacific,San Francisco County,California,11th Congressional district,"Arts, culture, and humanities",$500K to $999K,218132,0.362430833926898,0.095929021467292,0
 EIN-38-1369796,East North Central,Montcalm County,Michigan,2nd Congressional district,Hospitals,$10M or more,3153135,0.0689251799906705,-0.124939800215105,1
 EIN-35-6031419,East North Central,Vanderburgh County,Indiana,8th Congressional district,Environment and animals,$500K to $999K,46237,0.502296995024215,0.463920785833745,0
@@ -83247,7 +83249,7 @@ EIN-74-1793265,West South Central,Brazos County,Texas,10th Congressional distric
 EIN-01-0584930,South Atlantic,Richmond County,Georgia,12th Congressional district,Human services,$100K to $499K,260000,-0.116938104485935,-1.11680350722018,1
 EIN-16-1469312,Mid-Atlantic,Erie County,New York,26th Congressional district,"Public, societal benefit",$100K to $499K,21583,0.0128038806475267,-0.122461002375267,1
 EIN-25-1203882,Mid-Atlantic,Allegheny County,Pennsylvania,12th Congressional district,Human services,$5M to $9.9M,3446193,0.100254445690318,-0.22424742569361,1
-EIN-66-0851275,Unmapped,,Other/unmapped jurisdictions,,Human services,$1M to $4.9M,2150524,0.0236416261140373,-0.974177626084342,1
+EIN-66-0851275,Unmapped,,Other/unmapped jurisdictions,Unmapped,Human services,$1M to $4.9M,2150524,0.0236416261140373,-0.974177626084342,1
 EIN-47-2631668,Mid-Atlantic,Lycoming County,Pennsylvania,9th Congressional district,"Public, societal benefit",$500K to $999K,105510,0.157656068038254,0.0481442885937944,0
 EIN-26-4401512,West South Central,Pulaski County,Arkansas,2nd Congressional district,Human services,$1M to $4.9M,300588,0.101433913540755,-0.0664338241864289,1
 EIN-59-0879227,South Atlantic,Miami-Dade County,Florida,27th Congressional district,Human services,$5M to $9.9M,1816428,0.0138859571450633,-0.31808089419862,1
@@ -85846,7 +85848,7 @@ EIN-22-2380788,Mid-Atlantic,Montgomery County,New York,20th Congressional distri
 EIN-04-2718182,Mid-Atlantic,New York County,New York,12th Congressional district,Environment and animals,$1M to $4.9M,442877,0.125524820090698,0.0355748404823145,0
 EIN-94-3287468,Pacific,San Francisco County,California,11th Congressional district,Education,$1M to $4.9M,421767,0.423235794931443,0.327120847226805,0
 EIN-26-3761772,Pacific,San Francisco County,California,11th Congressional district,"International, foreign affairs",$500K to $999K,60000,0.260051412550693,0.214364904233464,0
-EIN-48-1098574,Unmapped,,Other/unmapped jurisdictions,,"Public, societal benefit",$100K to $499K,116014,0.0772582806816006,-0.811227264024507,1
+EIN-48-1098574,Unmapped,,Other/unmapped jurisdictions,Unmapped,"Public, societal benefit",$100K to $499K,116014,0.0772582806816006,-0.811227264024507,1
 EIN-92-0185626,Pacific,Alameda County,California,12th Congressional district,Health,$100K to $499K,48285,0.0638448441364621,-0.105313864112499,1
 EIN-22-2864900,New England,Washington County,Vermont,Congressional district (at large),"Public, societal benefit",$1M to $4.9M,3589110,0.54571946814107,-0.0250419669340634,1
 EIN-54-1837741,West South Central,Fort Bend County,Texas,9th Congressional district,Human services,$10M or more,5028152,-0.0337889104701244,-0.153655324010481,1
@@ -92586,7 +92588,7 @@ EIN-57-0855205,South Atlantic,Greenville County,South Carolina,4th Congressional
 EIN-71-0830696,West South Central,Pulaski County,Arkansas,2nd Congressional district,Health,$10M or more,619607,-0.206465290834183,-0.211629728256391,1
 EIN-84-2852661,South Atlantic,Campbell County,Virginia,5th Congressional district,"Public, societal benefit",$500K to $999K,71285,0.639675282048942,0.602712585413203,0
 EIN-31-0672132,East North Central,Montgomery County,Ohio,10th Congressional district,Environment and animals,$10M or more,3770694,0.227245465256425,0.221346822413862,0
-EIN-66-0561027,Unmapped,,Other/unmapped jurisdictions,,Hospitals,$10M or more,2557341,0.0846329611764634,0.0420173948643608,0
+EIN-66-0561027,Unmapped,,Other/unmapped jurisdictions,Unmapped,Hospitals,$10M or more,2557341,0.0846329611764634,0.0420173948643608,0
 EIN-30-0044478,Mid-Atlantic,Allegheny County,Pennsylvania,12th Congressional district,"Public, societal benefit",$1M to $4.9M,358206,15.0365921395159,17.4337252645033,0
 EIN-35-1350013,East North Central,St. Joseph County,Indiana,2nd Congressional district,Human services,$1M to $4.9M,319249,0.34437754011113,0.136513922511065,0
 EIN-52-1299433,South Atlantic,Southampton County,Virginia,4th Congressional district,Unclassified,$100K to $499K,14475,0.042241068112022,-0.0334883672262884,1
@@ -92864,7 +92866,7 @@ EIN-95-4374304,Pacific,Los Angeles County,California,29th Congressional district
 EIN-23-2921984,Mid-Atlantic,Chester County,Pennsylvania,6th Congressional district,Health,$100K to $499K,46166,-0.163050379237648,-0.386793321540214,1
 EIN-36-3956130,Mountain,Lincoln County,Montana,1st Congressional district,Unclassified,$1M to $4.9M,1395122,0.0827089903677684,-0.712211937585646,1
 EIN-95-6058273,Pacific,San Diego County,California,51st Congressional district,Unclassified,$10M or more,65295,0.0619530987716633,0.0597601201454718,0
-EIN-99-0246297,Unmapped,,Other/unmapped jurisdictions,,Unclassified,$1M to $4.9M,130786,-0.104535087272047,-0.148990635462873,1
+EIN-99-0246297,Unmapped,,Other/unmapped jurisdictions,Unmapped,Unclassified,$1M to $4.9M,130786,-0.104535087272047,-0.148990635462873,1
 EIN-56-2443462,West North Central,Ramsey County,Minnesota,4th Congressional district,Education,$5M to $9.9M,7530494,-0.0169851626082211,-0.935584318821069,1
 EIN-61-1420590,Mid-Atlantic,Westchester County,New York,16th Congressional district,Human services,$100K to $499K,11457,-0.0637731678286006,-0.161180071416426,1
 EIN-51-0174878,South Atlantic,Alamance County,North Carolina,9th Congressional district,Human services,Less than $100K,47000,0.522916900878355,0.293185784042974,0
@@ -93372,7 +93374,7 @@ EIN-45-3536475,East South Central,Scott County,Kentucky,6th Congressional distri
 EIN-91-1881974,Pacific,Humboldt County,California,2nd Congressional district,Environment and animals,$1M to $4.9M,981027,-0.0497031568963868,-1.04802711784376,1
 EIN-39-1226726,East North Central,Columbia County,Wisconsin,6th Congressional district,Human services,$1M to $4.9M,493765,0.154979303818382,0.0584365535431824,0
 EIN-36-2523982,East North Central,Cook County,Illinois,10th Congressional district,Unclassified,$100K to $499K,19700,0.0311098430081397,-0.0320459594712866,1
-EIN-98-0119947,Unmapped,,Other/unmapped jurisdictions,,"Public, societal benefit",$10M or more,688811055,0.0564914790797285,-0.588920445841791,1
+EIN-98-0119947,Unmapped,,Other/unmapped jurisdictions,Unmapped,"Public, societal benefit",$10M or more,688811055,0.0564914790797285,-0.588920445841791,1
 EIN-46-1634728,East North Central,Knox County,Indiana,8th Congressional district,Human services,$1M to $4.9M,148628,0.218109448023921,0.154118885499568,0
 EIN-62-1567997,East South Central,Sullivan County,Tennessee,1st Congressional district,Religion-related,$500K to $999K,141942,0.243389399765925,0.0535321852533021,0
 EIN-93-0768142,Pacific,Klamath County,Oregon,2nd Congressional district,Unclassified,$5M to $9.9M,8989312,0.181245805848353,-0.815846101116629,1

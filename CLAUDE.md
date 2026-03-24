@@ -25,6 +25,12 @@ R/03_iterate_factsheet.R → Renders national_factsheet.Rmd and state_factsheet.
 
 All pipeline scripts `source("R/config.R")` for shared constants. Run them from the project root (the working directory must be the repo root). Each script has a standalone guard that defaults to TY2021 when run outside the orchestrator.
 
+### Summary report (standalone)
+```
+R/04_summary_report.qmd  → Cross-year trends report (Quarto → DOCX, requires `quarto render`)
+```
+This is **not** part of the automated pipeline. It reads processed data from all three years and produces a Word document comparing trends. Additional dependencies: `patchwork`, `kableExtra`.
+
 ## Key Architecture Decisions
 
 - **`R/config.R`** is the single source of truth for all paths, URLs, column specs, factor levels, subsector mappings, expense breaks, census regions, and state vectors. It also defines year-aware path functions (`dir_processed_year()`, `processed_data_file()`, etc.) and `build_efile_urls()` for multi-year support. No `library()` calls — purely constants and path functions.
@@ -58,11 +64,19 @@ R/
   format_percentages.R      # Percentage string → numeric conversion
   retrieve_missing_counties.R # Counties with 0 nonprofits receiving govt grants
   create_sorted_plot.R      # Exploratory sorted scatter plots (interactive only)
+  04_summary_report.qmd     # Standalone: cross-year trends report (Quarto → DOCX)
   cash_on_hand.R            # Unused — days/months of cash metric
   operating_reserve_ratio.R # Unused — operating reserve ratio metric
   proportion_govt_grant.R   # Unused — govt grant proportion metric
   sfchronicle-06102025.R    # Frozen data request
   data_requests/            # Frozen, date-stamped ad-hoc analyses
+    congressional_briefing-20250715.R        # NY/FL/PR + demographics
+    congressional_briefing_utils-20250715.R  # Helpers for congressional briefing
+    municipal_innovations-20250724.R         # 20 cities × 5 policy areas
+    municipal_innovations_utils-20250724.R   # Helpers for municipal innovations
+    municipal_innovations_tests-20250725.R   # Tests for municipal innovations
+    municipal_innovations_city_factsheet-20250724.Rmd   # City factsheet template
+    municipal_innovations_city_factsheet-20250724.docx  # Rendered output
 
 data/
   raw/
@@ -131,6 +145,7 @@ All URLs are defined in `R/config.R`:
 Core: `tidyverse`, `data.table`, `dtplyr`, `sf`, `tigris`, `lubridate`, `tidylog`, `usdata`, `rio`, `scales`
 Analysis: `rlang`, `janitor`, `writexl`, `readxl`
 Rendering: `rmarkdown`, `gt`, `gtExtras`, `urbnthemes`, `epoxy`, `glue`, `rprojroot`, `stringr`
+Summary report only: `patchwork`, `kableExtra`, `quarto` (CLI)
 
 ## Common Tasks
 
@@ -140,6 +155,7 @@ Rendering: `rmarkdown`, `gt`, `gtExtras`, `urbnthemes`, `epoxy`, `glue`, `rprojr
 - **Re-render one state**: Use `render_factsheet()` from `03_iterate_factsheet.R` with specific params
 - **Update a metric or column**: Change in `01_data_process.R`, re-run pipeline from that point
 - **Add a new disaggregation**: Add to `02_analysis.R`'s `create_state_summaries()` and update the Rmd templates
+- **Render summary report**: `quarto render R/04_summary_report.qmd` (standalone, not part of pipeline)
 
 ## Things to Watch Out For
 

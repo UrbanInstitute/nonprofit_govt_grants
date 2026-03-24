@@ -21,6 +21,13 @@ R/02_analysis.R          → Aggregates into national + 51 state summary CSVs
 R/03_iterate_factsheet.R → Renders HTML factsheets
 ```
 
+### Summary report (standalone)
+```bash
+# Render the cross-year trends report (requires Quarto)
+quarto render R/04_summary_report.qmd
+```
+`R/04_summary_report.qmd` is a standalone Quarto document that compares trends across tax years 2021-2023 and renders to DOCX. It is not part of the automated pipeline.
+
 ## Directory Descriptions
 
 ### /data
@@ -42,6 +49,8 @@ R/03_iterate_factsheet.R → Renders HTML factsheets
 - Contains all R code for data analysis, processing, and visualization. Scripts are numbered sequentially to indicate the order of execution. `R/run_pipeline.R` is the orchestration entry point that runs all steps for one or more years.
 - Helper functions are stored in separate scripts named after their primary function.
 - `national_factsheet.Rmd` and `state_factsheet.Rmd` are parameterized templates that accept a `year` parameter.
+- `04_summary_report.qmd` is a standalone Quarto document for cross-year trend analysis (renders to DOCX).
+- `data_requests/` contains frozen, date-stamped ad-hoc analyses (congressional briefing, municipal innovations).
 
 ### /docs
 - Contains the HTML factsheets generated from the data analysis.
