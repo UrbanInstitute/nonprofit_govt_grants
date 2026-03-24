@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tail:*)",
+      "Bash(grep:*)",
+      "Bash(head:*)",
+      "Bash(echo ✓ $file EXISTS:*)",
+      "Bash(ls:*)",
+      "Bash(git status:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(done)",
+      "Bash(wc:*)",
+      "Bash(Rscript:*)",
+      "Bash(git rev-list:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(git branch:*)",
+      "Bash(git stash:*)",
+      "Bash(git:*)",
+      "Bash(R --vanilla --slave 2)",
+      "Bash(/dev/null:*)",
+      "Read(//usr/lib/R/**)",
+      "Read(//usr/local/bin/**)"
+    ]
+  }
+}

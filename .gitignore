@@ -1,0 +1,20 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Rmd asset directories (assets are embedded with self_contained: true)
+docs/**/*_files/
+docs/*_files/
+R/*_files/
+docs/**/web_report.css
+
+# Raw data (downloaded by pipeline, too large for git)
+data/raw/
+
+# Intermediate data (ignore large files, keep year subdirs and QA workbook)
+data/intermediate/*
+!data/intermediate/qa_all_years.xlsx
+!data/intermediate/2021/
+!data/intermediate/2022/
+!data/intermediate/2023/

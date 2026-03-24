@@ -1,25 +1,26 @@
 ---
 title: ""
-author: 
+author:
 subtitle: ''
 output:
   html_document:
     css: web_report.css
-    self_contained: false
+    self_contained: true
   pdf_document: default
 params:
   state: California
+  year: 2021
 ---
 
 ```{=html}
-<!-- this calls Lato font --> 
+<!-- this calls Lato font -->
 <style>
 @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
 </style>
 ```
 
 ```{=html}
-<!-- this calls crucial iframe resizing script --> 
+<!-- this calls crucial iframe resizing script -->
 <script type="text/javascript" src="https://apps.urban.org/features/dataviz-libs/pym-js/v1.3.2/pym.nprapps.org_pym.v1.min.js">
 </script>
 
@@ -46,26 +47,36 @@ set_urbn_defaults(style = "print")
 knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 ```
 
-## `r params$state` - How Losing Government Grants Would Affect Nonprofit Finances
+## `r params$state` - How Losing Government Grants Would Have Affected Nonprofit Finances in `r params$year`
 
 <div class="over-table-spacing"></div>
 
 
 ```{r load-data, echo=FALSE}
 setwd(rprojroot::find_rstudio_root_file())
+source("R/config.R")
 source("R/format_percentages.R")
 source("R/format_districts.R")
+source("R/format_gt_table.R")
 
 state <- gsub(" ", "-", tolower(params$state))
+factsheet_dir <- dir_state_factsheets_year(params$year)
 
-county <- data.table::fread(sprintf("data/processed/state_factsheets/%s_bycounty.csv", 
+county <- data.table::fread(sprintf(file.path(factsheet_dir, "%s_bycounty.csv"),
                                     state))
-district <- data.table::fread(sprintf("data/processed/state_factsheets/%s_bydistrict.csv",
+district <- data.table::fread(sprintf(file.path(factsheet_dir, "%s_bydistrict.csv"),
                                       state))
-size <- data.table::fread(sprintf("data/processed/state_factsheets/%s_bysize.csv", 
+size <- data.table::fread(sprintf(file.path(factsheet_dir, "%s_bysize.csv"),
                                   state))
-subsector <- data.table::fread(sprintf("data/processed/state_factsheets/%s_bysubsector.csv",
+subsector <- data.table::fread(sprintf(file.path(factsheet_dir, "%s_bysubsector.csv"),
                                        state))
+
+total_filers <- format(
+  sum(as.numeric(gsub(",", "", size$`Number of 990 filers with government grants`[
+    size$Size == "Total"
+  ]))),
+  big.mark = ","
+)
 ```
 
 ```{r into-para, echo=FALSE}
@@ -134,11 +145,16 @@ topcounties_surplus <- paste(topcounties_surplus, collapse = ", ")
 topcounties_atrisk <- paste(topcounties_atrisk, collapse = ", ")
 
 topcounties_grants <- gsub(",([^,]*)$", ", and\\1", topcounties_grants)
-topcounties_grants <- gsub(" County", "", topcounties_grants)
 topcounties_surplus <- gsub(",([^,]*)$", ", and\\1", topcounties_surplus)
-topcounties_surplus <- gsub(" County", "", topcounties_surplus)
 topcounties_atrisk <- gsub(",([^,]*)$", ", and\\1", topcounties_atrisk)
-topcounties_atrisk <- gsub(" County", "", topcounties_atrisk)
+
+# Strip all county-equivalent geographic suffixes (County, Parish, Borough, etc.)
+strip_county_suffix <- function(x) {
+  gsub(" (County|Parish|Borough|Census Area|Municipality|city|City and Borough)(?=,|$)", "", x, perl = TRUE)
+}
+topcounties_grants <- strip_county_suffix(topcounties_grants)
+topcounties_surplus <- strip_county_suffix(topcounties_surplus)
+topcounties_atrisk <- strip_county_suffix(topcounties_atrisk)
 
 topdistricts_grants <- format_districts(topdistricts_grants)
 topdistricts_surplus <- format_districts(topdistricts_surplus)
@@ -146,9 +162,21 @@ topdistricts_atrisk <- format_districts(topdistricts_atrisk)
 ```
 
 ```{r, echo=FALSE}
+# Build "Counties [and the Xth congressional district(s)]" fragments,
+# avoiding double spaces when district text is empty
+fmt_geo <- function(counties, districts) {
+  geo <- paste(counties, "Counties")
+  if (nchar(districts) > 0) geo <- paste(geo, districts)
+  geo
+}
+
 if (state_title != "District of Columbia"){
+  geo_grants  <- fmt_geo(topcounties_grants, topdistricts_grants)
+  geo_surplus <- fmt_geo(topcounties_surplus, topdistricts_surplus)
+  geo_atrisk  <- fmt_geo(topcounties_atrisk, topdistricts_atrisk)
+
   text <- glue::glue(
-    "In {state_title}, nonprofits received a total of ${total_govgrants} in government grants. Nonprofits in {topcounties_grants} counties {topdistricts_grants} received the most government funding. Nonprofits in {topcounties_surplus} counties {topdistricts_surplus} would have the biggest gap to fill if they lost their government grants. Nonprofits in {topcounties_atrisk} counties {topdistricts_atrisk} have the highest share of nonprofits at risk of not covering their expenses if they lost their government grants."
+    "In {state_title}, nonprofits received a total of ${total_govgrants} in government grants. Nonprofits in {geo_grants} received the most government funding. Nonprofits in {geo_surplus} would have the biggest gap to fill if they lost their government grants. Nonprofits in {geo_atrisk} have the highest share of nonprofits at risk of not covering their expenses if they lost their government grants."
   )
 } else {
   text <- glue::glue("In the District of Columbia, nonprofits received a total of ${total_govgrants} in government grants.")
@@ -160,10 +188,10 @@ if (state_title != "District of Columbia"){
 ```
 
 ```{r formatting, echo=FALSE}
-county <- format_percentages(county, 
+county <- format_percentages(county,
                              "Share of 990 filers with government grants at risk",
                              "formatted_percentages")
-district <- format_percentages(district, 
+district <- format_percentages(district,
                                "Share of 990 filers with government grants at risk",
                                "formatted_percentages")
 size <- format_percentages(size,
@@ -184,146 +212,47 @@ county |>
   dplyr::mutate(Geography = factor(Geography)) |>
   dplyr::mutate(color = "") |>
   gt() |>
-  cols_hide(formatted_percentages) |>
   cols_width(color ~ px(5)) |>
   cols_label(color = "") |>
-  cols_align(align = "left", columns = c("Geography")) |>
-  tab_style(
-    style = cell_borders(
-      sides = "right",
-      color = "#d2d2d2",
-      weight = px(1)
-    ),
-    locations = cells_body(columns = 1)
-  ) |>
-  tab_style(
-    style = cell_text(weight = "bold"),
-    locations = list(cells_body(columns = 1), cells_column_labels())
-  ) |>
-  tab_options(table.border.top.style = "hidden",
-              data_row.padding = px(10))
-
+  style_factsheet_table()
 ```
 
 ### Congressional districts
 ```{r}
-district |> 
+district |>
   dplyr::mutate(color = "") |>
   gt() |>
-  cols_hide(formatted_percentages) |>
   cols_width(color ~ px(5)) |>
   cols_label(color = "") |>
-  cols_align(align = "left", columns = c("Geography")) |>
-  tab_style(
-    style = cell_borders(
-      sides = "right",
-      color = "#d2d2d2",
-      weight = px(1)
-    ),
-    locations = cells_body(columns = 1)
-  ) |>
-  tab_style(
-    style = cell_text(weight = "bold"),
-    locations = list(cells_body(columns = 1), cells_column_labels())
-  ) |>
-  tab_options(table.border.top.style = "hidden",
-              data_row.padding = px(10))
+  style_factsheet_table()
 ```
 
 ### Size
 ```{r}
-size |> mutate(Size = factor(
-  Size,
-  levels = c(
-    "Less than $100K",
-    "Between $100K and $499K",
-    "Between $500K and $999K",
-    "Between $1M and $4.99M",
-    "Between $5M and $9.99M",
-    "Greater than $10M",
-    "Total"
-  )
-)) |>
+size |>
+  mutate(Size = factor(Size, levels = c(EXPENSE_LABELS, "Total"))) |>
   arrange(Size) |>
-   dplyr::mutate(color = "") |>
+  dplyr::mutate(color = "") |>
   gt() |>
-  cols_hide(formatted_percentages) |>
-    cols_width(color ~ px(5)) |>
-  cols_label(
-    color = ""  # This sets the column name to an empty string
-) |>
-  cols_align(
-    align = "left",
-    columns = c("Size")
-  ) |>
-  tab_style(
-    style = cell_borders(
-      sides = "right",
-      color = "#d2d2d2",
-      weight = px(1)
-    ),
-    locations = cells_body(
-      columns = 1
-    )
-  ) |>
-  tab_style(
-    style = cell_text(weight = "bold"),
-    locations = list(
-      cells_body(columns = 1),  # First column
-      cells_column_labels()      # All headers
-    )
-  ) |>
-  tab_options(
-    table.border.top.style = "hidden",
-    data_row.padding = px(10)
-  )
+  cols_width(color ~ px(5)) |>
+  cols_label(color = "") |>
+  style_factsheet_table()
 ```
 
 ### Subsector
 ```{r}
-subsector |> mutate(Subsector = factor(
-  Subsector,
-  levels = c(
-        "Arts, Culture, and Humanities",
-        "Education (Excluding Universities)",
-        "Environment and Animals",
-        "Health (Excluding Hospitals)",
-        "Hospitals",
-        "Human Services",
-        "International, Foreign Affairs",
-        "Public, Societal Benefit",
-        "Religion Related",
-        "Mutual/Membership Benefit",
-        "Universities",
-        "Unclassified",
-        "Total"
-      )
-)) |>
+subsector |>
+  mutate(Subsector = factor(Subsector, levels = c(SUBSECTOR_LEVELS, "Total"))) |>
   arrange(Subsector) |>
   dplyr::mutate(color = "") |>
   gt() |>
-  cols_hide(formatted_percentages) |>
   cols_width(color ~ px(5)) |>
   cols_label(color = "") |>
-  cols_align(align = "left", columns = c("Subsector")) |>
-  tab_style(
-    style = cell_borders(
-      sides = "right",
-      color = "#d2d2d2",
-      weight = px(1)
-    ),
-    locations = cells_body(columns = 1)
-  ) |>
-  tab_style(
-    style = cell_text(weight = "bold"),
-    locations = list(cells_body(columns = 1), cells_column_labels())
-  ) |>
-  tab_options(table.border.top.style = "hidden",
-              data_row.padding = px(10))
+  style_factsheet_table()
 ```
 
 ## {-}
 
-###### **Notes**: Includes 103,475 nonprofits that electronically filed an IRS Form 990 and reported receiving government grants in tax year 2021. Government grants are from governments at the local, state, federal, and territory levels, as well as foreign governments. A positive operating surplus indicates a nonprofit can cover all of its expenses and has funds available to reinvest in its mission. A negative surplus indicates they could not do so in that tax year. Operating surplus reported as the median.
+###### **Notes**: Includes `r total_filers` nonprofits that electronically filed an IRS Form 990 and reported receiving government grants in tax year `r params$year`. Government grants are from governments at the local, state, federal, and territory levels, as well as foreign governments. A positive operating surplus indicates a nonprofit can cover all of its expenses and has funds available to reinvest in its mission. A negative surplus indicates the nonprofit could not do so in that tax year. Operating surplus reported as the median.
 
-###### **Source**: National Center for Charitable Statistics 2021 501(c)(3) Charities [E-file Data](https://nccs.urban.org/nccs/datasets/efile/).
+###### **Source**: National Center for Charitable Statistics `r params$year` 501(c)(3) Charities [E-file Data](https://nccs.urban.org/nccs/datasets/efile/).

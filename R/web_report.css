@@ -92,6 +92,7 @@ table {
     Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
   width: 760px !important;
+  table-layout: auto !important;
 }
 thead > tr,
 table {
@@ -99,6 +100,9 @@ table {
 }
 th {
   font-weight: 700 !important;
+}
+td:not(:first-of-type) {
+  white-space: nowrap;
 }
 td:first-of-type {
   font-weight: 700 !important;
